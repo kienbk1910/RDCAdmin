@@ -1,0 +1,68 @@
+<?php
+//$page = $this->page;
+// get attribs for element
+$attribs = [
+		'id'     => $page->getId(),
+		'title'  => $menu->getTranslator()->translate($page->getTitle(), $page->getTextDomain()),
+];
+$classnames = array();
+if ( $addClassToListItem === false ) {
+	$class = $page->getClass();
+	if (!empty($class)) {
+		$classnames[] = $page->getClass();
+	}
+}
+$maxDepth = $menu->getMaxDepth();
+$depth = $page->get('level');
+$isBelowMaxLevel = ($maxDepth > $depth) || ($maxDepth === null) || ($maxDepth === false);
+if ( !empty($page->pages) && $isBelowMaxLevel ) {
+	$classnames[] = 'dropdown-toggle';
+	$attribs['data-toggle'] = (($depth == 0) ? $this->menu->getSubLiClassLevel0() : $this->menu->getSubLiClass());
+}
+$attribs['class'] = implode(" ", $classnames);
+ 
+// does page have a href?
+$href = (
+	!empty($menu->getHrefSubToggleOverride()) ?
+		$menu->getHrefSubToggleOverride() : $page->getHref()
+);
+$element = 'a';
+if ($href) {
+	$attribs['href'] = $href;
+	$attribs['target'] = $page->getTarget();
+} else {
+	$attribs['href'] = '#';
+}
+
+$html  = '<' . $element . $menu->htmlAttribs($attribs) . '>';
+$html .= ($page->get('icon') ? '<i class="' . $menu->getIconPrefixClass() . '' . $page->get('icon') . '"></i> ' : '' );
+$label = $menu->getTranslator()->translate($page->getLabel(), $page->getTextDomain());
+if ($depth == 0) {
+	if ($escapeLabel === true) {
+		/** @var \Zend\View\Helper\EscapeHtml $escaper */
+		$escaper = $menu->getView()->plugin('escapeHtml');
+		$html .= '<span>' . $escaper($label) . '</span>';
+	} else {
+		$html .= '<span>' . $label . '</span>';
+	}
+} else {
+	if ($escapeLabel === true) {
+		/** @var \Zend\View\Helper\EscapeHtml $escaper */
+		$escaper = $menu->getView()->plugin('escapeHtml');
+		$html .= $escaper($label);
+	} else {
+		$html .= $label;
+	}
+}
+$badge = $page->get('badge');
+if ($badge && is_array($badge)) {
+	$html .= (!empty($badge["type"]) ? 
+		'<span class="label label-' . $badge["type"] . ' pull-right"' . (!empty($badge["title"]) ? ' title="'.$badge["title"].'"' : '') . '>' . $badge["value"] . '</span>' : 
+		'<span class="label label-default pull-right"' . (!empty($badge["title"]) ? ' title="'.$badge["title"].'"' : '') . '>' . $badge["value"] . '</span>' 
+	);
+} else {
+	$html .= ($page->pages ? '<i class="' . $menu->getIconPrefixClass() . 'angle-left pull-right"></i> ' : '' );
+}
+$html .= '</' . $element . '>';
+
+echo $html;
