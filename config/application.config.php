@@ -8,8 +8,12 @@
 return array(
     // This should be an array of module namespaces used in the application.
     'modules' => array(
+        'DoctrineModule',
+        'DoctrineORMModule',
+        'ZfcBase',
+        'ZfcUser',
+        'ZfcUserDoctrineORM',
         'Application',
-        'TwitterBootstrapAPI',
     ),
 
     // These are various options for the listeners attached to the ModuleManager
@@ -21,6 +25,7 @@ return array(
         'module_paths' => array(
             './module',
             './vendor',
+            './vendor/zf-commons',
         ),
 
         // An array of paths from which to glob configuration files after
