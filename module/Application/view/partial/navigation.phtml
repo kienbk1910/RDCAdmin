@@ -1,0 +1,22 @@
+<ul class="sidebar-menu">
+     <li class="header">THANH CHỨC NĂNG</li>
+<?php   foreach ($this->container as $page) { ?>
+<?php        if($page->hasPages() == true){ ?>
+             <li class="treeview">
+              <a href="#">
+                <i class=<?php echo '"fa fa-'.$page->get('icon').'"';?>></i> <span><?php echo $page->getLabel();?></span>
+                <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <?php foreach ($page->getPages() as $child) {?>
+                    <li><a href=""><i class=<?php echo '"fa fa-'.$child->get('icon').'"';?>></i><?php echo $child->getLabel();?></a></li>
+                <?php } ?>
+              </ul>
+            </li>
+ <?php        }else{  ?>
+ 
+
+ <?php   }
+
+ } ?>
+</ul>

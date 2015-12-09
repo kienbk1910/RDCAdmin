@@ -319,66 +319,12 @@
           </form>
           <!-- /.search form -->
           <!-- sidebar menu: : style can be found in sidebar.less -->
-          <ul class="sidebar-menu">
-            <li class="header">THANH CHỨC NĂNG</li>
-            <li class="active treeview">
-              <a href="#">
-                <i class="fa fa-dashboard"></i> <span>Dashboard</span> <i class="fa fa-angle-left pull-right"></i>
-              </a>
-              <ul class="treeview-menu">
-                <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
-                <li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
-              </ul>
-            </li>
-            <li class="treeview">
-              <a href="#">
-                <i class="fa fa-files-o"></i>
-                <span>Hồ Sơ</span>
-                <span class="label label-primary pull-right">4</span>
-              </a>
-              <ul class="treeview-menu">
-                <li><a href="pages/layout/top-nav.html"><i class="fa fa-circle-o"></i>Danh Sách Hồ Sơ</a></li>
-                <li><a href="pages/layout/boxed.html"><i class="fa fa-circle-o"></i> Thêm Hồ Sơ</a></li>
-              </ul>
-            </li>
-            <li class="treeview">
-              <a href="#">
-                <i class="fa fa-pie-chart"></i>
-                <span>Quản lý Users</span>
-                <i class="fa fa-angle-left pull-right"></i>
-              </a>
-              <ul class="treeview-menu">
-                <li><a href="pages/charts/chartjs.html"><i class="fa fa-circle-o"></i> Danh Sách User</a></li>
-                <li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> Thêm User</a></li>
-              </ul>
-            </li>
-            <li class="treeview">
-              <a href="#">
-                <i class="fa fa-laptop"></i>
-                <span>Quản Lý Học Viên</span>
-                <i class="fa fa-angle-left pull-right"></i>
-              </a>
-              <ul class="treeview-menu">
-                <li><a href="pages/UI/general.html"><i class="fa fa-circle-o"></i> Dánh Sách Học Viên</a></li>
-                <li><a href="pages/UI/icons.html"><i class="fa fa-circle-o"></i> Thêm Học Viên</a></li>
-              </ul>
-            </li>
-            <li class="treeview">
-              <a href="#">
-                <i class="fa fa-edit"></i> <span>Quản Lý Chứng Chỉ</span>
-                <i class="fa fa-angle-left pull-right"></i>
-              </a>
-              <ul class="treeview-menu">
-                <li><a href="pages/forms/general.html"><i class="fa fa-circle-o"></i>Danh Sách Chứng Chỉ</a></li>
-                <li><a href="pages/forms/advanced.html"><i class="fa fa-circle-o"></i>Thêm Chứng Chỉ</a></li>
-              </ul>
-            </li>
-            
-            <li class="header">LABELS</li>
-            <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>
-            <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Warning</span></a></li>
-            <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>Information</span></a></li>
-          </ul>
+                <?php echo $this->navigation('navigation')
+                ->menu()
+                ->setUlClass('nav navbar-nav')
+                ->setMaxDepth(1)
+                ->setPartial(array('partial/navigation.phtml', 'Application'));
+                ?>
         </section>
         <!-- /.sidebar -->
       </aside>
@@ -386,8 +332,8 @@
       <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">
         <!-- Content Header (Page header) -->
-     
-     
+ 
+
       <?php echo $this->content; ?>
       </div><!-- /.content-wrapper -->
       <footer class="main-footer">

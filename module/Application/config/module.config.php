@@ -82,7 +82,7 @@ return array(
     'navigation_helpers' => array (
         'invokables' => array(
             // override or add a view helper
-            'menu' => '\TwitterBootstrapAPI\View\Helper\Navigation\Menu',
+           // 'menu' => '\TwitterBootstrapAPI\View\Helper\Navigation\Menu',
         ),
     ),
     'view_manager' => array(
@@ -111,33 +111,93 @@ return array(
     ),
 
     'navigation' => array(
-        'default' => array(
-            array(
-                'label' => 'Home',
-                'route' => 'home',
-            ),
-            array(
-                'label' => 'Album',
-                'route' => 'home',
-                'pages' => array(
-                    array(
-                        'label' => 'Add',
-                        'route' => 'home',
-                        'action' => 'add',
-                    ),
-                    array(
-                        'label' => 'Edit',
-                        'route' => 'home',
-                        'action' => 'edit',
-                    ),
-                    array(
-                        'label' => 'Delete',
-                        'route' => 'home',
-                        'action' => 'delete',
-                    ),
+    'default' => array(
+        array(
+            'label' => 'Bảng Tin',
+            'route' => 'home',
+            'icon' => 'dashboard',
+            'pages' => array(
+                array(
+                    'label' => 'Tin Tức',
+                    'uri' => '#',
+                    'icon' => 'circle-o'
                 ),
-            ),
+                array(
+                    'label' => 'Thông Kê',
+                    'uri' => '#',
+                    'icon' => 'circle-o'
+                ),
+            )
         ),
+        array(
+            'label' => 'Hồ Sơn',
+            'uri' => '#',
+            'icon' => 'files-o',
+            'pages' => array(
+                array(
+                    'label' => 'Danh Sách Hồ Sơ',
+                    'uri' => '#',
+                    'icon' => 'circle-o'
+                ),
+                array(
+                    'label' => 'Thêm Hồ Sơ',
+                    'uri' => '#',
+                    'icon' => 'circle-o'
+                ),
+            )
+        ),
+         array(
+            'label' => 'Quản lý Users',
+            'uri' => '#',
+            'icon' => 'pie-chart',
+            'pages' => array(
+                array(
+                    'label' => 'Danh Sách Hồ Sơ',
+                    'uri' => '#',
+                    'icon' => 'circle-o'
+                ),
+                array(
+                    'label' => 'Thêm Hồ Sơ',
+                    'uri' => '#',
+                    'icon' => 'circle-o'
+                ),
+            )
+        ),
+         array(
+            'label' => 'Quản Lý Học Viên',
+            'uri' => '#',
+            'icon' => 'laptop',
+            'pages' => array(
+                array(
+                    'label' => 'Dánh Sách Học Viên',
+                    'uri' => '#',
+                    'icon' => 'circle-o'
+                ),
+                array(
+                    'label' => ' Thêm Học Viên',
+                    'uri' => '#',
+                    'icon' => 'circle-o'
+                ),
+            )
+        ),
+         array(
+            'label' => 'Quản Lý Chứng Chỉ',
+            'uri' => '#',
+            'icon' => 'edit',
+            'pages' => array(
+                array(
+                    'label' => 'Danh Sách Chứng Chỉ',
+                    'uri' => '#',
+                    'icon' => 'circle-o'
+                ),
+                array(
+                    'label' => 'Thêm Chứng Chỉ',
+                    'uri' => '#',
+                    'icon' => 'circle-o'
+                ),
+            )
+        ),
+    ),
     ),
 
 );
