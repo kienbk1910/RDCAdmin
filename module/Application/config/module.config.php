@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Zend Framework (http://framework.zend.com/)
  *
@@ -6,7 +7,6 @@
  * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
-
 namespace Application;
 
 return array(
@@ -53,6 +53,32 @@ return array(
 
                 ),
             ),
+            'manager-users' => array (
+				'type' => 'Literal',
+				'options' => array (
+					'route' => '/manager-users',
+					'defaults' => array (
+						'__NAMESPACE__' => 'Application\Controller',
+						'controller' => 'ManagerUsers',
+						'action' => 'index'
+					)
+				),
+				'may_terminate' => true,
+				'child_routes' => array (
+					'default' => array (
+						'type' => 'Segment',
+						'options' => array (
+							'route' => '/[:controller[/:action]]',
+							'constraints' => array (
+								'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+								'action' => '[a-zA-Z][a-zA-Z0-9_-]*'
+							),
+							'defaults' => array ()
+						)
+					)
+				)
+			)
+
         ),
     ),
     'service_manager' => array(
