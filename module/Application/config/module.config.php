@@ -103,7 +103,7 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Application\Controller\Index' => Controller\IndexController::class
+            'Application\Controller\Index' => Controller\IndexController::class,
             'Application\Controller\ManagerUsers' => Controller\ManagerUsersController::class
         ),
     ),
@@ -189,7 +189,7 @@ return array(
                     'icon' => 'circle-o'
                 ),
                 array(
-                    'label' => 'Thêm Hồ User',
+                    'label' => 'Thêm User',
                     'uri' => '#',
                     'icon' => 'circle-o'
                 ),
