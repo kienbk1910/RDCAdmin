@@ -1,15 +1,21 @@
 <ul class="sidebar-menu">
      <li class="header">THANH CHỨC NĂNG</li>
 <?php   foreach ($this->container as $page) { ?>
-<?php        if($page->hasPages() == true){ ?>
-             <li class="treeview">
+<?php        if($page->hasPages() == true){ 
+               $active  = false;
+               foreach ($page->getPages() as $child) {
+                if($child->isActive()){  $active  = true; }
+               }
+            ?>
+
+             <li class="treeview <?php if($page->isActive() ||  $active  == true ){echo 'active'; }?>">
               <a href="#">
                 <i class=<?php echo '"fa fa-'.$page->get('icon').'"';?>></i> <span><?php echo $page->getLabel();?></span>
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
                 <?php foreach ($page->getPages() as $child) {?>
-                    <li><a href=""><i class=<?php echo '"fa fa-'.$child->get('icon').'"';?>></i><?php echo $child->getLabel();?></a></li>
+                    <li class="<?php if($child->isActive()){echo 'active'; }?>"><a href="<?php echo $child->getHref(); ?>"><i class=<?php echo '"fa fa-'.$child->get('icon').'"';?>></i><?php echo $child->getLabel();?></a></li>
                 <?php } ?>
               </ul>
             </li>

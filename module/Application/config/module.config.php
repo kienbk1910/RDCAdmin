@@ -38,18 +38,19 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
-                    'default' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/[:controller[/:action]]',
-                            'constraints' => array(
-                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
-                            ),
-                        ),
-                    ),
+                    'statistic' => array(
+                         'type' => 'segment',
+                         'options' => array(
+                             'route'    => '/statistic',
+                             'defaults' => array(
+                                 'action' => 'statistic',
+                             ),
+                             'constraints' => array(
+                             )
+                         ),
+                        
+                     ),
+
                 ),
             ),
         ),
@@ -114,18 +115,22 @@ return array(
     'default' => array(
         array(
             'label' => 'Bảng Tin',
-            'route' => 'home',
+            'route' => 'application',
             'icon' => 'dashboard',
             'pages' => array(
                 array(
                     'label' => 'Tin Tức',
                     'uri' => '#',
-                    'icon' => 'circle-o'
+                    'icon' => 'circle-o',
+                    'route' => 'application',
+                    'action' => 'index',
                 ),
                 array(
                     'label' => 'Thông Kê',
                     'uri' => '#',
-                    'icon' => 'circle-o'
+                    'icon' => 'circle-o',
+                    'route' => 'application/statistic',
+                    'action' => 'statistic',
                 ),
             )
         ),
