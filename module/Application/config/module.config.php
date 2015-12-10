@@ -152,12 +152,12 @@ return array(
             'icon' => 'pie-chart',
             'pages' => array(
                 array(
-                    'label' => 'Danh Sách Hồ Sơ',
+                    'label' => 'Danh Sách Users',
                     'uri' => '#',
                     'icon' => 'circle-o'
                 ),
                 array(
-                    'label' => 'Thêm Hồ Sơ',
+                    'label' => 'Thêm Hồ User',
                     'uri' => '#',
                     'icon' => 'circle-o'
                 ),
