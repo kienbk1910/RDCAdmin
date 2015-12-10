@@ -162,7 +162,7 @@ return array(
             )
         ),
         array(
-            'label' => 'Hồ Sơn',
+            'label' => 'Hồ Sơ',
             'uri' => '#',
             'icon' => 'files-o',
             'pages' => array(
