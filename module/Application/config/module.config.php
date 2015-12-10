@@ -104,6 +104,7 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Application\Controller\Index' => Controller\IndexController::class
+            'Application\Controller\ManagerUsers' => Controller\ManagerUsersController::class
         ),
     ),
     'navigation_helpers' => array (
@@ -179,12 +180,12 @@ return array(
         ),
          array(
             'label' => 'Quản lý Users',
-            'uri' => '#',
             'icon' => 'pie-chart',
+            'route' => 'manager-users',
             'pages' => array(
                 array(
                     'label' => 'Danh Sách Users',
-                    'uri' => '#',
+                     'route' => 'manager-users',
                     'icon' => 'circle-o'
                 ),
                 array(
