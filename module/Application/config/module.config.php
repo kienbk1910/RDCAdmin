@@ -50,6 +50,30 @@ return array(
                          ),
                         
                      ),
+                    'test' => array(
+                         'type' => 'segment',
+                         'options' => array(
+                             'route'    => '/test',
+                             'defaults' => array(
+                                 'action' => 'test',
+                             ),
+                             'constraints' => array(
+                             )
+                         ),
+                        
+                     ),
+                    'staff' => array(
+                         'type' => 'segment',
+                         'options' => array(
+                             'route'    => '/staff',
+                             'defaults' => array(
+                                 'action' => 'staff',
+                             ),
+                             'constraints' => array(
+                             )
+                         ),
+                        
+                     ),
 
                 ),
             ),
@@ -77,7 +101,34 @@ return array(
 						)
 					)
 				)
-			)
+			),
+            // tasks
+              'manager-tasks' => array (
+                'type' => 'Literal',
+                'options' => array (
+                    'route' => '/manager-tasks',
+                    'defaults' => array (
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'ManagerTasks',
+                        'action' => 'index'
+                    )
+                ),
+                'may_terminate' => true,
+                'child_routes' => array (
+                    'add' => array(
+                         'type' => 'segment',
+                         'options' => array(
+                             'route'    => '/add',
+                             'defaults' => array(
+                                 'action' => 'add',
+                             ),
+                             'constraints' => array(
+                             )
+                         ),
+                        
+                     ),
+                )
+            )
 
         ),
     ),
@@ -104,7 +155,8 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Application\Controller\Index' => Controller\IndexController::class,
-            'Application\Controller\ManagerUsers' => Controller\ManagerUsersController::class
+            'Application\Controller\ManagerUsers' => Controller\ManagerUsersController::class,
+            'Application\Controller\ManagerTasks' => Controller\ManagerTasksController::class
         ),
     ),
     'navigation_helpers' => array (
@@ -129,6 +181,9 @@ return array(
         'template_path_stack' => array(
             __DIR__ . '/../view',
         ),
+        'strategies' => array(
+            'ViewJsonStrategy'
+         ),
     ),
     // Placeholder for console routes
     'console' => array(
@@ -165,16 +220,19 @@ return array(
             'label' => 'Hồ Sơ',
             'uri' => '#',
             'icon' => 'files-o',
+            'route' => 'manager-tasks',
             'pages' => array(
                 array(
                     'label' => 'Danh Sách Hồ Sơ',
                     'uri' => '#',
-                    'icon' => 'circle-o'
+                    'icon' => 'circle-o',
+                    'route' => 'manager-tasks',
                 ),
                 array(
                     'label' => 'Thêm Hồ Sơ',
                     'uri' => '#',
-                    'icon' => 'circle-o'
+                    'icon' => 'circle-o',
+                    'route' => 'manager-tasks/add',
                 ),
             )
         ),
