@@ -2,10 +2,10 @@
 -- version 4.5.1
 -- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Generation Time: Dec 16, 2015 at 05:09 PM
--- Server version: 10.1.8-MariaDB
--- PHP Version: 5.5.30
+-- Client :  127.0.0.1
+-- Généré le :  Jeu 17 Décembre 2015 à 18:02
+-- Version du serveur :  10.1.8-MariaDB
+-- Version de PHP :  5.5.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,13 +17,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `rdc_admin`
+-- Base de données :  `rdc_admin`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `actions`
+-- Structure de la table `actions`
 --
 
 CREATE TABLE `actions` (
@@ -32,7 +32,7 @@ CREATE TABLE `actions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `actions`
+-- Contenu de la table `actions`
 --
 
 INSERT INTO `actions` (`id`, `name`) VALUES
@@ -43,7 +43,7 @@ INSERT INTO `actions` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `certificates`
+-- Structure de la table `certificates`
 --
 
 CREATE TABLE `certificates` (
@@ -57,7 +57,7 @@ CREATE TABLE `certificates` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `custumers`
+-- Structure de la table `custumers`
 --
 
 CREATE TABLE `custumers` (
@@ -76,7 +76,7 @@ CREATE TABLE `custumers` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `files`
+-- Structure de la table `files`
 --
 
 CREATE TABLE `files` (
@@ -93,7 +93,7 @@ CREATE TABLE `files` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `logs`
+-- Structure de la table `logs`
 --
 
 CREATE TABLE `logs` (
@@ -107,7 +107,7 @@ CREATE TABLE `logs` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `money_history`
+-- Structure de la table `money_history`
 --
 
 CREATE TABLE `money_history` (
@@ -126,7 +126,7 @@ CREATE TABLE `money_history` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `money_option`
+-- Structure de la table `money_option`
 --
 
 CREATE TABLE `money_option` (
@@ -135,7 +135,7 @@ CREATE TABLE `money_option` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `money_option`
+-- Contenu de la table `money_option`
 --
 
 INSERT INTO `money_option` (`id`, `name`) VALUES
@@ -145,7 +145,7 @@ INSERT INTO `money_option` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `process`
+-- Structure de la table `process`
 --
 
 CREATE TABLE `process` (
@@ -154,7 +154,7 @@ CREATE TABLE `process` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `process`
+-- Contenu de la table `process`
 --
 
 INSERT INTO `process` (`id`, `name`) VALUES
@@ -167,7 +167,7 @@ INSERT INTO `process` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `roles`
+-- Structure de la table `roles`
 --
 
 CREATE TABLE `roles` (
@@ -176,7 +176,7 @@ CREATE TABLE `roles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `roles`
+-- Contenu de la table `roles`
 --
 
 INSERT INTO `roles` (`id`, `name`) VALUES
@@ -188,7 +188,7 @@ INSERT INTO `roles` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tasks`
+-- Structure de la table `tasks`
 --
 
 CREATE TABLE `tasks` (
@@ -216,7 +216,7 @@ CREATE TABLE `tasks` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Structure de la table `users`
 --
 
 CREATE TABLE `users` (
@@ -231,136 +231,137 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `users`
+-- Contenu de la table `users`
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `email`, `avatar`, `role_id`, `block`, `create_date`) VALUES
-(1, 'kienbk1910', 'test', 'kienbk1910gmail.com', NULL, 1, 0, '2015-12-16 00:00:00');
+(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'kienbk1910gmail.com', NULL, 1, 1, '2015-12-16 00:00:00'),
+(2, 'user', 'ee11cbb19052e40b07aac0ca060c23ee', NULL, NULL, 4, 1, '0000-00-00 00:00:00');
 
 --
--- Indexes for dumped tables
+-- Index pour les tables exportées
 --
 
 --
--- Indexes for table `actions`
+-- Index pour la table `actions`
 --
 ALTER TABLE `actions`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `certificates`
+-- Index pour la table `certificates`
 --
 ALTER TABLE `certificates`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `custumers`
+-- Index pour la table `custumers`
 --
 ALTER TABLE `custumers`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `files`
+-- Index pour la table `files`
 --
 ALTER TABLE `files`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `logs`
+-- Index pour la table `logs`
 --
 ALTER TABLE `logs`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `money_history`
+-- Index pour la table `money_history`
 --
 ALTER TABLE `money_history`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `money_option`
+-- Index pour la table `money_option`
 --
 ALTER TABLE `money_option`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `process`
+-- Index pour la table `process`
 --
 ALTER TABLE `process`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `roles`
+-- Index pour la table `roles`
 --
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tasks`
+-- Index pour la table `tasks`
 --
 ALTER TABLE `tasks`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `users`
+-- Index pour la table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT pour les tables exportées
 --
 
 --
--- AUTO_INCREMENT for table `actions`
+-- AUTO_INCREMENT pour la table `actions`
 --
 ALTER TABLE `actions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
--- AUTO_INCREMENT for table `certificates`
+-- AUTO_INCREMENT pour la table `certificates`
 --
 ALTER TABLE `certificates`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `custumers`
+-- AUTO_INCREMENT pour la table `custumers`
 --
 ALTER TABLE `custumers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `files`
+-- AUTO_INCREMENT pour la table `files`
 --
 ALTER TABLE `files`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `logs`
+-- AUTO_INCREMENT pour la table `logs`
 --
 ALTER TABLE `logs`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `money_history`
+-- AUTO_INCREMENT pour la table `money_history`
 --
 ALTER TABLE `money_history`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `money_option`
+-- AUTO_INCREMENT pour la table `money_option`
 --
 ALTER TABLE `money_option`
   MODIFY `id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
--- AUTO_INCREMENT for table `process`
+-- AUTO_INCREMENT pour la table `process`
 --
 ALTER TABLE `process`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
--- AUTO_INCREMENT for table `tasks`
+-- AUTO_INCREMENT pour la table `tasks`
 --
 ALTER TABLE `tasks`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT pour la table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -12,12 +12,18 @@
  */
 
 return array(
-    'db' => array(
+      'db' => array(
          'driver'         => 'Pdo',
-         'dsn'            => 'mysql:dbname=rdcadmin;host=localhost',
+         'dsn'            => 'mysql:dbname=rdc_admin;host=localhost',
       //  'dsn'            => 'mysql:dbname=kienbk19_ducloi;host=localhost',
          'driver_options' => array(
              PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
+         ),
+     ),
+     'service_manager' => array(
+         'factories' => array(
+             'Zend\Db\Adapter\Adapter'
+                     => 'Zend\Db\Adapter\AdapterServiceFactory',
          ),
      ),
 );

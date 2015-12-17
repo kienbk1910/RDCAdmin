@@ -140,6 +140,9 @@ return array(
         'factories' => array(
             'translator' => 'Zend\Mvc\Service\TranslatorServiceFactory',
             'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',
+            'agency_navigation' => 'Application\Navigation\Service\AgencyNavigationFactory',
+            'Application\Mapper\IndexMapperInterface'   => 'Application\Factory\ZendDbSqlMapperFactory',
+           'Application\Service\IndexServiceInterface' => 'Application\Factory\IndexServiceFactory'
         ),
     ),
     'translator' => array(
@@ -154,10 +157,11 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Application\Controller\Index' => Controller\IndexController::class,
-            'Application\Controller\ManagerUsers' => Controller\ManagerUsersController::class,
-            'Application\Controller\ManagerTasks' => Controller\ManagerTasksController::class
+     
         ),
+         'factories' => array(
+             'Application\Controller\Index' => 'Application\Factory\IndexControllerFactory'
+         )
     ),
     'navigation_helpers' => array (
         'invokables' => array(
@@ -288,6 +292,30 @@ return array(
             )
         ),
     ),
+ // agency navigation
+        'agency' => array(
+            array(
+                'label' => 'Bảng Tin',
+                'route' => 'application',
+                'icon' => 'dashboard',
+                'pages' => array(
+                    array(
+                        'label' => 'Tin Tức',
+                        'uri' => '#',
+                        'icon' => 'circle-o',
+                        'route' => 'application',
+                        'action' => 'index',
+                    ),
+                    array(
+                        'label' => 'Thông Kê',
+                        'uri' => '#',
+                        'icon' => 'circle-o',
+                        'route' => 'application/statistic',
+                        'action' => 'statistic',
+                    ),
+                )
+            ),
+        ), 
     ),
 
 );
