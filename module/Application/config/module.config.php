@@ -128,8 +128,34 @@ return array(
                         
                      ),
                 )
+            ),
+            // profile
+           'profile' => array (
+            'type' => 'Literal',
+            'options' => array (
+                'route' => '/profile',
+                'defaults' => array (
+                    '__NAMESPACE__' => 'Application\Controller',
+                    'controller' => 'Profile',
+                    'action' => 'index'
+                )
+            ),
+            'may_terminate' => true,
+            'child_routes' => array (
+                'add' => array(
+                     'type' => 'segment',
+                     'options' => array(
+                         'route'    => '/add',
+                         'defaults' => array(
+                             'action' => 'add',
+                         ),
+                         'constraints' => array(
+                         )
+                     ),
+                    
+                 ),
             )
-
+        )   
         ),
     ),
     'service_manager' => array(
@@ -160,7 +186,8 @@ return array(
      
         ),
          'factories' => array(
-             'Application\Controller\Index' => 'Application\Factory\IndexControllerFactory'
+             'Application\Controller\Index' => 'Application\Factory\IndexControllerFactory',
+             'Application\Controller\Profile' => 'Application\Factory\ProfileControllerFactory'
          )
     ),
     'navigation_helpers' => array (

@@ -1,0 +1,100 @@
+  <!-- Main content -->
+<section class="content">
+  <!-- Main row -->
+  <div class="row">
+    <!-- Left col -->
+    <section class="col-lg-3 connectedSortable">
+              <div class="box box-primary">
+                <div class="box-body box-profile">
+                  <img class="profile-user-img img-responsive img-circle" src="/AdminLTE-2.3.0/dist/img/user4-128x128.jpg" alt="User profile picture">
+                  <h3 class="profile-username text-center"> <?php echo $this->identity()->username?></h3>
+                  <p class="text-muted text-center">Quản Lý</p>
+                  <div class="row">
+                    <div class="col-lg-6">
+                       <button class="btn btn-block btn-info">Chọn File</button>
+                    </div >
+                    <div class="col-lg-2"></div>
+                    <div class="col-lg-6">
+                      <button class="btn btn-block btn-primary">Đổi Avatar</button>
+                    </div >
+                  </div >
+
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->      
+     
+    </section><!-- /.Left col -->
+    <!-- right col (We are only adding the ID to make the widgets sortable)-->
+    <section class="col-lg-9 connectedSortable">
+      <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                  <li class="active"><a href="#activity" data-toggle="tab">Thông Tin Cá Nhân</a></li>
+                  <li><a href="#timeline" data-toggle="tab">Thông Tin Tài Chính</a></li>
+                  <li><a href="#settings" data-toggle="tab">Đổi Mật Khẩu</a></li>
+                </ul>
+                <div class="tab-content">
+                  <div class="active tab-pane" id="activity">
+                 
+                    <form class="form-horizontal">
+                      <div class="form-group">
+                        <label for="inputName" class="col-sm-2 control-label">Email</label>
+                        <div class="col-sm-10">
+                          <a href="#" id="pro-email" data-type="text" data-pk="1" data-url="/post" data-title="Enter username">kienbk1910@gmail.com</a>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="inputEmail" class="col-sm-2 control-label">Phone</label>
+                        <div class="col-sm-10">
+                           <a href="#" id="pro-phone" data-type="text" data-pk="1" data-url="/post" data-title="Enter username">098 435 1910</a>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="inputEmail" class="col-sm-2 control-label">Mô tả</label>
+                        <div class="col-sm-10">
+                           <a href="#" id="pro-note" data-type="textarea" data-pk="1" data-url="/post" data-title="Enter username"> 
+                          Initial value of input. If not set, taken from element's text.
+                          Note, that if element's text is empty - text is automatically generated from value and can be customized (see autotext option).
+                          For example, to display currency sign:</a>
+                        </div>
+                      </div>
+                 
+                    </form>
+                  </div><!-- /.tab-pane -->
+                  <div class="tab-pane" id="timeline">
+                    <h1>Đang Phát triển</h1>
+                  </div><!-- /.tab-pane -->
+
+                  <div class="tab-pane" id="settings">
+                    <form class="form-horizontal">
+                      <div class="form-group">
+                        <label for="inputName" class="col-sm-2 control-label">Mật Khẩu Mới</label>
+                        <div class="col-sm-5">
+                          <input type="email" class="form-control" id="inputName" placeholder="Name">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="inputEmail" class="col-sm-2 control-label">Xác Nhận</label>
+                        <div class="col-sm-5">
+                          <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                        </div>
+                      </div>
+                    
+                      <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                          <button type="submit" class="btn btn-danger">Đổi</button>
+                        </div>
+                      </div>
+                    </form>
+                  </div><!-- /.tab-pane -->
+                </div><!-- /.tab-content -->
+              </div><!-- /.nav-tabs-custom -->   
+
+    </section><!-- right col -->
+  </div><!-- /.row (main row) -->
+
+</section><!-- /.content -->
+<script type="text/javascript">
+  $.fn.editable.defaults.mode = 'inline';
+  $('#pro-email').editable();
+  $('#pro-phone').editable();
+   $('#pro-note').editable();
+</script>

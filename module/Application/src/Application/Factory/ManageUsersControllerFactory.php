@@ -2,11 +2,11 @@
  // Filename: /module/Blog/src/Blog/Factory/ListControllerFactory.php
  namespace Application\Factory;
 
- use Application\Controller\IndexController;
+ use Application\Controller\ManagerUsers;
  use Zend\ServiceManager\FactoryInterface;
  use Zend\ServiceManager\ServiceLocatorInterface;
 
- class IndexControllerFactory implements FactoryInterface
+ class ManagerUsersControllerFactory implements FactoryInterface
  {
      /**
       * Create service
@@ -21,6 +21,6 @@
          $postService        = $realServiceLocator->get('Application\Service\IndexServiceInterface');
          $auth               = $realServiceLocator->get('Zend\Authentication\AuthenticationService');
 
-         return new IndexController($postService,$auth);
+         return new ManagerUsersController($postService,$auth);
      }
  }

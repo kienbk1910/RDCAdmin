@@ -40,6 +40,8 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.1.0/css/select.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="/Editor-PHP-1.5.4/css/editor.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="/Editor-PHP-1.5.4/examples/resources/syntax/shCore.css">
+    <!-- inline edit css end ---->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
      <!-- data table css end -->
     <!-- jQuery 2.1.4 -->
     <script src="/AdminLTE-2.3.0/plugins/jQuery/jQuery-2.1.4.min.js"></script>
@@ -89,6 +91,8 @@
   </script>
   <script type="text/javascript" language="javascript" src="/Editor-PHP-1.5.4/examples/resources/syntax/shCore.js">
 </script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -332,7 +336,7 @@
                   <!-- Menu Footer-->
                   <li class="user-footer">
                     <div class="pull-left">
-                      <a href="#" class="btn btn-default btn-flat">Thông Tin Tài Khoản</a>
+                      <a href="<?php echo $this->url('profile');?>" class="btn btn-default btn-flat">Thông Tin Tài Khoản</a>
                     </div>
                     <div class="pull-right">
                       <a href="<?php echo $this->url('logout');?>" class="btn btn-default btn-flat">Đăng Xuất</a>
