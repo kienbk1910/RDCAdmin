@@ -6,18 +6,28 @@
     <section class=" col-lg-12 connectedSortable">
          <div class="box box-warning">
                 <div class="box-header with-border">
-                  <h3 class="box-title">Tạo Hồ Sơ</h3>
+                  <h3 class="box-title">Thông Tin Hồ Sơ</h3>
                 </div><!-- /.box-header -->
                 <div class="box-body">
-                  <form role="form">
+                  <form role="form" class="form-horizontal">
                     <!-- text input -->
                     <div class="form-group">
-                      <label>Tên Khách Hàng</label>
-                      <input type="text" class="form-control" placeholder="Enter ...">
+                      <label for="inputName" class="col-sm-3 control-label">Tên Khách Hàng</label>
+                      <div class="col-sm-9">
+                          <a href="#" id="name-custom" data-type="text" data-pk="1" data-url="/post" data-title="Enter username">Nguyễn Văn A</a>
+                      </div>
+                     </div>
+                    <div class="form-group">
+                       <label for="inputName" class="col-sm-3 control-label">Sản Phẩm</label>
+                          <div class="col-sm-9">
+                           <a href="#" id="name-product" data-type="text" data-pk="1" data-url="/post" data-title="Enter username">An Toàn Lao Động</a>
+                          </div>
                     </div>
                     <div class="form-group">
-                      <label>Sản Phẩm</label>
-                      <input type="text" class="form-control"  >
+                       <label for="inputName" class="col-sm-3 control-label">Trạng Thái</label>
+                          <div class="col-sm-9">
+                           <a href="#" id="process" data-type="select" data-pk="1" data-url="/post" data-title="Enter username"></a>
+                          </div>
                     </div>
                     <div class="row">
                           <section class="col-lg-6 connectedSortable">
@@ -30,23 +40,19 @@
                                <div class="form-group">
                                   <label for="inputName" class="col-sm-3 control-label">Người Gửi</label>
                                   <div class="col-sm-9">
-                                    <select class="form-control">
-                                    <option>RDC</option>
-                                      <option>Nguyễn A</option>
-                                      <option>Văn B</option>
-                                    </select>
+                                        <a href="#" id="name-agency" data-type="select" data-pk="1" data-url="/post" data-title="Enter username"></a>
                                   </div>
                                 </div>
                                 <div class="form-group">
                                   <label for="inputName" class="col-sm-3 control-label">Thỏa Thuận</label>
                                   <div class="col-sm-9">
-                                    <input type="text" class="form-control"  >
+                                    <a href="#" id="money-custom" data-type="text" data-pk="1" data-url="/post" data-title="Enter username">500,000</a>
                                   </div>
                                 </div>
                                 <div class="form-group">
                                   <label for="inputName" class="col-sm-3 control-label">Ngày Nhận</label>
                                   <div class="col-sm-9">
-                                    <input id="cus-date-start"type="text" class="form-control"  >
+                                    <a href="#" id="cus-date-start" data-type="combodate" data-pk="1" data-url="/post" data-title="Enter username">15/05/1984</a>
                                   </div>
                                 </div>
                                  <div class="form-group">
@@ -112,9 +118,34 @@
 
 </section><!-- /.content -->
 <script type="text/javascript">
-
-    $("#cus-date-start").datepicker();
-    $("#cus-date-end").datepicker();
-    $("#pro-date-start").datepicker();
-    $("#pro-date-end").datepicker();
+    $.fn.editable.defaults.mode = 'inline';
+  $('#name-custom').editable();
+  $('#name-product').editable();
+  $('#money-custom').editable();
+  $('#cus-date-start').editable({
+        format: 'yyyy-mm-dd',    
+        viewformat: 'dd/mm/yyyy',    
+        datepicker: {
+                weekStart: 1
+           }
+        }
+    );
+  $('#process').editable({
+        value: 1,    
+        source: [
+              {value: 1, text: 'Nhận Hồ Sơ'},
+              {value: 2, text: 'Đang Sử Lý'},
+              {value: 3, text: 'Sử Lý Xong'},
+              {value: 4, text: 'Giao Hồ Sơ'},
+              {value: 5, text: 'Đóng'},
+           ]
+    });
+  $('#name-agency').editable({
+        value: 1,    
+        source: [
+              {value: 1, text: 'Nguyễn Văn A'},
+              {value: 2, text: 'Nguyễn Văn B'},
+              {value: 3, text: 'Nguyễn Văn C'},
+           ]
+    });
   </script>

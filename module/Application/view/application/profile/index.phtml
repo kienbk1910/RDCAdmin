@@ -6,19 +6,20 @@
     <section class="col-lg-3 connectedSortable">
               <div class="box box-primary">
                 <div class="box-body box-profile">
-                  <img class="profile-user-img img-responsive img-circle" src="/AdminLTE-2.3.0/dist/img/user4-128x128.jpg" alt="User profile picture">
+                  <img class="profile-user-img img-responsive img-circle" id="image-avartar" src="/AdminLTE-2.3.0/dist/img/user4-128x128.jpg" alt="User profile picture">
                   <h3 class="profile-username text-center"> <?php echo $this->identity()->username?></h3>
                   <p class="text-muted text-center">Quản Lý</p>
+                   <form class="form-horizontal" method="post" enctype="multipart/form-data">
                   <div class="row">
                     <div class="col-lg-6">
-                       <button class="btn btn-block btn-info">Chọn File</button>
+                      <input name="avatar" id="choose-image"type="file" class="btn btn-block btn-info" />
                     </div >
                     <div class="col-lg-2"></div>
                     <div class="col-lg-6">
-                      <button class="btn btn-block btn-primary">Đổi Avatar</button>
+                      <button type ="submit"class="btn btn-block btn-primary" id="btn-change-avatar" disabled>Đổi Avatar</button>
                     </div >
                   </div >
-
+                   </form>  
                 </div><!-- /.box-body -->
               </div><!-- /.box -->      
      
@@ -96,5 +97,23 @@
   $.fn.editable.defaults.mode = 'inline';
   $('#pro-email').editable();
   $('#pro-phone').editable();
-   $('#pro-note').editable();
+  $('#pro-note').editable();
+  // for upload file
+   function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function (e) {
+                $('#image-avartar').attr('src', e.target.result);
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    
+    $("#choose-image").change(function(){
+        readURL(this);
+        $('#btn-change-avatar').prop("disabled", false);
+
+    });
 </script>

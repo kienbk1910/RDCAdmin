@@ -5,14 +5,16 @@ use Application\Service\IndexServiceInterface;
 
 class IndexService implements IndexServiceInterface
 {
-    protected $couponMapper;
+    protected $databaseMapper;
 
     /**
      * @param PostMapperInterface $postMapper
      */
-    public function __construct(IndexMapperInterface $couponMapper)
+    public function __construct(IndexMapperInterface $databaseMapper)
     {
-        $this->couponMapper = $couponMapper;
+        $this->databaseMapper = $databaseMapper;
     }
-   
+   public function getListRoles(){
+   		return $this->databaseMapper->getListRoles();
+   }
 }

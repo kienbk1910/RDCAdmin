@@ -7,13 +7,13 @@ namespace Application\Controller;
  use Zend\Authentication\AuthenticationService;
  class ManagerUsersController extends BaseController
  {
-      protected $couponService;
+      protected $databaseService;
 
-     public function __construct(IndexServiceInterface $couponService,AuthenticationService $auth)
+     public function __construct(IndexServiceInterface $databaseService,AuthenticationService $auth)
      
      {
         
-        $this->couponService = $couponService;
+        $this->databaseService = $databaseService;
         $this->auth = $auth;
         $this->user = $auth->getIdentity();
          
@@ -30,7 +30,10 @@ namespace Application\Controller;
      public function addAction()
      {
         $this->checkAuth();
-        return new ViewModel();
+        $roles = $this->databaseService->getlistRoles();
+        return new ViewModel(array(
+            'roles' =>$roles 
+            ));
      }
 
 }

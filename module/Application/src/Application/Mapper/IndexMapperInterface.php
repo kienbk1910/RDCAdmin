@@ -5,6 +5,6 @@
  interface IndexMapperInterface
  {
      
-      
+      public function getListRoles();
  
 }

@@ -128,6 +128,18 @@ return array(
                          ),
                         
                      ),
+                    'detail' => array(
+                     'type' => 'segment',
+                     'options' => array(
+                         'route'    => '/detail',
+                         'defaults' => array(
+                             'action' => 'detail',
+                         ),
+                         'constraints' => array(
+                         )
+                     ),
+                        
+                     ),
                 )
             ),
             // profile

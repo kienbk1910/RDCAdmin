@@ -32,5 +32,11 @@ namespace Application\Controller;
         $this->checkAuth();
         return new ViewModel();
      }
+      public function detailAction()
+     {
+        $this->checkAuth();
+        return new ViewModel();
+     }
+     
 
 }
