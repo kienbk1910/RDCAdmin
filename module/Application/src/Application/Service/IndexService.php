@@ -17,4 +17,7 @@ class IndexService implements IndexServiceInterface
    public function getListRoles(){
    		return $this->databaseMapper->getListRoles();
    }
+   public function updateAvatar($id_user,$avatar){
+   		return $this->databaseMapper->updateAvatar($id_user,$avatar);
+   }
 }

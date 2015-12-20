@@ -7,13 +7,13 @@ namespace Application\Controller;
  use Zend\Authentication\AuthenticationService;
  class ProfileController extends BaseController
  {
-      protected $couponService;
+      protected $databaseService;
 
-     public function __construct(IndexServiceInterface $couponService,AuthenticationService $auth)
+     public function __construct(IndexServiceInterface $databaseService,AuthenticationService $auth)
      
      {
         
-        $this->couponService = $couponService;
+        $this->databaseService = $databaseService;
         $this->auth = $auth;
         $this->user = $auth->getIdentity();
          
@@ -22,6 +22,14 @@ namespace Application\Controller;
      public function indexAction()
      {
         $this->checkAuth();
+        $request = $this->getRequest();
+        if (!$request->isPost()) {
+            // save image 
+
+            $avatar = "345.png";
+            $this->databaseService->updateAvatar($this->user->id,$avatar);
+            
+        }
         return new ViewModel();
     
         
