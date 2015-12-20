@@ -3,15 +3,116 @@
   <!-- Main row -->
   <div class="row">
     <!-- Left col -->
-    <section class="col-lg-6 connectedSortable">
-     
-     
+    <section class=" col-lg-12 connectedSortable">
+         <div class="box box-warning">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Tạo Hồ Sơ</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <form role="form">
+                    <!-- text input -->
+                    <div class="form-group">
+                      <label>Tên Khách Hàng</label>
+                      <input type="text" class="form-control" placeholder="Enter ...">
+                    </div>
+                    <div class="form-group">
+                      <label>Sản Phẩm</label>
+                      <input type="text" class="form-control"  >
+                    </div>
+                    <div class="row">
+                          <section class="col-lg-6 connectedSortable">
+                            <div class="box box-primary">
+                               <div class="box-header with-border">
+                                <h3 class="box-title">Khách Hàng</h3>
+                              </div><!-- /.box-header -->
+                            
+                             <div class="box-body">
+                               <div class="form-group">
+                                  <label for="inputName" class="col-sm-3 control-label">Người Gửi</label>
+                                  <div class="col-sm-9">
+                                    <select class="form-control">
+                                    <option>RDC</option>
+                                      <option>Nguyễn A</option>
+                                      <option>Văn B</option>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="inputName" class="col-sm-3 control-label">Thỏa Thuận</label>
+                                  <div class="col-sm-9">
+                                    <input type="text" class="form-control"  >
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="inputName" class="col-sm-3 control-label">Ngày Nhận</label>
+                                  <div class="col-sm-9">
+                                    <input id="cus-date-start"type="text" class="form-control"  >
+                                  </div>
+                                </div>
+                                 <div class="form-group">
+                                  <label for="inputName" class="col-sm-3 control-label">Ngày Hẹn</label>
+                                  <div class="col-sm-9">
+                                    <input id="cus-date-end"type="text" class="form-control"  >
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                          </section>
+                           <section class="col-lg-6 connectedSortable">
+                            <div class="box box-info">
+                               <div class="box-header with-border">
+                                <h3 class="box-title">Nhà Cung Cấp</h3>
+                              </div><!-- /.box-header -->
+                               <div class="box-body">
+                             <div class="form-group">
+                                <label for="inputName" class="col-sm-3 control-label">Xử Lý</label>
+                                <div class="col-sm-9">
+                                  <select class="form-control">
+                                    <option>RDC</option>
+                                    <option>Nguyễn A</option>
+                                    <option>Văn B</option>
+                                  </select>
+                                </div>
+                              </div>
+                                  <div class="form-group">
+                                  <label for="inputName" class="col-sm-3 control-label">Thỏa Thuận</label>
+                                  <div class="col-sm-9">
+                                    <input type="text" class="form-control"  >
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="inputName" class="col-sm-3 control-label">Ngày Nhận</label>
+                                  <div class="col-sm-9">
+                                    <input id="cus-date-start"type="text" class="form-control"  >
+                                  </div>
+                                </div>
+                                 <div class="form-group">
+                                  <label for="inputName" class="col-sm-3 control-label">Ngày Hẹn</label>
+                                  <div class="col-sm-9">
+                                    <input id="cus-date-end"type="text" class="form-control"  >
+                                  </div>
+                                </div>
+                               </div>
+                             </div>
+                          </section>
+                    </div>
+                   <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                          <button type="submit" class="btn btn-danger">Tạo Tài Khoản</button>
+                        </div>
+                      </div>
+
+                  </form>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
     </section><!-- /.Left col -->
     <!-- right col (We are only adding the ID to make the widgets sortable)-->
-    <section class="col-lg-6 connectedSortable">
    
-
-    </section><!-- right col -->
   </div><!-- /.row (main row) -->
 
 </section><!-- /.content -->
+<script type="text/javascript">
+
+    $("#cus-date-start").datepicker();
+    $("#cus-date-end").datepicker();
+  </script>

@@ -5,7 +5,7 @@ namespace Application\Controller;
  use Zend\View\Model\ViewModel;
  use Zend\View\Model\JsonModel;
  use Zend\Authentication\AuthenticationService;
- class ManagerUsersController extends BaseController
+ class ManagerTasksController extends BaseController
  {
       protected $couponService;
 

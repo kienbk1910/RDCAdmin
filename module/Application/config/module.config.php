@@ -88,19 +88,20 @@ return array(
 					)
 				),
 				'may_terminate' => true,
-				'child_routes' => array (
-					'default' => array (
-						'type' => 'Segment',
-						'options' => array (
-							'route' => '/[:controller[/:action]]',
-							'constraints' => array (
-								'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-								'action' => '[a-zA-Z][a-zA-Z0-9_-]*'
-							),
-							'defaults' => array ()
-						)
-					)
-				)
+				    'child_routes' => array (
+                    'add' => array(
+                         'type' => 'segment',
+                         'options' => array(
+                             'route'    => '/add',
+                             'defaults' => array(
+                                 'action' => 'add',
+                             ),
+                             'constraints' => array(
+                             )
+                         ),
+                        
+                     ),
+                )
 			),
             // tasks
               'manager-tasks' => array (
@@ -168,7 +169,8 @@ return array(
             'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',
             'agency_navigation' => 'Application\Navigation\Service\AgencyNavigationFactory',
             'Application\Mapper\IndexMapperInterface'   => 'Application\Factory\ZendDbSqlMapperFactory',
-           'Application\Service\IndexServiceInterface' => 'Application\Factory\IndexServiceFactory'
+            'Application\Service\IndexServiceInterface' => 'Application\Factory\IndexServiceFactory'
+
         ),
     ),
     'translator' => array(
@@ -187,7 +189,9 @@ return array(
         ),
          'factories' => array(
              'Application\Controller\Index' => 'Application\Factory\IndexControllerFactory',
-             'Application\Controller\Profile' => 'Application\Factory\ProfileControllerFactory'
+             'Application\Controller\Profile' => 'Application\Factory\ProfileControllerFactory',
+             'Application\Controller\ManagerUsers' => 'Application\Factory\ManagerUsersControllerFactory',
+              'Application\Controller\ManagerTasks' => 'Application\Factory\ManagerTasksControllerFactory'
          )
     ),
     'navigation_helpers' => array (
@@ -280,6 +284,7 @@ return array(
                 array(
                     'label' => 'Thêm User',
                     'uri' => '#',
+                    'route' => 'manager-users/add',
                     'icon' => 'circle-o'
                 ),
             )
