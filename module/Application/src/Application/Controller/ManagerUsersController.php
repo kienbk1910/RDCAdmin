@@ -31,8 +31,10 @@ namespace Application\Controller;
      {
         $this->checkAuth();
         $roles = $this->databaseService->getlistRoles();
+         $usererror =1;
         return new ViewModel(array(
-            'roles' =>$roles 
+            'roles' =>$roles,
+            'usererror'=>$usererror
             ));
      }
 
