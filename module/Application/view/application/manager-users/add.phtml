@@ -26,7 +26,7 @@
                     <div class="form-group">
                       <label>Quyền</label>
                       <select name="role" class="form-control">
-                      <?php 
+                      <?php
                         foreach ($roles as $role) {
                         echo "<option value=".$role->id.">".$role->name."</option>";
                         }
@@ -44,7 +44,7 @@
               </div><!-- /.box -->
     </section><!-- /.Left col -->
     <!-- right col (We are only adding the ID to make the widgets sortable)-->
-   
+
   </div><!-- /.row (main row) -->
 
 </section><!-- /.content -->
@@ -76,6 +76,6 @@
   }
   $( "input[name='password1']" ).parent().removeClass("has-error");
   $( "input[name='password1']" ).parent().addClass("has-success");
-  return false;
+  return true;
  }
 </script>

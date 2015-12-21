@@ -17,6 +17,7 @@ use Zend\Db\Sql\Select;
 use Zend\Paginator\Adapter\DbSelect;
 use Zend\Paginator\Paginator;
 use Zend\Db\ResultSet\ResultSet;
+use Application\Model\User;
 
 class ZendDbSqlMapper implements IndexMapperInterface
 {
@@ -44,4 +45,17 @@ class ZendDbSqlMapper implements IndexMapperInterface
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
 
+     public function addUser(User $user){
+         $data = array(
+             'id' => $user->getId(),
+             'username' => $user->getUsername(),
+             'password' => $user->getPassword(),
+         );
+
+         $sql = new Sql($this->dbAdapter);
+         $insert = $sql->insert('users');
+         $insert->values($data);
+         $selectString = $sql->getSqlStringForSqlObject($insert);
+         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+     }
 }

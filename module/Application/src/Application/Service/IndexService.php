@@ -2,6 +2,7 @@
 namespace Application\Service;
 use Application\Mapper\IndexMapperInterface;
 use Application\Service\IndexServiceInterface;
+use Application\Model\User;
 
 class IndexService implements IndexServiceInterface
 {
@@ -19,5 +20,9 @@ class IndexService implements IndexServiceInterface
    }
    public function updateAvatar($id_user,$avatar){
    		return $this->databaseMapper->updateAvatar($id_user,$avatar);
+   }
+
+   public function addUser(User $user) {
+       return $this->databaseMapper->addUser($user);
    }
 }
