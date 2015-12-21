@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Application\Config;
 
  class Config
@@ -8,6 +8,7 @@ namespace Application\Config;
     const USER_ADMIN =1;
     const USER_LEAVE1 =2;
     const USER_LEVEL2 =3;
+    const IMAGE_PATH = "/files/users/avatar/origin/";
   public static function getMinValue()
   {
     return self::MAX_ITEM_OF_PAGE;

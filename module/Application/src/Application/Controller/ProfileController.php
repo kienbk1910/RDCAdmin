@@ -16,13 +16,13 @@ use Zend\Validator;
       protected $databaseService;
 
      public function __construct(IndexServiceInterface $databaseService,AuthenticationService $auth)
-     
+
      {
-        
+
         $this->databaseService = $databaseService;
         $this->auth = $auth;
         $this->user = $auth->getIdentity();
-         
+
      }
 
      public function indexAction()
@@ -52,31 +52,23 @@ use Zend\Validator;
                 ->setData($postData);
 
             if ($inputFilter->isValid()) {           // FileInput validators are run, but not the filters...
-         
+
               $data = $inputFilter->getValues();   // This is when the FileInput filters are run.
               var_dump($data);
               $avatar = basename($data['avatar']['tmp_name']);
               $this->databaseService->updateAvatar($this->user->id,$avatar);
-                $thumbnailer = $this->getServiceLocator()->get('WebinoImageThumb');
-                $imagePath   = $data['avatar']['tmp_name'];
-                $thumb       = $thumbnailer->create($imagePath, $options = [], $plugins = []);
 
-                $thumb->resize(100, 100);
-
-    
-                // or/and
-                $thumb->save('public/files/resized.jpg');
              } else {
                 // error
             }
-         
-           
-            
+
+
+
         }
         return new ViewModel();
-    
-        
+
+
      }
-   
+
 
 }
