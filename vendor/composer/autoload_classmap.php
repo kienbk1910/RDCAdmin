@@ -441,6 +441,7 @@ return array(
     'SebastianBergmann\\RecursionContext\\InvalidArgumentException' => $vendorDir . '/sebastian/recursion-context/src/InvalidArgumentException.php',
     'SebastianBergmann\\Version' => $vendorDir . '/sebastian/version/src/Version.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
+    'WebinoImageThumb\\Module' => $vendorDir . '/webino/webino-image-thumb/Module.php',
     'Zend\\I18n\\Translator\\Resources' => $vendorDir . '/zendframework/zend-i18n-resources/src/Resources.php',
     'ZfcBase\\Module' => $vendorDir . '/zf-commons/zfc-base/Module.php',
     'ZfcUserDoctrineORM\\Entity\\User' => $vendorDir . '/zf-commons/zfc-user-doctrine-orm/src/ZfcUserDoctrineORM/Entity/User.php',

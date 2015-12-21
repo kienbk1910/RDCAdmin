@@ -11,6 +11,7 @@ return array(
     'ZfcUser' => array($vendorDir . '/zf-commons/zfc-user/src'),
     'ZfcBase' => array($vendorDir . '/zf-commons/zfc-base/src'),
     'ZendXml\\' => array($vendorDir . '/zendframework/zendxml/library'),
+    'WebinoImageThumb' => array($vendorDir . '/webino/webino-image-thumb/src'),
     'Prophecy\\' => array($vendorDir . '/phpspec/prophecy/src'),
     'Doctrine\\ORM\\' => array($vendorDir . '/doctrine/orm/lib'),
     'Doctrine\\DBAL\\' => array($vendorDir . '/doctrine/dbal/lib'),

@@ -57,7 +57,15 @@ use Zend\Validator;
               var_dump($data);
               $avatar = basename($data['avatar']['tmp_name']);
               $this->databaseService->updateAvatar($this->user->id,$avatar);
-           
+                $thumbnailer = $this->getServiceLocator()->get('WebinoImageThumb');
+                $imagePath   = $data['avatar']['tmp_name'];
+                $thumb       = $thumbnailer->create($imagePath, $options = [], $plugins = []);
+
+                $thumb->resize(100, 100);
+
+    
+                // or/and
+                $thumb->save('public/files/resized.jpg');
              } else {
                 // error
             }
