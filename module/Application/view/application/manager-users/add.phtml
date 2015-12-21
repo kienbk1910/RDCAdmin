@@ -11,7 +11,7 @@
                 <div class="box-body">
                   <form role="form" method="post" onsubmit="return validateFormRegister()">
                     <!-- text input -->
-                    <div class="form-group">
+                    <div class="form-group <?php if($usererror == 1){echo 'has-error';}?>">
                       <label>Tài Khoản</label>
                       <input type="text" class="form-control" name="username">
                     </div>
@@ -73,6 +73,7 @@
 
   if($( "input[name='password1']" ).val() != $( "input[name='password']" ).val()){
       $( "input[name='password1']" ).parent().addClass("has-error");
+      return false;
   }
   $( "input[name='password1']" ).parent().removeClass("has-error");
   $( "input[name='password1']" ).parent().addClass("has-success");

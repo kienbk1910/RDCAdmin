@@ -28,6 +28,7 @@ namespace Application\Controller;
      public function addAction()
      {
         $this->checkAuth();
+
         $request = $this->getRequest();
         $roles = $this->databaseService->getListRoles();
 
