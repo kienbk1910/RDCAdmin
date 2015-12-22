@@ -1,16 +1,17 @@
 <?php
 namespace Application\Controller;
- use Application\Service\IndexServiceInterface;
- use Application\Controller\BaseController;
- use Zend\View\Model\ViewModel;
- use Zend\View\Model\JsonModel;
- use Zend\Authentication\AuthenticationService;
- use Zend\Http\PhpEnvironment\Request;
+use Application\Service\IndexServiceInterface;
+use Application\Controller\BaseController;
+use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
+use Zend\Authentication\AuthenticationService;
+use Zend\Http\PhpEnvironment\Request;
 use Zend\Filter;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\Input;
 use Zend\InputFilter\FileInput;
 use Zend\Validator;
+use Application\Model\Xeditable;
  class ProfileController extends BaseController
  {
       protected $databaseService;
@@ -54,10 +55,10 @@ use Zend\Validator;
             if ($inputFilter->isValid()) {           // FileInput validators are run, but not the filters...
 
               $data = $inputFilter->getValues();   // This is when the FileInput filters are run.
-              var_dump($data);
+            
               $avatar = basename($data['avatar']['tmp_name']);
               $this->databaseService->updateAvatar($this->user->id,$avatar);
-
+               $this->user->avatar = $avatar;
              } else {
                 // error
             }
@@ -66,8 +67,26 @@ use Zend\Validator;
 
         }
         return new ViewModel();
+     }
+     public function changeEmailAction(){
+        $email = $this->getRequest()->getPost('value');
+      
+        $result = new Xeditable();
+        $validator = new \Zend\Validator\EmailAddress();
+        if ($validator->isValid($email)) {
+             $this->databaseService->changeEmail($this->user->id,$email);
+           
+            $this->user->email =  $email;
+        }else{
+            $result->setStatus(Xeditable::STATUS_ERROR);
+            $result->setMsg(Xeditable::MSG_DATA_ERROR);
+        }
+        
+       
+        
 
-
+        echo \Zend\Json\Json::encode($result, false);
+        exit;
      }
 
 

@@ -8,4 +8,6 @@
      public function getListRoles();
      public function updateAvatar($id_user,$avatar);
      public function addUser(User $user);
+     public function changeEmail($id_user,$email);
+ 
  }

@@ -25,4 +25,7 @@ class IndexService implements IndexServiceInterface
    public function addUser(User $user) {
        return $this->databaseMapper->addUser($user);
    }
+   public function changeEmail($id_user,$email){
+       return $this->databaseMapper->changeEmail($id_user,$email);
+   }
 }

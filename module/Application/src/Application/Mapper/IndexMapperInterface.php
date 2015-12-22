@@ -7,4 +7,5 @@
      
       public function getListRoles();
  	  public function updateAvatar($id_user,$avatar);
+ 	  public function changeEmail($id_user,$email);
 }

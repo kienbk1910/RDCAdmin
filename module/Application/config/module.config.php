@@ -155,12 +155,12 @@ return array(
             ),
             'may_terminate' => true,
             'child_routes' => array (
-                'add' => array(
+                'change-email' => array(
                      'type' => 'segment',
                      'options' => array(
-                         'route'    => '/add',
+                         'route'    => '/change-email',
                          'defaults' => array(
-                             'action' => 'add',
+                             'action' => 'changeEmail',
                          ),
                          'constraints' => array(
                          )
