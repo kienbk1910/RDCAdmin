@@ -82,9 +82,6 @@ use Application\Model\Xeditable;
             $result->setMsg(Xeditable::MSG_DATA_ERROR);
         }
         
-       
-        
-
         echo \Zend\Json\Json::encode($result, false);
         exit;
      }

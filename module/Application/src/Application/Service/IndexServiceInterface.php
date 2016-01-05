@@ -9,5 +9,7 @@
      public function updateAvatar($id_user,$avatar);
      public function addUser(User $user);
      public function changeEmail($id_user,$email);
+     public function getTotalUsers();
+     public function getListUsers($start,$length,$search);
  
  }

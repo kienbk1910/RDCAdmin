@@ -28,4 +28,10 @@ class IndexService implements IndexServiceInterface
    public function changeEmail($id_user,$email){
        return $this->databaseMapper->changeEmail($id_user,$email);
    }
+   public function getTotalUsers(){
+      return $this->databaseMapper->getTotalUsers();
+   }
+   public function getListUsers($start,$length,$search){
+      return $this->databaseMapper->getListUsers($start,$length,$search);
+   }
 }

@@ -66,4 +66,27 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $selectString = $sql->getSqlStringForSqlObject($update);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
+     public function getTotalUsers(){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('users')
+                ->columns(array('COUNT'=>new \Zend\Db\Sql\Expression('COUNT(*)')));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $resultSet =  $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $count = 0;
+        foreach ($resultSet as $row) {
+            $count = $row->COUNT;
+            break;
+        }
+        return $count;
+     }
+    public function getListUsers($start,$length,$search){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('users')
+                    ->join('roles', 'roles.id = users.role_id', array(
+                            'role_name' => 'name'), 'left')
+                      ->offset($start)
+                      ->limit($length);
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+    }
 }

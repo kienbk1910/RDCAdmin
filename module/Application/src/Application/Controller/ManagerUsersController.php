@@ -6,6 +6,8 @@ namespace Application\Controller;
  use Zend\View\Model\JsonModel;
  use Zend\Authentication\AuthenticationService;
  use Application\Model\User;
+ use Application\Model\UserListItem;
+ use Application\Model\DataTablesObject;
  use Zend\Debug\Debug;
 
  class ManagerUsersController extends BaseController
@@ -23,6 +25,26 @@ namespace Application\Controller;
      {
         $this->checkAuth();
         return new ViewModel();
+     }
+     public function getlistAction(){
+         $this->checkAuth();
+         $request = $this->getRequest();
+
+         $draw = $request->getPost('draw',1);
+         $start = $request->getPost('start',0);
+         $length = $request->getPost('length',10);
+         $total = $this->databaseService->getTotalUsers();
+         
+         $users =$this->databaseService->getListUsers($start,$length,"");
+         $data = new DataTablesObject();
+         $data->recordsTotal = $total;
+         $data->recordsFiltered = $total;
+         $data->draw = $draw;
+         foreach ($users as $user) {
+             array_push($data->data,new UserListItem($user->id,$user->username,$user->role_name,$user->block));
+         }
+        echo \Zend\Json\Json::encode($data, false);
+        exit;
      }
 
      public function addAction()
