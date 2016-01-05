@@ -9,6 +9,7 @@ namespace Application\Controller;
  use Application\Model\UserListItem;
  use Application\Model\DataTablesObject;
  use Zend\Debug\Debug;
+use Application\Config\Config;
 
  class ManagerUsersController extends BaseController
  {
@@ -57,14 +58,42 @@ namespace Application\Controller;
         if ($request->isPost()) {
             $id = $this->getRequest()->getPost('id', null);
             $username = $this->getRequest ()->getPost('username', null);
+            $role_id = $this->getRequest ()->getPost('role', null);
             $tmp_pass = $this->getRequest ()->getPost('password', null);
-            $password = md5($tmp_pass);
-            $user = new User($id, $username, $password);
+            $tmp_pass1 = $this->getRequest ()->getPost('password1', null);
 
-            $user = $this->databaseService->addUser($user);
+            $usererror = array();
+            if ($tmp_pass != $tmp_pass1) {
+                $usererror['password1'] = Config::PASSWORD_DIFFERENT;
+            }
+            else if (strlen($tmp_pass) > Config::PASSWORD_MAX_LEN) {
+                $usererror['password'] = Config::PASSWORD_EXCEED_MAX_LEN;
+            }
+            else if (strlen($tmp_pass) < Config::PASSWORD_MIN_LEN) {
+                $usererror['password'] = Config::PASSWORD_BENEATH_MIN_LEN;
+            }
+            else if (strlen($username) > Config::USERNAME_MAX_LEN) {
+                $usererror['username'] = Config::USERNAME_EXCEED_MAX_LEN;
+            }
+            else if (strlen($username) < Config::USERNAME_MIN_LEN) {
+                $usererror['username'] = Config::USERNAME_BENEATH_MIN_LEN;
+            }
+
+            $password = md5($tmp_pass);
+            $user = new User($id, $username, $password, $role_id);
+            if (empty($usererror)) {
+                $ret = $this->databaseService->addUser($user);
+                if ($ret == NULL) {
+                    $usererror['username'] = Config::USER_EXIST;
+                } else {
+                    return $this->redirect()->toRoute('manager-users');
+                }
+            }
+
             return new ViewModel(array(
-                'roles' => $roles,
+                'usererror' => $usererror,
                 'user' => $user,
+                'roles' => $roles,
             ));
         }
 

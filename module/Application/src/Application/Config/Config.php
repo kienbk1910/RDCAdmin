@@ -1,4 +1,5 @@
 <?php
+
 namespace Application\Config;
 
  class Config
@@ -9,6 +10,19 @@ namespace Application\Config;
     const USER_LEAVE1 =2;
     const USER_LEVEL2 =3;
     const IMAGE_PATH = "/files/users/avatar/origin/";
+
+    const PASSWORD_MAX_LEN = 500;
+    const PASSWORD_MIN_LEN = 8;
+    const USERNAME_MAX_LEN = 500;
+    const USERNAME_MIN_LEN = 5;
+
+    /* Add user */
+    const PASSWORD_DIFFERENT = "Password is not mapping";
+    const USER_EXIST = "Username is exist";
+    const PASSWORD_EXCEED_MAX_LEN = "Password length exceed maximum length";
+    const PASSWORD_BENEATH_MIN_LEN = "Password length beneath minimum length";
+    const USERNAME_EXCEED_MAX_LEN = "Username length exceed maximum length";
+    const USERNAME_BENEATH_MIN_LEN = "Username length beneath minimum length";
   public static function getMinValue()
   {
     return self::MAX_ITEM_OF_PAGE;

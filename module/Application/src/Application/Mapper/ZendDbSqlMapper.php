@@ -50,14 +50,23 @@ class ZendDbSqlMapper implements IndexMapperInterface
              'id' => $user->getId(),
              'username' => $user->getUsername(),
              'password' => $user->getPassword(),
+             'role_id' => $user->getRoleId(),
+             'create_date'=> date("Y-m-d H:i:s"),
          );
 
          $sql = new Sql($this->dbAdapter);
          $insert = $sql->insert('users');
          $insert->values($data);
          $selectString = $sql->getSqlStringForSqlObject($insert);
-         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+         $ret;
+         try {
+             $ret = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+         } catch (\Exception $e) {
+             $ret = NULL;
+         }
+         return $ret;
      }
+
      public function changeEmail($id_user,$email){
         $sql = new Sql($this->dbAdapter);
         $update = $sql->update('users');
