@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Filename: /module/Blog/src/Blog/Mapper/ZendDbSqlMapper.php
 namespace Application\Mapper;
 use Zend\Db\Adapter\AdapterInterface;
