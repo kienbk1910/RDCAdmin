@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 namespace Application\Controller;
  use Application\Service\IndexServiceInterface;
  use Application\Controller\BaseController;
