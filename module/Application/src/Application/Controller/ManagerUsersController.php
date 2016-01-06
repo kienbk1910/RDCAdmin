@@ -34,9 +34,11 @@ use Application\Config\Config;
          $draw = $request->getPost('draw',1);
          $start = $request->getPost('start',0);
          $length = $request->getPost('length',10);
+         $search = $request->getPost('search','');
+         $search = $search['value'];
          $total = $this->databaseService->getTotalUsers();
-         
-         $users =$this->databaseService->getListUsers($start,$length,"");
+       
+         $users =$this->databaseService->getListUsers($start,$length,$search);
          $data = new DataTablesObject();
          $data->recordsTotal = $total;
          $data->recordsFiltered = $total;

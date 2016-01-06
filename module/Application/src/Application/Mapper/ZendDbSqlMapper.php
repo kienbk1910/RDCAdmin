@@ -92,9 +92,10 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('users')
                     ->join('roles', 'roles.id = users.role_id', array(
-                            'role_name' => 'name'), 'left')
-                      ->offset($start)
-                      ->limit($length);
+                            'role_name' => 'name'), 'left');
+        $select->where->like('users.username', '%' . $search .'%');
+        $select->offset($start)
+                ->limit($length);
         $selectString = $sql->getSqlStringForSqlObject($select);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
     }

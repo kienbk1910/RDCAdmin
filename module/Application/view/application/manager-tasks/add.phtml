@@ -114,6 +114,10 @@
 <script type="text/javascript">
 
     $("#cus-date-start").datepicker();
+    $("#cus-date-start").datepicker( "option", "dateFormat", "dd/mm/yy");
+    $( "#cus-date-start" ).datepicker( "option",
+        $.datepicker.regional[ "vi" ] );
+    
     $("#cus-date-end").datepicker();
     $("#pro-date-start").datepicker();
     $("#pro-date-end").datepicker();

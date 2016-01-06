@@ -41,19 +41,29 @@ var editor; // use a global for the submit and return data rendering in the exam
 			{ extend: "remove", editor: editor }
 		]
 	} );*/
-		$('#users-table').DataTable( {
-		dom: 'lrtip',
-		processing: true,
-        serverSide: true,
-        ajax: {
-            url: "/manager-users/getlist",
-            type: "POST"
-        },
-		columns: [
-			{ data: "username" },
-			{ data: "role" },
-			{ data: "status" }
-		
-		]
-	} );
+		var table = $('#users-table').DataTable( {
+						"dom": '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>',
+						processing: true,
+				        serverSide: true,
+				        ajax: {
+				            url: "/manager-users/getlist",
+				            type: "POST"
+				        },
+				        "language": {
+				    		"url": "//cdn.datatables.net/plug-ins/1.10.10/i18n/Vietnamese.json"
+				  		},
+						columns: [
+						
+							{ data: "username" },
+							{ data: "role" },
+							{ data: "status" }
+						
+						],
+
+				} );
+	 $('#users-table').on('click', 'tr', function () {
+        var data = table.row( this ).id();
+        alert( 'You clicked on '+data+'\'s row' );
+    } );
+	
 </script>
