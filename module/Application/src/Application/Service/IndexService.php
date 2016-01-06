@@ -34,4 +34,7 @@ class IndexService implements IndexServiceInterface
    public function getListUsers($start,$length,$search){
       return $this->databaseMapper->getListUsers($start,$length,$search);
    }
+   public function changePassword($id_user, $password, $old_password) {
+       return $this->databaseMapper->changePassword($id_user, $password, $old_password);
+   }
 }

@@ -99,4 +99,25 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $selectString = $sql->getSqlStringForSqlObject($select);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
     }
+
+    /* change password */
+    public function changePassword($id_user, $new_password, $old_password) {
+        $sql = new Sql($this->dbAdapter);
+        $update = $sql->update('users');
+        $update->set(array('password' => $new_password));
+        $string = " id = ". $id_user. " AND password = \"" .$old_password. "\" LIMIT 1";
+        $update->Where($string);
+        $selectString = $sql->getSqlStringForSqlObject($update);
+        $ret;
+        try {
+            $ret = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+            if ($ret->count() == 1) {
+                return $ret;
+            } else {
+                return NULL;
+            }
+        } catch (\Exception $e) {
+            return NULL;
+        }
+    }
 }

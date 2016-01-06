@@ -12,18 +12,17 @@ use Zend\InputFilter\Input;
 use Zend\InputFilter\FileInput;
 use Zend\Validator;
 use Application\Model\Xeditable;
+use Application\Config\Config;
+
  class ProfileController extends BaseController
  {
       protected $databaseService;
 
      public function __construct(IndexServiceInterface $databaseService,AuthenticationService $auth)
-
      {
-
         $this->databaseService = $databaseService;
         $this->auth = $auth;
         $this->user = $auth->getIdentity();
-
      }
 
      public function indexAction()
@@ -55,36 +54,72 @@ use Application\Model\Xeditable;
             if ($inputFilter->isValid()) {           // FileInput validators are run, but not the filters...
 
               $data = $inputFilter->getValues();   // This is when the FileInput filters are run.
-            
+
               $avatar = basename($data['avatar']['tmp_name']);
               $this->databaseService->updateAvatar($this->user->id,$avatar);
                $this->user->avatar = $avatar;
              } else {
                 // error
             }
-
-
-
         }
         return new ViewModel();
      }
+
      public function changeEmailAction(){
         $email = $this->getRequest()->getPost('value');
-      
+
         $result = new Xeditable();
         $validator = new \Zend\Validator\EmailAddress();
         if ($validator->isValid($email)) {
              $this->databaseService->changeEmail($this->user->id,$email);
-           
+
             $this->user->email =  $email;
         }else{
             $result->setStatus(Xeditable::STATUS_ERROR);
             $result->setMsg(Xeditable::MSG_DATA_ERROR);
         }
-        
+
         echo \Zend\Json\Json::encode($result, false);
         exit;
      }
 
+     public function changePasswordAction()
+     {
+         $this->checkAuth();
+         $request = $this->getRequest();
+         if ($request->isPost()) {
+            $old_password = $this->getRequest ()->getPost('old_password', null);
+            $new_password = $this->getRequest ()->getPost('new_password', null);
+            $new_password1 = $this->getRequest ()->getPost('new_password1', null);
+            $usererror;
+            if ($new_password != $new_password1) {
+                $usererror = Config::PASSWORD_DIFFERENT;
+            } else if (strlen($new_password) > Config::PASSWORD_MAX_LEN) {
+                $usererror = Config::PASSWORD_EXCEED_MAX_LEN;
+            }
+            else if (strlen($new_password) < Config::PASSWORD_MIN_LEN) {
+                $usererror = Config::PASSWORD_BENEATH_MIN_LEN;
+            }
 
+            $status;
+            if (empty($usererror)) {
+                $new_password_md5 = md5($new_password);
+                $old_password_md5 = md5($old_password);
+                if ($this->databaseService->changePassword($this->user->id, $new_password_md5, $old_password_md5) != NULL) {
+                    $status = "success";
+                    $usererror = Config::PROCESS_OK;
+                } else {
+                    $status = "error";
+                    $usererror = Config::PASSWORD_IS_WRONG;
+                }
+            } else {
+                $status = "error";
+            }
+
+            return new JsonModel(array(
+                'status' => $status,
+                'usererror'=> $usererror,
+            ));
+         }
+     }
 }

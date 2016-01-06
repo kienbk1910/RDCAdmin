@@ -48,7 +48,7 @@ return array(
                              'constraints' => array(
                              )
                          ),
-                        
+
                      ),
                     'test' => array(
                          'type' => 'segment',
@@ -60,7 +60,7 @@ return array(
                              'constraints' => array(
                              )
                          ),
-                        
+
                      ),
                     'staff' => array(
                          'type' => 'segment',
@@ -72,7 +72,7 @@ return array(
                              'constraints' => array(
                              )
                          ),
-                        
+
                      ),
 
                 ),
@@ -99,7 +99,7 @@ return array(
                              'constraints' => array(
                              )
                          ),
-                        
+
                      ),
                     'getlist' => array(
                          'type' => 'segment',
@@ -111,7 +111,7 @@ return array(
                              'constraints' => array(
                              )
                          ),
-                        
+
                      ),
                 )
 			),
@@ -138,7 +138,7 @@ return array(
                              'constraints' => array(
                              )
                          ),
-                        
+
                      ),
                     'detail' => array(
                      'type' => 'segment',
@@ -150,7 +150,7 @@ return array(
                          'constraints' => array(
                          )
                      ),
-                        
+
                      ),
                 )
             ),
@@ -177,10 +177,20 @@ return array(
                          'constraints' => array(
                          )
                      ),
-                    
                  ),
+                'change-password' => array(
+                    'type' => 'segment',
+                    'options' => array(
+                        'route'    => '/change-password',
+                        'defaults' => array(
+                            'action' => 'changePassword',
+                        ),
+                        'constraints' => array(
+                        )
+                    ),
+                ),
             )
-        )   
+        )
         ),
     ),
     'service_manager' => array(
@@ -209,7 +219,7 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-     
+
         ),
          'factories' => array(
              'Application\Controller\Index' => 'Application\Factory\IndexControllerFactory',
@@ -371,7 +381,7 @@ return array(
                     ),
                 )
             ),
-        ), 
+        ),
     ),
 
 );

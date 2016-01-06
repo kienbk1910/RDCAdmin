@@ -66,26 +66,34 @@
                   </div><!-- /.tab-pane -->
 
                   <div class="tab-pane" id="settings">
-                    <form class="form-horizontal">
+                    <div class="form-horizontal">
+                      <div class="form-group">
+                        <label for="inputName" class="col-sm-2 control-label">Mật Khẩu Cũ</label>
+                        <div class="col-sm-5">
+                          <input type="password" class="form-control" id="inputName" name="old_password">
+                        </div>
+                      </div>
+
                       <div class="form-group">
                         <label for="inputName" class="col-sm-2 control-label">Mật Khẩu Mới</label>
                         <div class="col-sm-5">
-                          <input type="email" class="form-control" id="inputName" placeholder="Name">
+                          <input type="password" class="form-control" id="inputName" name="new_password">
                         </div>
                       </div>
+
                       <div class="form-group">
                         <label for="inputEmail" class="col-sm-2 control-label">Xác Nhận</label>
                         <div class="col-sm-5">
-                          <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                          <input type="password" class="form-control" id="inputName" name="new_password1">
                         </div>
                       </div>
 
                       <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                          <button type="submit" class="btn btn-danger">Đổi</button>
+                          <button type="submit" class="btn btn-danger" id="change-password">Đổi</button>
                         </div>
                       </div>
-                    </form>
+                    </div>
                   </div><!-- /.tab-pane -->
                 </div><!-- /.tab-content -->
               </div><!-- /.nav-tabs-custom -->
@@ -102,6 +110,7 @@
         if(response.status == 'error') return response.msg; //msg will be shown in editable form
     }
   });
+
   $('#pro-phone').editable();
   $('#pro-note').editable();
   // for upload file
@@ -120,6 +129,51 @@
     $("#choose-image").change(function(){
         readURL(this);
         $('#btn-change-avatar').prop("disabled", false);
+    });
 
+    /* Validate form */
+    function validateFormRegister() {
+        /* Old password */
+        if ($( "input[name='old_password']" ).val().length == 0 ) {
+            $( "input[name='old_password']" ).parent().addClass("has-error");
+            return false;
+        }
+
+        $( "input[name='old_password']" ).parent().removeClass("has-error");
+        $( "input[name='old_password']" ).parent().addClass("has-success");
+
+        /* new password */
+        if ($( "input[name='new_password']" ).val().length == 0 ) {
+            $( "input[name='new_password']" ).parent().addClass("has-error");
+            return false;
+        }
+
+        $( "input[name='new_password']" ).parent().removeClass("has-error");
+        $( "input[name='new_password']" ).parent().addClass("has-success");
+
+        /* new password1 */
+        if ($( "input[name='new_password1']" ).val() != $( "input[name='new_password']" ).val()) {
+            $( "input[name='new_password1']" ).parent().addClass("has-error");
+            return false;
+        }
+
+        $( "input[name='new_password1']" ).parent().removeClass("has-error");
+        $( "input[name='new_password1']" ).parent().addClass("has-success");
+        return true;
+    }
+
+    /* On submit change password */
+    $("#change-password").click(function() {
+        if (validateFormRegister() == true)
+        {
+            $.post("/profile/change-password",
+            {
+              old_password: $("input[name='old_password']").val(),
+              new_password: $("input[name='new_password']").val(),
+              new_password1: $("input[name='new_password1']").val(),
+            },
+            function(data, status) {
+            });
+        }
     });
 </script>

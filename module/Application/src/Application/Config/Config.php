@@ -17,7 +17,9 @@ namespace Application\Config;
     const USERNAME_MIN_LEN = 5;
 
     /* Add user */
+    const PROCESS_OK = "ok";
     const PASSWORD_DIFFERENT = "Password is not mapping";
+    const PASSWORD_IS_WRONG = "Your password is wrong or the same password";
     const USER_EXIST = "Username is exist";
     const PASSWORD_EXCEED_MAX_LEN = "Password length exceed maximum length";
     const PASSWORD_BENEATH_MIN_LEN = "Password length beneath minimum length";
