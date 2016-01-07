@@ -68,6 +68,10 @@
                   <div class="tab-pane" id="settings">
                     <div class="form-horizontal">
                       <div class="form-group">
+                        <label class="col-sm-4 control-label" id="usererror"></label>
+                      </div>
+
+                      <div class="form-group">
                         <label for="inputName" class="col-sm-2 control-label">Mật Khẩu Cũ</label>
                         <div class="col-sm-5">
                           <input type="password" class="form-control" id="inputName" name="old_password">
@@ -106,7 +110,7 @@
 
   $('#pro-email').editable({
      success: function(response, newValue) {
-       response = JSON.parse(response);
+        response = JSON.parse(response);
         if(response.status == 'error') return response.msg; //msg will be shown in editable form
     }
   });
@@ -173,6 +177,16 @@
               new_password1: $("input[name='new_password1']").val(),
             },
             function(data, status) {
+                document.getElementById("usererror").innerHTML = data.usererror;
+                if (data.usererror == "<?php Print(Config::PASSWORD_BENEATH_MIN_LEN); ?>"
+                    || data.usererror == "<?php Print(Config::PASSWORD_EXCEED_MAX_LEN); ?>")
+                {
+                    $( "input[name='new_password']" ).parent().addClass("has-error");
+                }
+                else if (data.usererror == "<?php Print(Config::PASSWORD_IS_WRONG); ?>")
+                {
+                    $( "input[name='old_password']" ).parent().addClass("has-error");
+                }
             });
         }
     });

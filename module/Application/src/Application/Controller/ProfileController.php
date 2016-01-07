@@ -100,23 +100,14 @@ use Application\Config\Config;
                 $usererror = Config::PASSWORD_BENEATH_MIN_LEN;
             }
 
-            $status;
-            if (empty($usererror)) {
+            if (empty($usererror))
+            {
                 $new_password_md5 = md5($new_password);
                 $old_password_md5 = md5($old_password);
-                if ($this->databaseService->changePassword($this->user->id, $new_password_md5, $old_password_md5) != NULL) {
-                    $status = "success";
-                    $usererror = Config::PROCESS_OK;
-                } else {
-                    $status = "error";
-                    $usererror = Config::PASSWORD_IS_WRONG;
-                }
-            } else {
-                $status = "error";
+                $usererror = $this->databaseService->changePassword($this->user->id, $new_password_md5, $old_password_md5);
             }
 
             return new JsonModel(array(
-                'status' => $status,
                 'usererror'=> $usererror,
             ));
          }

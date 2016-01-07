@@ -18,6 +18,7 @@ use Zend\Paginator\Adapter\DbSelect;
 use Zend\Paginator\Paginator;
 use Zend\Db\ResultSet\ResultSet;
 use Application\Model\User;
+use Application\Config\Config;
 
 class ZendDbSqlMapper implements IndexMapperInterface
 {
@@ -103,23 +104,54 @@ class ZendDbSqlMapper implements IndexMapperInterface
     /* change password */
     public function changePassword($id_user, $new_password, $old_password) {
         $sql = new Sql($this->dbAdapter);
-        $update = $sql->update('users');
-        $update->set(array('password' => $new_password));
-        $string = " id = ". $id_user. " AND password = \"" .$old_password. "\" LIMIT 1";
-        $update->Where($string);
-        $selectString = $sql->getSqlStringForSqlObject($update);
-        $ret;
-        try {
+        $select = $sql->select('users')->Where(array(
+                        'id = ? ' => $id_user,
+                        'password = ?' => $old_password,
+                        ));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $str_ret = Config::PROCESS_OK;
+        try
+        {
             $ret = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
-            if ($ret->count() == 1) {
-                return $ret;
-            } else {
-                return NULL;
+            if ($ret->count() == 1)
+            {
+                $update = $sql->update('users');
+                $update->set(array('password' => $new_password));
+                $string = " id = ". $id_user. " AND password = \"" .$old_password. "\" LIMIT 1";
+                $update->Where($string);
+                $selectString = $sql->getSqlStringForSqlObject($update);
+
+                try
+                {
+                    $ret = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+                    if ($ret->count() == 1)
+                    {
+                        $str_ret = Config::PROCESS_OK;
+                    }
+                    else
+                    {
+                        $str_ret =  Config::PASSWORD_IS_THE_SAME;
+                    }
+                }
+                catch (\Exception $e)
+                {
+                    $str_ret = Config::PROCESS_NG;
+                }
             }
-        } catch (\Exception $e) {
-            return NULL;
+            else
+            {
+                /* Password is not map */
+                $str_ret = Config::PASSWORD_IS_WRONG;
+            }
         }
+        catch (Exception $e)
+        {
+            $str_ret =  Config::PROCESS_NG;
+        }
+
+        return $str_ret;
     }
+
     public function getListByRole($role){
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('users');

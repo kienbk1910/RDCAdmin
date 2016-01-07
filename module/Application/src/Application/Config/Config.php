@@ -19,15 +19,18 @@ namespace Application\Config;
 
 
     /* Add user */
-    const PROCESS_OK = "ok";
+    const PROCESS_OK = "Processing successfully";
+    const PROCESS_NG = "Genaral error while processing";
     const PASSWORD_DIFFERENT = "Password is not mapping";
-    const PASSWORD_IS_WRONG = "Your password is wrong or the same password";
+    const PASSWORD_IS_THE_SAME = "Password is the same as the old one";
+    const PASSWORD_IS_WRONG = "Your password is wrong";
     const USER_EXIST = "Username is exist";
+    const USER_IS_NOT_EXIST = "Username is not exist";
     const PASSWORD_EXCEED_MAX_LEN = "Password length exceed maximum length";
     const PASSWORD_BENEATH_MIN_LEN = "Password length beneath minimum length";
     const USERNAME_EXCEED_MAX_LEN = "Username length exceed maximum length";
     const USERNAME_BENEATH_MIN_LEN = "Username length beneath minimum length";
-  
+
 
   public static function getMinValue()
   {
