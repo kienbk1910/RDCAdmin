@@ -13,7 +13,7 @@ use Application\Config\Config;
 
  class ManagerUsersController extends BaseController
  {
-      protected $databaseService;
+     
 
      public function __construct(IndexServiceInterface $databaseService,AuthenticationService $auth)
      {

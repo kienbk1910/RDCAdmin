@@ -120,4 +120,11 @@ class ZendDbSqlMapper implements IndexMapperInterface
             return NULL;
         }
     }
+    public function getListByRole($role){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('users');
+        $select->Where(array('users.role_id = ?' => $role));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+    }
 }

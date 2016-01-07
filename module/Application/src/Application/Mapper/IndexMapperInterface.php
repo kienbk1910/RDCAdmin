@@ -11,4 +11,5 @@
  	  public function getTotalUsers();
       public function getListUsers($start,$length,$search);
       public function changePassword($id_user, $password, $old_password);
+      public function getListByRole($role);
 }

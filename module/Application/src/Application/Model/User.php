@@ -123,7 +123,6 @@ class User
         $this->create_date = $create_date;
         return $this;
     }
-
     public function __construct($id, $username, $password, $role_id)
     {
         $this->id = $id;

@@ -16,7 +16,6 @@ use Application\Config\Config;
 
  class ProfileController extends BaseController
  {
-      protected $databaseService;
 
      public function __construct(IndexServiceInterface $databaseService,AuthenticationService $auth)
      {

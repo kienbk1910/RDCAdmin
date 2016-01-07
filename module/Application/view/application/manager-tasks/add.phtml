@@ -26,14 +26,14 @@
                                 <h3 class="box-title">Khách Hàng</h3>
                               </div><!-- /.box-header -->
                             
-                             <div class="box-body">
+                             <div class="box-body form-horizontal">
                                <div class="form-group">
                                   <label for="inputName" class="col-sm-3 control-label">Người Gửi</label>
                                   <div class="col-sm-9">
-                                    <select class="form-control">
-                                    <option>RDC</option>
-                                      <option>Nguyễn A</option>
-                                      <option>Văn B</option>
+                                    <select class="form-control js-example-basic-single">
+                                       <?php foreach($agencys as $agency){
+                                       
+                                        }?>
                                     </select>
                                   </div>
                                 </div>
@@ -63,14 +63,14 @@
                                <div class="box-header with-border">
                                 <h3 class="box-title">Nhà Cung Cấp</h3>
                               </div><!-- /.box-header -->
-                               <div class="box-body">
+                               <div class="box-body form-horizontal">
                              <div class="form-group">
                                 <label for="inputName" class="col-sm-3 control-label">Xử Lý</label>
                                 <div class="col-sm-9">
-                                  <select class="form-control">
-                                    <option>RDC</option>
-                                    <option>Nguyễn A</option>
-                                    <option>Văn B</option>
+                                  <select class="form-control js-example-basic-single">
+                                      <?php foreach($agencys as $agency){
+                                           
+                                      }?>
                                   </select>
                                 </div>
                               </div>
@@ -112,13 +112,14 @@
 
 </section><!-- /.content -->
 <script type="text/javascript">
-
+  $(document).ready(function() {
+     $(".js-example-basic-single").select2();
     $("#cus-date-start").datepicker();
     $("#cus-date-start").datepicker( "option", "dateFormat", "dd/mm/yy");
-    $( "#cus-date-start" ).datepicker( "option",
-        $.datepicker.regional[ "vi" ] );
+    $("#cus-date-start" ).datepicker( "option", $.datepicker.regional[ "vi" ] );
     
     $("#cus-date-end").datepicker();
     $("#pro-date-start").datepicker();
     $("#pro-date-end").datepicker();
+  });
   </script>

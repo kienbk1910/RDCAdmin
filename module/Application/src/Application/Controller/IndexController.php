@@ -7,13 +7,13 @@ namespace Application\Controller;
  use Zend\Authentication\AuthenticationService;
  class IndexController extends BaseController
  {
-      protected $couponService;
 
-     public function __construct(IndexServiceInterface $couponService,AuthenticationService $auth)
+
+     public function __construct(IndexServiceInterface $databaseService,AuthenticationService $auth)
      
      {
         
-        $this->couponService = $couponService;
+        $this->databaseService = $databaseService;
         $this->auth = $auth;
         $this->user = $auth->getIdentity();
          

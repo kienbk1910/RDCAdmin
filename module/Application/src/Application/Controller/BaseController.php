@@ -8,6 +8,7 @@
  {
       protected $auth;
       protected $user;
+      protected $databaseService;
       protected function checkAuth(){
         if(!$this->auth->hasIdentity()){
                return $this->redirect()->toRoute('auth');
