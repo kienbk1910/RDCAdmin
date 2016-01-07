@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Jeu 17 Décembre 2015 à 18:02
+-- Généré le :  Jeu 07 Janvier 2016 à 17:51
 -- Version du serveur :  10.1.8-MariaDB
 -- Version de PHP :  5.5.30
 
@@ -194,8 +194,8 @@ INSERT INTO `roles` (`id`, `name`) VALUES
 CREATE TABLE `tasks` (
   `id` int(11) NOT NULL,
   `agency_id` int(11) NOT NULL,
-  `custumer_id` int(11) NOT NULL,
-  `certificate_id` int(11) NOT NULL,
+  `custumer` varchar(200) NOT NULL,
+  `certificate` varchar(400) NOT NULL,
   `cost_sell` int(11) NOT NULL,
   `date_open` datetime NOT NULL,
   `date_end` datetime NOT NULL,
@@ -224,6 +224,8 @@ CREATE TABLE `users` (
   `username` varchar(20) NOT NULL,
   `password` varchar(50) NOT NULL,
   `email` text,
+  `phone` varchar(40) NOT NULL,
+  `note` date NOT NULL,
   `avatar` text,
   `role_id` int(3) NOT NULL,
   `block` int(1) NOT NULL,
@@ -234,9 +236,21 @@ CREATE TABLE `users` (
 -- Contenu de la table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `email`, `avatar`, `role_id`, `block`, `create_date`) VALUES
-(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'kienbk1910gmail.com', NULL, 1, 1, '2015-12-16 00:00:00'),
-(2, 'user', 'ee11cbb19052e40b07aac0ca060c23ee', NULL, NULL, 4, 1, '0000-00-00 00:00:00');
+INSERT INTO `users` (`id`, `username`, `password`, `email`, `phone`, `note`, `avatar`, `role_id`, `block`, `create_date`) VALUES
+(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'fdsfsdfsdf@gmail.com', '', '0000-00-00', '092659baoxaydung_5_5679698f7baac.jpg', 1, 1, '2015-12-16 00:00:00'),
+(2, 'user', 'ee11cbb19052e40b07aac0ca060c23ee', NULL, '', '0000-00-00', NULL, 4, 1, '0000-00-00 00:00:00'),
+(3, 'adminf', '21232f297a57a5a743894a0e4a801fc3', 'dfdffdg0@gmail.com', '', '0000-00-00', '092659baoxaydung_5_5679698f7baac.jpg', 1, 1, '2015-12-16 00:00:00'),
+(4, 'fdsf', '21232f297a57a5a743894a0e4a801fc3', 'dfdffdg0@gmail.com', '', '0000-00-00', '092659baoxaydung_5_5679698f7baac.jpg', 1, 1, '2015-12-16 00:00:00'),
+(5, 'fdsfsdf', '21232f297a57a5a743894a0e4a801fc3', 'dfdffdg0@gmail.com', '', '0000-00-00', '092659baoxaydung_5_5679698f7baac.jpg', 1, 1, '2015-12-16 00:00:00'),
+(6, 'fsfsfsdf', '21232f297a57a5a743894a0e4a801fc3', 'dfdffdg0@gmail.com', '', '0000-00-00', '092659baoxaydung_5_5679698f7baac.jpg', 1, 1, '2015-12-16 00:00:00'),
+(7, 'erer', '21232f297a57a5a743894a0e4a801fc3', 'dfdffdg0@gmail.com', '', '0000-00-00', '092659baoxaydung_5_5679698f7baac.jpg', 1, 1, '2015-12-16 00:00:00'),
+(8, 'rewrffsd', '21232f297a57a5a743894a0e4a801fc3', 'dfdffdg0@gmail.com', '', '0000-00-00', '092659baoxaydung_5_5679698f7baac.jpg', 1, 1, '2015-12-16 00:00:00'),
+(9, 'fsdfsd', '21232f297a57a5a743894a0e4a801fc3', 'dfdffdg0@gmail.com', '', '0000-00-00', '092659baoxaydung_5_5679698f7baac.jpg', 1, 1, '2015-12-16 00:00:00'),
+(10, 'RDC', '21232f297a57a5a743894a0e4a801fc3', 'dfdffdg0@gmail.com', '', '0000-00-00', '092659baoxaydung_5_5679698f7baac.jpg', 4, 1, '2015-12-16 00:00:00'),
+(11, 'Nguyễn Văn A', '21232f297a57a5a743894a0e4a801fc3', 'dfdffdg0@gmail.com', '', '0000-00-00', '092659baoxaydung_5_5679698f7baac.jpg', 4, 1, '2015-12-16 00:00:00'),
+(12, 'Phạm Thi B', '21232f297a57a5a743894a0e4a801fc3', 'dfdffdg0@gmail.com', '', '0000-00-00', '092659baoxaydung_5_5679698f7baac.jpg', 4, 1, '2015-12-16 00:00:00'),
+(13, 'Lã THị C', 'ee11cbb19052e40b07aac0ca060c23ee', NULL, '', '0000-00-00', NULL, 4, 1, '0000-00-00 00:00:00'),
+(14, 'test123', '25d55ad283aa400af464c76d713c07ad', NULL, '', '0000-00-00', NULL, 1, 0, '2016-01-06 14:03:48');
 
 --
 -- Index pour les tables exportées
@@ -306,7 +320,8 @@ ALTER TABLE `tasks`
 -- Index pour la table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`);
 
 --
 -- AUTO_INCREMENT pour les tables exportées
@@ -361,7 +376,7 @@ ALTER TABLE `tasks`
 -- AUTO_INCREMENT pour la table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

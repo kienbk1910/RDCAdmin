@@ -9,15 +9,15 @@
                   <h3 class="box-title">Tạo Hồ Sơ</h3>
                 </div><!-- /.box-header -->
                 <div class="box-body">
-                  <form role="form">
+                  <form role="form" method="post" onsubmit="return validateFormTask()">
                     <!-- text input -->
                     <div class="form-group">
                       <label>Tên Khách Hàng</label>
-                      <input type="text" class="form-control" placeholder="Enter ...">
+                      <input type="text" class="form-control" name="custumer" placeholder="Tên Khách Hàng">
                     </div>
                     <div class="form-group">
                       <label>Sản Phẩm</label>
-                      <input type="text" class="form-control"  >
+                      <input type="text" class="form-control" name="certificate"  >
                     </div>
                     <div class="row">
                           <section class="col-lg-6 connectedSortable">
@@ -30,9 +30,9 @@
                                <div class="form-group">
                                   <label for="inputName" class="col-sm-3 control-label">Người Gửi</label>
                                   <div class="col-sm-9">
-                                    <select class="form-control js-example-basic-single">
+                                    <select class="form-control js-example-basic-single" name=" agency" >
                                        <?php foreach($agencys as $agency){
-                                       
+                                         echo "<option  value=".$agency->getId().">".$agency->getUsername()."</option>";
                                         }?>
                                     </select>
                                   </div>
@@ -40,19 +40,19 @@
                                 <div class="form-group">
                                   <label for="inputName" class="col-sm-3 control-label">Thỏa Thuận</label>
                                   <div class="col-sm-9">
-                                    <input type="text" class="form-control"  >
+                                    <input type="text" class="form-control number-money" name="cost_sell"  value="0">
                                   </div>
                                 </div>
                                 <div class="form-group">
                                   <label for="inputName" class="col-sm-3 control-label">Ngày Nhận</label>
                                   <div class="col-sm-9">
-                                    <input id="cus-date-start"type="text" class="form-control"  >
+                                    <input id="cus-date-start"type="text" class="form-control" name="date_open"  >
                                   </div>
                                 </div>
                                  <div class="form-group">
                                   <label for="inputName" class="col-sm-3 control-label">Ngày Hẹn</label>
                                   <div class="col-sm-9">
-                                    <input id="cus-date-end"type="text" class="form-control"  >
+                                    <input id="cus-date-end"type="text" class="form-control" name="date_end"  >
                                   </div>
                                 </div>
                             </div>
@@ -67,29 +67,29 @@
                              <div class="form-group">
                                 <label for="inputName" class="col-sm-3 control-label">Xử Lý</label>
                                 <div class="col-sm-9">
-                                  <select class="form-control js-example-basic-single">
-                                      <?php foreach($agencys as $agency){
-                                           
-                                      }?>
+                                  <select class="form-control js-example-basic-single" name="provider">
+                                        <?php foreach($agencys as $agency){
+                                         echo "<option  value=".$agency->getId().">".$agency->getUsername()."</option>";
+                                        }?>
                                   </select>
                                 </div>
                               </div>
                                   <div class="form-group">
-                                  <label for="inputName" class="col-sm-3 control-label">Thỏa Thuận</label>
+                                  <label for="inputName" class="col-sm-3 control-label ">Thỏa Thuận</label>
                                   <div class="col-sm-9">
-                                    <input type="text" class="form-control"  >
+                                    <input type="text" class="form-control number-money" name="cost_buy" >
                                   </div>
                                 </div>
                                 <div class="form-group">
                                   <label for="inputName" class="col-sm-3 control-label">Ngày Nhận</label>
                                   <div class="col-sm-9">
-                                    <input id="pro-date-start"type="text" class="form-control"  >
+                                    <input id="pro-date-start"type="text" class="form-control" name="date_open_rp" >
                                   </div>
                                 </div>
                                  <div class="form-group">
                                   <label for="inputName" class="col-sm-3 control-label">Ngày Hẹn</label>
                                   <div class="col-sm-9">
-                                    <input id="pro-date-end"type="text" class="form-control"  >
+                                    <input id="pro-date-end"type="text" class="form-control" name="date_end_rp" >
                                   </div>
                                 </div>
                                </div>
@@ -112,14 +112,55 @@
 
 </section><!-- /.content -->
 <script type="text/javascript">
+   function validateFormTask(){
+    if($( "input[name='custumer']" ).val().length == 0 ){
+       $( "input[name='custumer']" ).parent().addClass("has-error");
+       return false;
+    }
+    $( "input[name='custumer']" ).parent().removeClass("has-error");
+    $( "input[name='custumer']" ).parent().addClass("has-success");
+    if($( "input[name='certificate']" ).val().length == 0 ){
+       $( "input[name='certificate']" ).parent().addClass("has-error");
+       return false;
+    }
+    $( "input[name='certificate']" ).parent().removeClass("has-error");
+    $( "input[name='certificate']" ).parent().addClass("has-success");
+    
+    if($( "input[name='cost_sell']" ).val().length == 0 ){
+       $( "input[name='cost_sell']" ).parent().addClass("has-error");
+       return false;
+    }
+    $( "input[name='cost_sell']" ).parent().removeClass("has-error");
+    $( "input[name='cost_sell']" ).parent().addClass("has-success");
+
+    if($( "input[name='date_open']" ).val().length == 0 ){
+       $( "input[name='date_open']" ).parent().addClass("has-error");
+       return false;
+    }
+    $( "input[name='date_open']" ).parent().removeClass("has-error");
+    $( "input[name='date_open']" ).parent().addClass("has-success");
+
+    if($( "input[name='date_end']" ).val().length == 0 ){
+       $( "input[name='date_end']" ).parent().addClass("has-error");
+       return false;
+    }
+    $( "input[name='date_end']" ).parent().removeClass("has-error");
+    $( "input[name='date_end']" ).parent().addClass("has-success");    
+
+    return true;
+  }
+  
   $(document).ready(function() {
      $(".js-example-basic-single").select2();
     $("#cus-date-start").datepicker();
     $("#cus-date-start").datepicker( "option", "dateFormat", "dd/mm/yy");
-    $("#cus-date-start" ).datepicker( "option", $.datepicker.regional[ "vi" ] );
-    
     $("#cus-date-end").datepicker();
+    $("#cus-date-end").datepicker( "option", "dateFormat", "dd/mm/yy");
     $("#pro-date-start").datepicker();
+    $("#pro-date-start").datepicker( "option", "dateFormat", "dd/mm/yy");
     $("#pro-date-end").datepicker();
+    $("#pro-date-end").datepicker( "option", "dateFormat", "dd/mm/yy");
+    $('.number-money').autoNumeric('init'); 
+
   });
   </script>
