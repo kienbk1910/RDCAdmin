@@ -143,11 +143,27 @@ return array(
                     'detail' => array(
                      'type' => 'segment',
                      'options' => array(
-                         'route'    => '/detail',
-                         'defaults' => array(
+                         'route'    => '/detail/:id',
+                           'defaults' => array(
                              'action' => 'detail',
+                              'id'=>'0',
                          ),
                          'constraints' => array(
+                             'id'   => '[1-9]\d*',
+                         )
+                     ),
+
+                     ),
+                    'change-info' => array(
+                     'type' => 'segment',
+                     'options' => array(
+                         'route'    => '/change-info',
+                           'defaults' => array(
+                             'action' => 'changeinfo',
+                       
+                         ),
+                         'constraints' => array(
+                            
                          )
                      ),
 

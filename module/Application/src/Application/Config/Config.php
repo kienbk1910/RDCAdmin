@@ -8,8 +8,11 @@ namespace Application\Config;
     const MAX_DAYS_COUNTER =30;
     const USER_ADMIN =1;
     const USER_LEAVE1 =2;
-    const USER_LEVEL2 =3;
+    const USER_LEAVE2 =3;
     const ROLE_AGENCY = 4;
+
+    // process id
+    const PROCESS_REC = 1;
     const IMAGE_PATH = "/files/users/avatar/origin/";
 
     const PASSWORD_MAX_LEN = 500;

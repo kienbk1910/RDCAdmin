@@ -25,7 +25,7 @@
       }
       public function checkRole($role){
            $this->checkAuth();
-          if($this->auth->getIdentity()->role > $role){
+          if($this->auth->getIdentity()->role_id > $role){
                return $this->redirect()->toRoute('error');
           }
       }

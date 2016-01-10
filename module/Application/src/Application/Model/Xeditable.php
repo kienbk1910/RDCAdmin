@@ -6,6 +6,7 @@ class Xeditable
 {
     const STATUS_ERROR = "error";
     const MSG_DATA_ERROR = "không đúng định dạng";
+    const MSG_DATA_EMPTY = "Dữ liệu rỗng";
     /**
      *
      * @var string

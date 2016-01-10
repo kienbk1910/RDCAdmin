@@ -4,3 +4,6 @@
 div.dataTables_length, div.dataTables_filter {
         padding-top: 0.55em;
 }
+.custum-x-editable{
+	width: 240px;
+}

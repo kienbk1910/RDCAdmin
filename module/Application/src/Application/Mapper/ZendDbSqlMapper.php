@@ -19,7 +19,7 @@ use Zend\Paginator\Paginator;
 use Zend\Db\ResultSet\ResultSet;
 use Application\Model\User;
 use Application\Config\Config;
-
+use Application\Model\Task;
 class ZendDbSqlMapper implements IndexMapperInterface
 {
 
@@ -159,4 +159,41 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $selectString = $sql->getSqlStringForSqlObject($select);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
     }
-}
+     public function insertTask(Task $task){
+        $sql = new Sql($this->dbAdapter);
+        $insert = $sql->insert('tasks');
+        $newData = $task->toArray();
+        $insert->values($newData);
+        $selectString = $sql->getSqlStringForSqlObject($insert);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+     }
+     public function getListUserByBaseRole($role){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('users');
+        $select->Where(array('users.role_id < ?' => $role));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+     }
+     public function getInfoTask($id){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('tasks');
+        $select->Where(array('tasks.id = ?' => $id));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+     }
+     public function changeInfoOfTask($id,$key,$value,$id_user){
+        $sql = new Sql($this->dbAdapter);
+        $update = $sql->update('tasks');
+        $update->set(array($key=>$value,'last_user_id' =>$id_user,'last_update'=>date('Y-m-d H:i:s')));
+        $update->Where(array('id = ?' => $id));
+        $selectString = $sql->getSqlStringForSqlObject($update);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+     }
+     public function getListProcess(){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('process');
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+     }
+     
+ }

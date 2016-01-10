@@ -1,5 +1,6 @@
   <!-- Main content -->
 <section class="content">
+
   <!-- Main row -->
   <div class="row">
     <!-- Left col -->
@@ -14,19 +15,19 @@
                     <div class="form-group">
                       <label for="inputName" class="col-sm-3 control-label">Tên Khách Hàng</label>
                       <div class="col-sm-9">
-                          <a href="#" id="name-custom" data-type="text" data-pk="1" data-url="/post" data-title="Enter username">Nguyễn Văn A</a>
+                          <a href="#" id="custumer" data-type="text" data-pk="<?php echo $task->id;?>" data-url="/manager-tasks/change-info" data-inputclass="custum-x-editable" data-title="Nhập tên Khách Hàng"><?php echo $task->custumer;?></a>
                       </div>
                      </div>
                     <div class="form-group">
                        <label for="inputName" class="col-sm-3 control-label">Sản Phẩm</label>
                           <div class="col-sm-9">
-                           <a href="#" id="name-product" data-type="text" data-pk="1" data-url="/post" data-title="Enter username">An Toàn Lao Động</a>
+                           <a href="#" id="certificate" data-inputclass="custum-x-editable" data-type="text" data-pk="<?php echo $task->id;?>" data-url="/manager-tasks/change-info" data-title="Nhập Tên Sản Phẩm"><?php echo $task->certificate;?></a>
                           </div>
                     </div>
                     <div class="form-group">
                        <label for="inputName" class="col-sm-3 control-label">Trạng Thái</label>
                           <div class="col-sm-9">
-                           <a href="#" id="process" data-type="select" data-pk="1" data-url="/post" data-title="Enter username"></a>
+                           <a data-inputclass="custum-x-editable" href="#" id="process_id" data-type="select2" data-pk="<?php echo $task->id;?>" data-value="<?php echo $task->process_id;?>"data-url="/manager-tasks/change-info" data-title="Chọn Trạng Thái"></a>
                           </div>
                     </div>
                     <div class="row">
@@ -41,13 +42,13 @@
                                <div class=" col-lg-6 form-group">
                                   <label for="inputName" class="col-sm-6 control-label">Người Gửi</label>
                                   <div class="col-sm-6">
-                                        <a href="#" id="name-agency" data-type="select" data-pk="1" data-url="/post" data-title="Enter username"></a>
+                                       <a href="#" id="agency_id" data-inputclass="custum-x-editable" data-type="select2" data-pk="<?php echo $task->id;?>" data-url="/manager-tasks/change-info" data-title="Chọn Cộng Tác Viên" data-value="<?php echo $task->agency_id;?>"></a>
                                   </div>
                                 </div>
                                 <div class="col-lg-6 form-group">
                                   <label for="inputName" class="col-sm-6 control-label">Thỏa Thuận</label>
                                   <div class="col-sm-6">
-                                    <a href="#" id="money-custom" data-type="text" data-pk="1" data-url="/post" data-title="Enter username">500,000</a>
+                                    <a href="#" id="money-custom" data-type="text" data-pk="1" data-url="/post" data-title="Enter username"><?php echo $task->cost_sell;?></a>
                                   </div>
                                 </div>
                                  </div>
@@ -55,7 +56,7 @@
                                    <div class=" col-lg-6 form-group ">
                                     <label for="inputName" class="col-sm-6 control-label">Ngày Nhận</label>
                                     <div class="col-sm-6">
-                                      <a href="#" id="cus-date-start" data-type="combodate" data-pk="1" data-url="/post" data-title="Enter username">15/05/1984</a>
+                                      <a href="#" data-inputclass="custum-x-editable" id="cus-date-start" data-type="combodate" data-pk="1" data-url="/post" data-title="Chọn Ngày"  data-value="15/05/1984"></a>
                                     </div>
                                   </div>
                                    <div class=" col-lg-6 form-group">
@@ -270,16 +271,40 @@
               </div><!-- /.box -->
     </section><!-- /.Left col -->
     <!-- right col (We are only adding the ID to make the widgets sortable)-->
-   
+<a href="#" id="dob" data-type="combodate" data-pk="1" data-url="/post" data-value="2000-05-15" data-title="Select date"></a>
+<script>
+$(function(){
+    $('#dob').editable({
+        format: 'YYYY-MM-DD',    
+        viewformat: 'DD.MM.YYYY',    
+        template: 'D / MM / YYYY',    
+        combodate: {
+                minYear: 2000,
+                maxYear: 2030,
+                minuteStep: 1
+           }
+    });
+});
+</script>
   </div><!-- /.row (main row) -->
 
 </section><!-- /.content -->
 <script type="text/javascript">
-  $('#name-custom').editable();
-  $('#name-product').editable();
+  $('#custumer').editable({
+    success: function(response, newValue) {
+        response = JSON.parse(response);
+        if(response.status == 'error') return response.msg; //msg will be shown in editable form
+    }}
+  );
+  $('#certificate').editable({
+      success: function(response, newValue) {
+        response = JSON.parse(response);
+        if(response.status == 'error') return response.msg; //msg will be shown in editable form
+    }}
+    );
   $('#money-custom').editable();
   $('#cus-date-start').editable({
-        format: 'yyyy-mm-dd',    
+        format: 'dd/mm/yyyy',    
         viewformat: 'dd/mm/yyyy',    
         datepicker: {
                 weekStart: 1
@@ -294,22 +319,28 @@
            }
         }
     );
-  $('#process').editable({
-        value: 1,    
+  $('#process_id').editable({
         source: [
-              {value: 1, text: 'Nhận Hồ Sơ'},
-              {value: 2, text: 'Đang Sử Lý'},
-              {value: 3, text: 'Sử Lý Xong'},
-              {value: 4, text: 'Giao Hồ Sơ'},
-              {value: 5, text: 'Đóng'},
-           ]
+        <?php 
+          foreach ($listprocess as $process) {
+            echo "{value: ".$process->id.", text: '".$process->name."'},";
+          }
+        ?>
+           ],
+         select2: {
+           multiple: false,
+        }
     });
-  $('#name-agency').editable({
-        value: 1,    
-        source: [
-              {value: 1, text: 'Nguyễn Văn A'},
-              {value: 2, text: 'Nguyễn Văn B'},
-              {value: 3, text: 'Nguyễn Văn C'},
-           ]
+  $('#agency_id').editable({
+         source: [
+        <?php 
+          foreach ($agencys as $agency) {
+            echo "{value: ".$agency->getId().", text: '".$agency->getUsername()."'},";
+          }
+        ?>
+           ],
+         select2: {
+           multiple: false,
+        }
     });
   </script>

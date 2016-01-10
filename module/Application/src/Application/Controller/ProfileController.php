@@ -66,7 +66,6 @@ use Application\Config\Config;
 
      public function changeEmailAction(){
         $email = $this->getRequest()->getPost('value');
-
         $result = new Xeditable();
         $validator = new \Zend\Validator\EmailAddress();
         if ($validator->isValid($email)) {

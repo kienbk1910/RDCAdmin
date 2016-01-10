@@ -3,7 +3,7 @@ namespace Application\Service;
 use Application\Mapper\IndexMapperInterface;
 use Application\Service\IndexServiceInterface;
 use Application\Model\User;
-
+ use Application\Model\Task;
 class IndexService implements IndexServiceInterface
 {
     protected $databaseMapper;
@@ -40,5 +40,19 @@ class IndexService implements IndexServiceInterface
     public function getListByRole($role){
       return $this->databaseMapper->getListByRole($role);
   }
-
+   public function insertTask(Task $task){
+      return $this->databaseMapper->insertTask($task);
+   }
+   public function getListUserByBaseRole($role){
+      return $this->databaseMapper->getListUserByBaseRole($role);
+   }
+  public function getInfoTask($id){
+     return $this->databaseMapper->getInfoTask($id);
+  }
+  public function changeInfoOfTask($id,$key,$value,$id_user){
+     return $this->databaseMapper->changeInfoOfTask($id,$key,$value,$id_user);
+  }
+  public function getListProcess(){
+    return $this->databaseMapper->getListProcess();
+  }
 }

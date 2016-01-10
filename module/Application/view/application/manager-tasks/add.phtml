@@ -19,6 +19,14 @@
                       <label>Sản Phẩm</label>
                       <input type="text" class="form-control" name="certificate"  >
                     </div>
+                    <div class="form-group">
+                      <label>Người Quản Lý</label>
+                      <select class="form-control js-example-basic-single" name="reporter_id" >
+                         <?php foreach($reporters as $reporter){
+                           echo "<option  value=".$reporter->id.">".$reporter->username."</option>";
+                          }?>
+                        </select>
+                    </div>
                     <div class="row">
                           <section class="col-lg-6 connectedSortable">
                             <div class="box box-primary">
@@ -30,7 +38,7 @@
                                <div class="form-group">
                                   <label for="inputName" class="col-sm-3 control-label">Người Gửi</label>
                                   <div class="col-sm-9">
-                                    <select class="form-control js-example-basic-single" name=" agency" >
+                                    <select class="form-control js-example-basic-single" name="agency_id" >
                                        <?php foreach($agencys as $agency){
                                          echo "<option  value=".$agency->getId().">".$agency->getUsername()."</option>";
                                         }?>
@@ -55,6 +63,12 @@
                                     <input id="cus-date-end"type="text" class="form-control" name="date_end"  >
                                   </div>
                                 </div>
+                               <div class="form-group">
+                                <label for="inputName" class="col-sm-3 control-label">Ghi Chú</label>
+                                <div class="col-sm-9">
+                                <textarea class="form-control" rows="3" name="agency_note" placeholder="Enter ..."></textarea>
+                                </div>
+                              </div>
                             </div>
                         </div>
                           </section>
@@ -67,7 +81,7 @@
                              <div class="form-group">
                                 <label for="inputName" class="col-sm-3 control-label">Xử Lý</label>
                                 <div class="col-sm-9">
-                                  <select class="form-control js-example-basic-single" name="provider">
+                                  <select class="form-control js-example-basic-single" name="provider_id">
                                         <?php foreach($agencys as $agency){
                                          echo "<option  value=".$agency->getId().">".$agency->getUsername()."</option>";
                                         }?>
@@ -83,15 +97,21 @@
                                 <div class="form-group">
                                   <label for="inputName" class="col-sm-3 control-label">Ngày Nhận</label>
                                   <div class="col-sm-9">
-                                    <input id="pro-date-start"type="text" class="form-control" name="date_open_rp" >
+                                    <input id="pro-date-start"type="text" class="form-control" name="date_open_pr" >
                                   </div>
                                 </div>
                                  <div class="form-group">
                                   <label for="inputName" class="col-sm-3 control-label">Ngày Hẹn</label>
                                   <div class="col-sm-9">
-                                    <input id="pro-date-end"type="text" class="form-control" name="date_end_rp" >
+                                    <input id="pro-date-end"type="text" class="form-control" name="date_end_pr" >
                                   </div>
                                 </div>
+                                 <div class="form-group">
+                                <label for="inputName" class="col-sm-3 control-label">Ghi Chú</label>
+                                <div class="col-sm-9">
+                                <textarea class="form-control" rows="3" name="provider_note" placeholder="Enter ..."></textarea>
+                                </div>
+                              </div>
                                </div>
                              </div>
                           </section>
@@ -146,7 +166,7 @@
     }
     $( "input[name='date_end']" ).parent().removeClass("has-error");
     $( "input[name='date_end']" ).parent().addClass("has-success");    
-
+    
     return true;
   }
   

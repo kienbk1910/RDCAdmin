@@ -1,7 +1,7 @@
 <?php
  // Filename: /module/Blog/src/Blog/Mapper/PostMapperInterface.php
  namespace Application\Mapper;
-
+ use Application\Model\Task;
  interface IndexMapperInterface
  {
 
@@ -12,4 +12,10 @@
       public function getListUsers($start,$length,$search);
       public function changePassword($id_user, $password, $old_password);
       public function getListByRole($role);
+      public function insertTask(Task $task);
+      public function getListUserByBaseRole($role);
+
+      public function getInfoTask($id);
+      public function changeInfoOfTask($id,$key,$value,$id_user);
+
 }

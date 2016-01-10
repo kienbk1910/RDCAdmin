@@ -22,9 +22,7 @@ namespace Application\Controller;
      public function indexAction()
      {
         $this->checkAuth();
-        return new ViewModel();
-    
-        
+        return new ViewModel();  
      }
    
 
