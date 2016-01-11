@@ -150,7 +150,7 @@
 }  
 
 .editable-container.popover {
-    width: auto; /* without this rule popover does not stretch */
+    width: 350px; /* without this rule popover does not stretch */
 }
 
 .editable-container.editable-inline {

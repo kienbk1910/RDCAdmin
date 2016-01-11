@@ -11,6 +11,8 @@ namespace Application\Controller;
  use Utility\Date\Date;
  use Application\Model\Xeditable;
  use Zend\Validator;
+ use Application\Model\MoneyHistory;
+ use Utility\String\StringUtility;
  class ManagerTasksController extends BaseController
  {
      public function __construct(IndexServiceInterface $databaseService,AuthenticationService $auth)
@@ -98,7 +100,8 @@ namespace Application\Controller;
              return $this->redirect()->toRoute('manager-tasks');
         }
         $task = $task->current();
-         
+        $task->date_open = Date::changeDateSQLtoVN($task->date_open);
+        $task->date_end = Date::changeDateSQLtoVN($task->date_end);
         $listprocess = $this->databaseService->getListProcess();
         $users = $this->databaseService->getListByRole(Config::ROLE_AGENCY);
 
@@ -107,10 +110,12 @@ namespace Application\Controller;
              array_push($agencys,new User($user->id,$user->username,"",""));
 
         }
+        $pay_custumer = number_format($this->databaseService->getTotalPay($id,Config::PAY_CUSTUMER));
         return new ViewModel(array(
             'task'=> $task,
             'listprocess'=>$listprocess,
             'agencys'=>$agencys,
+            'pay_custumer'=>$pay_custumer
             ));
      }
      public function changeinfoAction(){
@@ -121,7 +126,11 @@ namespace Application\Controller;
          $valid = new \Zend\Validator\NotEmpty();
         $result = new Xeditable();
         if ($valid->isValid($value)) {
+            if($name == "date_open" ||$name == "date_end" ){
+                $value = Date::changeVNtoDateSQL($value); 
+            }
              $this->databaseService->changeInfoOfTask($id,$name,$value,$this->auth->getIdentity()->id);
+            
         }else{
             $result->setStatus(Xeditable::STATUS_ERROR);
             $result->setMsg(Xeditable::MSG_DATA_EMPTY);
@@ -129,5 +138,29 @@ namespace Application\Controller;
 
         echo \Zend\Json\Json::encode($result, false);
         exit;
+     }
+     public function payAction(){
+        $this->checkLevel2();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $pay = new MoneyHistory();
+            // validate TODO
+            // user info
+            $pay->user_id = $this->auth->getIdentity()->id;
+            $pay->create_date = date('Y-m-d H:i:s');
+            $pay->last_update = $pay->create_date;
+            $pay->last_user_id = $this->auth->getIdentity()->id;
+            // info pay
+            $pay->task_id = $request->getPost('task_id');
+            $pay->money = str_replace(',','',$request->getPost('money',0));
+            $pay->date_pay = Date::changeVNtoDateSQL($request->getPost('date_pay'));
+            $pay->money_option = $request->getPost('money_option');
+            $pay->note = $request->getPost('note');
+            $pay->type = $request->getPost('type');
+            $id = $this->databaseService->insertMoneyHistory($pay);
+        }
+        return new JsonModel(array(
+        
+        ));
      }
 }

@@ -20,6 +20,8 @@ use Zend\Db\ResultSet\ResultSet;
 use Application\Model\User;
 use Application\Config\Config;
 use Application\Model\Task;
+use Application\Model\MoneyHistory;
+
 class ZendDbSqlMapper implements IndexMapperInterface
 {
 
@@ -195,5 +197,26 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $selectString = $sql->getSqlStringForSqlObject($select);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
-     
+    public function insertMoneyHistory(MoneyHistory $money){
+        $sql = new Sql($this->dbAdapter);
+        $insert = $sql->insert('money_history');
+        $newData = $money->toArray();
+        $insert->values($newData);
+        $selectString = $sql->getSqlStringForSqlObject($insert);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+    }
+    public function getTotalPay($id,$type){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('money_history');
+        $select->Where(array('money_history.task_id = ?' => $id,
+            'money_history.type = ?' => $type,
+            ));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $result = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $total = 0;
+        foreach ($result as $item) {
+            $total += $item->money;
+        }
+        return $total;
+    }
  }

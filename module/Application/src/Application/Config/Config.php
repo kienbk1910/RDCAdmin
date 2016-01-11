@@ -13,6 +13,10 @@ namespace Application\Config;
 
     // process id
     const PROCESS_REC = 1;
+    // type pay
+    const PAY_CUSTUMER = 1;
+    const PAY_PROVIDER = 2;
+
     const IMAGE_PATH = "/files/users/avatar/origin/";
 
     const PASSWORD_MAX_LEN = 500;

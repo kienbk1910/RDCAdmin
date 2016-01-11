@@ -3,7 +3,8 @@ namespace Application\Service;
 use Application\Mapper\IndexMapperInterface;
 use Application\Service\IndexServiceInterface;
 use Application\Model\User;
- use Application\Model\Task;
+use Application\Model\Task;
+use Application\Model\MoneyHistory;
 class IndexService implements IndexServiceInterface
 {
     protected $databaseMapper;
@@ -54,5 +55,11 @@ class IndexService implements IndexServiceInterface
   }
   public function getListProcess(){
     return $this->databaseMapper->getListProcess();
+  }
+  public function insertMoneyHistory(MoneyHistory $money){
+      return $this->databaseMapper->insertMoneyHistory($money);
+  }
+  public function getTotalPay($id,$type){
+      return $this->databaseMapper->getTotalPay($id,$type);
   }
 }

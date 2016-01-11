@@ -166,7 +166,19 @@ return array(
                             
                          )
                      ),
-
+                     ),
+                    'pay' => array(
+                     'type' => 'segment',
+                     'options' => array(
+                         'route'    => '/pay',
+                           'defaults' => array(
+                             'action' => 'pay',
+                       
+                         ),
+                         'constraints' => array(
+                            
+                         )
+                     ),
                      ),
                 )
             ),

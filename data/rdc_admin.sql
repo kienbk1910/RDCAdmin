@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Jeu 07 Janvier 2016 à 17:51
+-- Généré le :  Lun 11 Janvier 2016 à 18:15
 -- Version du serveur :  10.1.8-MariaDB
 -- Version de PHP :  5.5.30
 
@@ -115,13 +115,23 @@ CREATE TABLE `money_history` (
   `task_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `money` int(20) NOT NULL,
+  `date_pay` datetime NOT NULL,
   `create_date` datetime NOT NULL,
   `money_option` int(3) NOT NULL,
   `last_user_id` int(11) NOT NULL,
   `last_update` datetime NOT NULL,
-  `note` text NOT NULL,
+  `note` text,
   `type` int(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `money_history`
+--
+
+INSERT INTO `money_history` (`id`, `task_id`, `user_id`, `money`, `date_pay`, `create_date`, `money_option`, `last_user_id`, `last_update`, `note`, `type`) VALUES
+(1, 6, 1, 1666, '2016-01-11 00:00:00', '2016-01-11 17:44:07', 1, 1, '2016-01-11 17:44:07', 'rt5454543', 1),
+(2, 6, 1, 10000, '2016-01-13 00:00:00', '2016-01-11 18:07:49', 1, 1, '2016-01-11 18:07:49', 'frdere', 1),
+(3, 6, 1, 2000, '2016-01-18 00:00:00', '2016-01-11 18:13:21', 1, 1, '2016-01-11 18:13:21', 'retrewtw', 1);
 
 -- --------------------------------------------------------
 
@@ -199,19 +209,31 @@ CREATE TABLE `tasks` (
   `cost_sell` int(11) NOT NULL,
   `date_open` datetime NOT NULL,
   `date_end` datetime NOT NULL,
-  `agency_note` text NOT NULL,
+  `agency_note` text,
   `provider_id` int(11) NOT NULL,
   `cost_buy` int(30) NOT NULL,
-  `date_open_rp` datetime NOT NULL,
-  `date_end_rp` datetime NOT NULL,
-  `provider_note` text NOT NULL,
+  `date_open_pr` datetime NOT NULL,
+  `date_end_pr` datetime NOT NULL,
+  `provider_note` text,
   `process_id` int(3) NOT NULL,
-  `follower_id` int(11) NOT NULL,
+  `reporter_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `create_date` datetime NOT NULL,
   `last_user_id` int(11) NOT NULL,
   `last_update` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `tasks`
+--
+
+INSERT INTO `tasks` (`id`, `agency_id`, `custumer`, `certificate`, `cost_sell`, `date_open`, `date_end`, `agency_note`, `provider_id`, `cost_buy`, `date_open_pr`, `date_end_pr`, `provider_note`, `process_id`, `reporter_id`, `user_id`, `create_date`, `last_user_id`, `last_update`) VALUES
+(1, 2, 'phạm đức kiện', '1', 0, '0000-00-00 00:00:00', '2016-01-19 00:00:00', 'fgdfgfdgdf', 2, 1111, '2016-01-05 00:00:00', '2016-01-18 00:00:00', 'gfdgfdg', 1, 2, 1, '2016-01-10 14:52:41', 1, '2016-01-11 15:17:10'),
+(2, 2, 'rewrwerewrew', '1', 0, '2016-01-04 00:00:00', '2016-01-14 00:00:00', '', 2, 0, '2016-01-04 00:00:00', '2016-01-14 00:00:00', '', 1, 2, 1, '2016-01-10 14:55:07', 1, '2016-01-10 14:55:07'),
+(3, 2, 'rewrwerewrew', 'rewrewrewr', 0, '2016-01-04 00:00:00', '2016-01-14 00:00:00', '', 2, 0, '2016-01-04 00:00:00', '2016-01-14 00:00:00', '', 1, 1, 1, '2016-01-10 14:56:13', 1, '2016-01-10 14:56:13'),
+(4, 2, 'rewrwerewrew', 'rewrewrewr', 0, '2016-01-04 00:00:00', '2016-01-14 00:00:00', '', 2, 0, '2016-01-04 00:00:00', '2016-01-14 00:00:00', '', 1, 1, 1, '2016-01-10 14:59:59', 1, '2016-01-10 14:59:59'),
+(5, 2, 'rewrwerewrew', 'rewrewrewr', 0, '2016-01-04 00:00:00', '2016-01-14 00:00:00', '', 2, 0, '2016-01-04 00:00:00', '2016-01-14 00:00:00', '', 1, 1, 1, '2016-01-10 15:00:28', 1, '2016-01-10 15:00:28'),
+(6, 11, 'fsdfsdf', 'An Toan Lao Độngfdfdsfdsfsdfsd', 10000, '2021-11-30 00:00:00', '2016-03-14 00:00:00', '', 2, 0, '2016-01-04 00:00:00', '2016-01-14 00:00:00', '', 2, 1, 1, '2016-01-10 15:03:25', 1, '2016-01-11 15:50:58');
 
 -- --------------------------------------------------------
 
@@ -356,7 +378,7 @@ ALTER TABLE `logs`
 -- AUTO_INCREMENT pour la table `money_history`
 --
 ALTER TABLE `money_history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT pour la table `money_option`
 --
@@ -371,7 +393,7 @@ ALTER TABLE `process`
 -- AUTO_INCREMENT pour la table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT pour la table `users`
 --

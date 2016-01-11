@@ -2,6 +2,7 @@
  // Filename: /module/Blog/src/Blog/Mapper/PostMapperInterface.php
  namespace Application\Mapper;
  use Application\Model\Task;
+ use Application\Model\MoneyHistory;
  interface IndexMapperInterface
  {
 
@@ -17,5 +18,6 @@
 
       public function getInfoTask($id);
       public function changeInfoOfTask($id,$key,$value,$id_user);
-
+      public function insertMoneyHistory(MoneyHistory $money);
+      public function getTotalPay($id,$type);
 }
