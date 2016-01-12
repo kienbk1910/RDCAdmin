@@ -50,7 +50,7 @@
                                 <div class="col-lg-6 form-group">
                                   <label for="inputName" class="col-sm-6 control-label">Thỏa Thuận</label>
                                   <div class="col-sm-6">
-                                    <a href="#" id="money-custom" data-type="text" data-pk="1" data-url="/post" data-title="Enter username"><?php echo $task->cost_sell;?></a>
+                                    <a href="#" id="cost_sell" data-type="text" data-pk="<?php echo $task->id;?>" data-url="/manager-tasks/change-info" data-title="Nhập Giá"><?php echo $task->cost_sell;?></a>
                                   </div>
                                 </div>
                                  </div>
@@ -73,18 +73,18 @@
                                    <div class=" col-lg-6 form-group ">
                                     <label for="inputName" class="col-sm-6 control-label">Thanh Toán</label>
                                     <div class="col-sm-6">
-                                      <?php echo $pay_custumer; ?>
+                                      <label><?php echo $pay_custumer; ?></label>
                                     </div>
                                   </div>
                                    <div class=" col-lg-6 form-group">
-                                   
+                                     <label for="inputName" class="col-sm-6 control-label">Dư Nợ</label>
                                     <div class="col-sm-6">
-                                      <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">Thanh Toán</button>
+                                      
                                     </div>
                                   </div>
                                     
                                 </div>
-                                
+                                <button onclick="show_pay_form(1)" type="button" class="btn btn-primary btn-sm" >Thanh Toán</button>
 
                             </div>
                         </div>
@@ -96,8 +96,33 @@
                                   <li><a href="#settings" data-toggle="tab">Tài Liệu</a></li>
                                 </ul>
                                 <div class="tab-content">
-                                  <div class="active tab-pane" id="activity">
-    
+                                  <div class="active tab-pane box" id="activity">
+                                          <ul class="todo-list">
+                                          <?php foreach ($custumer_historys as $custumer_history) {?>
+                                              <li>
+                                              <!-- drag handle -->
+                                              <span class="handle">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                                <i class="fa fa-ellipsis-v"></i>
+                                              </span>
+                                              <!-- checkbox -->
+                                          
+                                              <!-- todo text -->
+                                              <span class="text"><?php echo date_format(date_create($custumer_history->date_pay),"d/m/Y");?></span>
+                                              <span class="text"><?php echo number_format($custumer_history->money)?></span>
+                                             
+                                               <small class="label label-success"><i class="fa fa-clock-o"></i> <?php echo $custumer_history->name;?></small>
+                                                <!-- Emphasis label -->
+                                              <small class="label label-danger"><i class="fa fa-clock-o"></i> <?php echo $custumer_history->username;?></small>
+                                              <!-- General tools such as edit or delete-->
+                                              <div class="tools">
+                                                <i class="fa fa-edit"></i>
+                                                <i class="fa fa-trash-o"></i>
+                                              </div>
+                                            </li>
+                                          <?php }?>
+                                          </ul>
+                                        
                                   </div><!-- /.tab-pane -->
                                   <div class="tab-pane" id="timeline">
                                      <div class="box-body chat" id="chat-box">
@@ -167,9 +192,9 @@
                               </div><!-- /.nav-tabs-custom -->
                           </section>
                            <section class="col-lg-6 connectedSortable">
-                            <div class="box box-primary">
+                            <div class="box box-danger">
                                <div class="box-header with-border">
-                                <h3 class="box-title">Khách Hàng</h3>
+                                <h3 class="box-title">Nhà Cung Cấp</h3>
                               </div><!-- /.box-header -->
                             
                              <div class="box-body">
@@ -177,13 +202,13 @@
                                <div class=" col-lg-6 form-group">
                                   <label for="inputName" class="col-sm-6 control-label">Người Gửi</label>
                                   <div class="col-sm-6">
-                                        <a href="#" id="name-agency" data-type="select" data-pk="1" data-url="/post" data-title="Enter username"></a>
+                                        <a href="#" id="provider_id" data-inputclass="custum-x-editable" data-type="select2" data-pk="<?php echo $task->id;?>" data-url="/manager-tasks/change-info" data-title="Chọn Nhà Cung Cấp" data-value="<?php echo $task->provider_id;?>"></a>
                                   </div>
                                 </div>
                                 <div class="col-lg-6 form-group">
                                   <label for="inputName" class="col-sm-6 control-label">Thỏa Thuận</label>
                                   <div class="col-sm-6">
-                                    <a href="#" id="money-custom" data-type="text" data-pk="1" data-url="/post" data-title="Enter username">500,000</a>
+                                     <a href="#" id="cost_buy" data-type="text" data-pk="<?php echo $task->id;?>" data-url="/manager-tasks/change-info" data-title="Nhập Giá"><?php echo $task->cost_buy;?></a>
                                   </div>
                                 </div>
                                  </div>
@@ -191,32 +216,71 @@
                                    <div class=" col-lg-6 form-group ">
                                     <label for="inputName" class="col-sm-6 control-label">Ngày Nhận</label>
                                     <div class="col-sm-6">
-                                      <a href="#" id="cus-date-start" data-type="combodate" data-pk="1" data-url="/post" data-title="Enter username">15/05/1984</a>
+                                      <a href="#" data-inputclass="custum-x-editable" id="date_open_pr" data-type="combodate" data-pk="<?php echo $task->id;?>" data-url="/manager-tasks/change-info" data-title="Chọn Ngày"  data-value="<?php echo $task->date_open_pr;?>"></a>
                                     </div>
                                   </div>
                                    <div class=" col-lg-6 form-group">
                                     <label for="inputName" class="col-sm-6 control-label">Ngày Hẹn</label>
                                     <div class="col-sm-6">
-                                      <a href="#" id="cus-date-end" data-type="combodate" data-pk="1" data-url="/post" data-title="Enter username">15/05/1984</a>
+                                     <a href="#" data-inputclass="custum-x-editable" id="date_end_pr" data-type="combodate" data-pk="<?php echo $task->id;?>" data-url="/manager-tasks/change-info" data-title="Chọn Ngày"  data-value="<?php echo $task->date_end_pr;?>"></a>
                                     </div>
                                   </div>
                                     
                                 </div>
-                               
+                                 <div class="row">
+                                   <div class=" col-lg-6 form-group ">
+                                    <label for="inputName" class="col-sm-6 control-label">Thanh Toán</label>
+                                    <div class="col-sm-6">
+                                      <label><?php echo $pay_provider; ?></label>
+                                    </div>
+                                  </div>
+                                   <div class=" col-lg-6 form-group">
+                                     <label for="inputName" class="col-sm-6 control-label">Dư Nợ</label>
+                                    <div class="col-sm-6">
+                                      
+                                    </div>
+                                  </div>
+                                    
+                                </div>
+                                <button type="button"onclick="show_pay_form(2)" class="btn btn-danger btn-sm" >Thanh Toán</button>
                             </div>
                         </div>
                         <!-- TAB -->
                         <div class="nav-tabs-custom">
                                 <ul class="nav nav-tabs">
-                                  <li class="active"><a href="#activity" data-toggle="tab">Thanh Toán</a></li>
-                                  <li><a href="#timeline" data-toggle="tab">Bình Luận</a></li>
-                                  <li><a href="#settings" data-toggle="tab">Tài Liệu</a></li>
+                                  <li class="active"><a href="#activity_pr" data-toggle="tab">Thanh Toán</a></li>
+                                  <li><a href="#timeline_pr" data-toggle="tab">Bình Luận</a></li>
+                                  <li><a href="#settings_pr" data-toggle="tab">Tài Liệu</a></li>
                                 </ul>
                                 <div class="tab-content">
-                                  <div class="active tab-pane" id="activity">
-    
+                                  <div class="active tab-pane" id="activity_pr">
+                                       <ul class="todo-list">
+                                          <?php foreach ($provider_historys as $custumer_history) {?>
+                                              <li>
+                                              <!-- drag handle -->
+                                              <span class="handle">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                                <i class="fa fa-ellipsis-v"></i>
+                                              </span>
+                                              <!-- checkbox -->
+                                          
+                                              <!-- todo text -->
+                                              <span class="text"><?php echo date_format(date_create($custumer_history->date_pay),"d/m/Y");?></span>
+                                              <span class="text"><?php echo number_format($custumer_history->money)?></span>
+                                             
+                                               <small class="label label-success"><i class="fa fa-clock-o"></i> <?php echo $custumer_history->name;?></small>
+                                                <!-- Emphasis label -->
+                                              <small class="label label-danger"><i class="fa fa-clock-o"></i> <?php echo $custumer_history->username;?></small>
+                                              <!-- General tools such as edit or delete-->
+                                              <div class="tools">
+                                                <i class="fa fa-edit"></i>
+                                                <i class="fa fa-trash-o"></i>
+                                              </div>
+                                            </li>
+                                          <?php }?>
+                                          </ul>
                                   </div><!-- /.tab-pane -->
-                                  <div class="tab-pane" id="timeline">
+                                  <div class="tab-pane" id="timeline_pr">
                                      <div class="box-body chat" id="chat-box">
                                       <!-- chat item -->
                                       <div class="item">
@@ -277,7 +341,7 @@
                                     </div>
                                   </div><!-- /.tab-pane -->
 
-                                  <div class="tab-pane" id="settings">
+                                  <div class="tab-pane" id="settings_pr">
                                   
                                   </div><!-- /.tab-pane -->
                                 </div><!-- /.tab-content -->
@@ -359,11 +423,8 @@
         if(response.status == 'error') return response.msg; //msg will be shown in editable form
     }}
     );
-  $('#money-custom').editable({
-    display: function(value) {
-      $(this).text(value + '$');
-    } 
-  });
+  $('#cost_sell').editable({});
+  $('#cost_buy').editable({});
   $('#date_open').editable({
         format: 'DD/MM/YYYY',    
         viewformat: 'DD/MM/YYYY',    
@@ -375,6 +436,26 @@
            }
     });
    $('#date_end').editable({
+        format: 'DD/MM/YYYY',    
+        viewformat: 'DD/MM/YYYY',    
+        template: 'D / MM / YYYY',    
+        combodate: {
+                minYear: 2000,
+                maxYear: 2030,
+                minuteStep: 1
+           }
+  });
+   $('#date_open_pr').editable({
+        format: 'DD/MM/YYYY',    
+        viewformat: 'DD/MM/YYYY',    
+        template: 'D / MM / YYYY',    
+        combodate: {
+                minYear: 2000,
+                maxYear: 2030,
+                minuteStep: 1
+           }
+    });
+   $('#date_end_pr').editable({
         format: 'DD/MM/YYYY',    
         viewformat: 'DD/MM/YYYY',    
         template: 'D / MM / YYYY',    
@@ -408,6 +489,19 @@
            multiple: false,
         }
     });
+
+   $('#provider_id').editable({
+         source: [
+        <?php 
+          foreach ($agencys as $agency) {
+            echo "{value: ".$agency->getId().", text: '".$agency->getUsername()."'},";
+          }
+        ?>
+           ],
+         select2: {
+           multiple: false,
+        }
+    });
   $('.number-money').autoNumeric('init');
   $("#date_pay").datepicker();
   $("#date_pay").datepicker( "option", "dateFormat", "dd/mm/yy");
@@ -424,6 +518,20 @@
     $( "input[name='date_pay']" ).parent().removeClass("has-error");
     return true;
   }
+  function init_pay_form(type){
+    $("input[name='type']" ).val(type); 
+    if(type == 1){
+        $("#myModalLabel").html("Khách Hàng Thanh Toán");
+    }else{
+       $("myModalLabel").html("Thanh Toán Cho Nhà Cung Cấp");
+    }
+  
+  }
+  function show_pay_form(type){
+    $("#myModal").modal('show');
+    init_pay_form(type);
+  }
+
   $('#btn_submit').click(function(){
         if(validatePayForm() == false){
           return;
@@ -444,11 +552,11 @@
                    note:note,
                    type:type
                    },
-            
             success: function(data){
-                     window.top.location = window.top.location;
+                     location.reload();
+
             }
      });
   });
-
+ 
   </script>

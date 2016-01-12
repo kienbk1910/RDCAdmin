@@ -180,6 +180,19 @@ return array(
                          )
                      ),
                      ),
+                     'payhistory' => array(
+                     'type' => 'segment',
+                     'options' => array(
+                         'route'    => '/payhistory',
+                           'defaults' => array(
+                             'action' => 'payhistory',
+                       
+                         ),
+                         'constraints' => array(
+                            
+                         )
+                     ),
+                     ),
                 )
             ),
             // profile

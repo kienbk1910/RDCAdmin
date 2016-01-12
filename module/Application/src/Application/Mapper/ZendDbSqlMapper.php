@@ -219,4 +219,15 @@ class ZendDbSqlMapper implements IndexMapperInterface
         }
         return $total;
     }
+     public function getPayHistory($id,$type){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('money_history');
+         $select->join('users', 'money_history.user_id = users.id', array('username'=>'username'), 'left')
+                ->join('money_option', 'money_history.money_option = money_option.id', array('name'=>'name'), 'left');
+        $select->Where(array('money_history.task_id = ?' => $id,
+            'money_history.type = ?' => $type,
+            ));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        return $result = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+     }
  }

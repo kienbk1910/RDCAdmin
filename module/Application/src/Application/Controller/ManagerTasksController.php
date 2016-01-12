@@ -102,6 +102,8 @@ namespace Application\Controller;
         $task = $task->current();
         $task->date_open = Date::changeDateSQLtoVN($task->date_open);
         $task->date_end = Date::changeDateSQLtoVN($task->date_end);
+        $task->date_open_pr = Date::changeDateSQLtoVN($task->date_open_pr);
+        $task->date_end_pr = Date::changeDateSQLtoVN($task->date_end_pr);
         $listprocess = $this->databaseService->getListProcess();
         $users = $this->databaseService->getListByRole(Config::ROLE_AGENCY);
 
@@ -109,13 +111,19 @@ namespace Application\Controller;
         foreach ($users as $user) {
              array_push($agencys,new User($user->id,$user->username,"",""));
 
-        }
+        } 
         $pay_custumer = number_format($this->databaseService->getTotalPay($id,Config::PAY_CUSTUMER));
+        $pay_provider = number_format($this->databaseService->getTotalPay($id,Config::PAY_PROVIDER));
+        $custumer_historys = $this->databaseService->getPayHistory($id,Config::PAY_CUSTUMER);
+        $provider_historys = $this->databaseService->getPayHistory($id,Config::PAY_PROVIDER);
         return new ViewModel(array(
             'task'=> $task,
             'listprocess'=>$listprocess,
             'agencys'=>$agencys,
-            'pay_custumer'=>$pay_custumer
+            'pay_custumer'=>$pay_custumer,
+            'custumer_historys' =>$custumer_historys,
+            'pay_provider'=>$pay_provider,
+            'provider_historys'=>$provider_historys
             ));
      }
      public function changeinfoAction(){
@@ -126,7 +134,7 @@ namespace Application\Controller;
          $valid = new \Zend\Validator\NotEmpty();
         $result = new Xeditable();
         if ($valid->isValid($value)) {
-            if($name == "date_open" ||$name == "date_end" ){
+            if($name == "date_open" || $name == "date_end" || $name == "date_open_pr" || $name == "date_end_pr"){
                 $value = Date::changeVNtoDateSQL($value); 
             }
              $this->databaseService->changeInfoOfTask($id,$name,$value,$this->auth->getIdentity()->id);
@@ -163,4 +171,25 @@ namespace Application\Controller;
         
         ));
      }
+    public function payhistoryAction(){
+        $this->checkLevel2();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $taks_id = $request->getPost('task_id');
+            $type = $request->getPost('type');
+            $historys = $this->databaseService->getPayHistory($taks_id,$type);
+            $result = array();
+            foreach ($historys as $history) {
+                $item = new MoneyHistory();
+                $item->id = $history->id;
+                 $item->username = $history->username;
+                $item->money = number_format($history->money);
+                $item->date_pay = Date::changeDateSQLtoVN($history->date_pay);
+
+                array_push($result,$item);
+            }
+          
+        }
+        return new JsonModel($result);
+    }
 }

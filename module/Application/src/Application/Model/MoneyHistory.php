@@ -17,6 +17,7 @@ class MoneyHistory
 	public $last_update;
 	public $note;
 	public $type;
+	public $username;
 	public function toArray(){
 		return   array(
 			'task_id'=>$this->task_id,

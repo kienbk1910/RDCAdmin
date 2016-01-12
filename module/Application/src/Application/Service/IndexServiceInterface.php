@@ -22,4 +22,5 @@
      public function getListProcess();
      public function insertMoneyHistory(MoneyHistory $money);
      public function getTotalPay($id,$type);
+     public function getPayHistory($id,$type);
  }
