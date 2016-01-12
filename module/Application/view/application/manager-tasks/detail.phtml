@@ -117,7 +117,7 @@
                                               <!-- General tools such as edit or delete-->
                                               <div class="tools">
                                                 <i class="fa fa-edit"></i>
-                                                <i class="fa fa-trash-o"></i>
+                                                <i class="fa fa-trash-o" onclick="pay_delete()"></i>
                                               </div>
                                             </li>
                                           <?php }?>
@@ -357,6 +357,24 @@
 
 </section><!-- /.content -->
 <!-- Modal -->
+<div class="modal fade" id="modal-confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Cảnh Báo</h4>
+      </div>
+      <div class="modal-body">
+            Dữ Liệu sẽ bị xóa
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-primary" >Xóa</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -521,9 +539,9 @@
   function init_pay_form(type){
     $("input[name='type']" ).val(type); 
     if(type == 1){
-        $("#myModalLabel").html("Khách Hàng Thanh Toán");
+        $("#myModalLabel").text("Khách Hàng Thanh Toán");
     }else{
-       $("myModalLabel").html("Thanh Toán Cho Nhà Cung Cấp");
+       $("#myModalLabel").text("Thanh Toán Cho Nhà Cung Cấp");
     }
   
   }
@@ -558,5 +576,8 @@
             }
      });
   });
+  function pay_delete(){
+       $("#modal-confirm").modal('show');
+  }
  
   </script>
