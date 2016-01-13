@@ -70,14 +70,28 @@ class ZendDbSqlMapper implements IndexMapperInterface
          return $ret;
      }
 
-     public function changeEmail($id_user,$email){
+     public function changeUserInfo($id_user,$user){
         $sql = new Sql($this->dbAdapter);
         $update = $sql->update('users');
-        $update->set(array('email'=>$email));
+        /* Validate filed */
+        if ($user->email != NULL)
+        {
+            $update->set(array('email' => $user->email));
+        }
+        else if ($user->phone != NULL)
+        {
+            $update->set(array('phone' => $user->phone));
+        }
+        else if ($user->note != NULL)
+        {
+            $update->set(array('note' => $user->note));
+        }
+
         $update->Where(array('id = ?' => $id_user));
         $selectString = $sql->getSqlStringForSqlObject($update);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
+
      public function getTotalUsers(){
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('users')

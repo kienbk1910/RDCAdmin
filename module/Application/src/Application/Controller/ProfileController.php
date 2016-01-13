@@ -64,23 +64,6 @@ use Application\Config\Config;
         return new ViewModel();
      }
 
-     public function changeEmailAction(){
-        $email = $this->getRequest()->getPost('value');
-        $result = new Xeditable();
-        $validator = new \Zend\Validator\EmailAddress();
-        if ($validator->isValid($email)) {
-             $this->databaseService->changeEmail($this->user->id,$email);
-
-            $this->user->email =  $email;
-        }else{
-            $result->setStatus(Xeditable::STATUS_ERROR);
-            $result->setMsg(Xeditable::MSG_DATA_ERROR);
-        }
-
-        echo \Zend\Json\Json::encode($result, false);
-        exit;
-     }
-
      public function changePasswordAction()
      {
          $this->checkAuth();
