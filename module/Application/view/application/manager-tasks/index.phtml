@@ -1,0 +1,101 @@
+<section class="content">
+	<table id="users-table" class="display nowrap" cellspacing="0" width="100%">
+	  
+	          <thead>
+	            <tr>
+	            	<th>#</th>
+	                <th>Tên</th>
+	                <th>Hồ Sơ</th>
+	                <th>Trạng Thái</th>
+	               	<th>Người Gửi</th>
+	               	<th>Thỏa Thuận</th>
+	               	<th>Đã Nhập</th>
+	               	<th>Ngày Nhận</th>
+	               	<th>Ngày Trả</th>
+	               	<th>Xỷ Lý</th>
+	               	<th>Phải Chi</th>
+	               	<th>Đã Chi</th>
+	               	<th>Ngày Xử Lý</th>
+	               	<th>Xử Lý Xong</th>
+	            </tr>
+	        </thead>
+	        <tfoot>
+	            <tr>
+	            	<th>#</th>
+	                <th>Tên</th>
+	                <th>Hồ Sơ</th>
+	                <th>Trạng Thái</th>
+	               	<th>Người Gửi</th>
+	               	<th>Thỏa Thuận</th>
+	               	<th>Đã Nhập</th>
+	               	<th>Ngày Nhận</th>
+	               	<th>Ngày Trả</th>
+	               	<th>Xỷ Lý</th>
+	               	<th>Phải Chi</th>
+	               	<th>Đã Chi</th>
+	               	<th>Ngày Xử Lý</th>
+	               	<th>Xử Lý Xong</th>
+	            </tr>
+	        </tfoot>
+	</table>
+</section>
+<script type="text/javascript" language="javascript" class="init">
+	
+var editor; // use a global for the submit and return data rendering in the examples
+
+	/*$('#users-talbe').DataTable( {
+		dom: 'lrtip',
+		processing: true,
+        serverSide: true,
+        ajax: {
+            url: "/manager-users/getlist",
+            type: "POST"
+        },
+		columns: [
+			{ data: "username" },
+			{ data: "role" },
+			{ data: "staus" }
+		],
+		order: [[ 3, "desc" ]],
+		buttons: [
+			{ extend: "create", editor: editor },
+			{ extend: "edit",   editor: editor },
+			{ extend: "remove", editor: editor }
+		]
+	} );*/
+		var table = $('#users-table').DataTable( {
+						"dom": '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>',
+						processing: true,
+				        serverSide: true,
+				        "scrollX": true,
+				        ajax: {
+				            url: "/manager-tasks/getlist",
+				            type: "POST"
+				        },
+				        "language": {
+				    		"url": "//cdn.datatables.net/plug-ins/1.10.10/i18n/Vietnamese.json"
+				  		},
+						columns: [
+							{ data: "DT_RowId" },
+							{ data: "custumer" },
+							{ data: "certificate" },
+							{ data: "process_name" },
+							{ data: "agency_name" },
+							{ data: "cost_sell" },
+							{ data: "custumer_pay" },
+							{ data: "date_open" },
+							{ data: "date_end" },
+							{ data: "provider_name" },
+							{ data: "cost_buy" },
+							{ data: "provider_pay" },
+							{ data: "date_open_pr" },
+							{ data: "date_end_pr" },
+						],
+
+				} );
+	 $('#users-table').on('click', 'tr', function () {
+        var data = table.row( this ).id();
+        window.open("/manager-tasks/detail/"+data);
+    } );
+	
+</script>

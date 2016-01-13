@@ -230,4 +230,30 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $selectString = $sql->getSqlStringForSqlObject($select);
         return $result = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
+      public function getTotalTask(){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('tasks')
+                ->columns(array('COUNT'=>new \Zend\Db\Sql\Expression('COUNT(*)')));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $resultSet =  $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $count = 0;
+        foreach ($resultSet as $row) {
+            $count = $row->COUNT;
+            break;
+        }
+        return $count;
+      }
+      public function getListTask($start,$length,$search,$columns,$order){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('tasks');        
+        $select->join('process', 'tasks.process_id = process.id', array('process_name'=>'name'), 'left');
+        $select->join('users', 'tasks.agency_id = users.id', array('agency_name'=>'username'), 'left');
+        $select->join(array('2users' => 'users'), 'tasks.provider_id = 2users.id', array('provider_name'=>'username'), 'left');
+        $select->where->like('tasks.custumer', '%' . $search .'%');
+        $select->offset($start)
+                ->limit($length);
+        $selectString = $sql->getSqlStringForSqlObject($select);
+     
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+      }
  }

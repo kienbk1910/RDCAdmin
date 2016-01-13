@@ -21,4 +21,6 @@
       public function insertMoneyHistory(MoneyHistory $money);
       public function getTotalPay($id,$type);
       public function getPayHistory($id,$type);
+      public function getTotalTask();
+      public function getListTask($start,$length,$search,$columns,$order);
 }     

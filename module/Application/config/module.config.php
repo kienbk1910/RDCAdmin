@@ -193,6 +193,18 @@ return array(
                          )
                      ),
                      ),
+                    'getlist' => array(
+                         'type' => 'segment',
+                         'options' => array(
+                             'route'    => '/getlist',
+                             'defaults' => array(
+                                 'action' => 'getlist',
+                             ),
+                             'constraints' => array(
+                             )
+                         ),
+
+                     ),
                 )
             ),
             // profile

@@ -65,4 +65,10 @@ class IndexService implements IndexServiceInterface
   public function getPayHistory($id,$type){
       return $this->databaseMapper->getPayHistory($id,$type);
   }
+  public function getTotalTask(){
+    return $this->databaseMapper->getTotalTask();
+  }
+  public function getListTask($start,$length,$search,$columns,$order){
+      return $this->databaseMapper->getListTask($start,$length,$search,$columns,$order);
+  }
 }
