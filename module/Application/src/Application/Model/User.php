@@ -8,49 +8,52 @@ class User
      *
      * @var int
      */
-    protected $id;
+    public $id;
 
     /**
      *
      * @var string
      */
-    protected $username;
+    public $username;
 
     /**
      *
      * @var string
      */
-    protected $password;
+    public $password;
 
     /**
      *
      * @var string
      */
-    protected $email;
+    public $email;
+    public $phone;
+    public $note;
 
     /**
      *
      * @var string
      */
-    protected $avatar;
+    public $avatar;
 
     /**
      *
      * @var string
      */
-    protected $role_id;
+    public $role_id;
 
     /**
      *
      * @var string
      */
-    protected $block;
+    public $block;
 
     /**
      *
      * @var string
      */
-    protected $create_date;
+    public $create_date;
+
     public function getId()
     {
         return $this->id;
@@ -123,6 +126,7 @@ class User
         $this->create_date = $create_date;
         return $this;
     }
+
     public function __construct($id, $username, $password, $role_id)
     {
         $this->id = $id;

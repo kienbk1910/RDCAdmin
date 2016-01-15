@@ -181,21 +181,70 @@ namespace Application\Controller;
          $value = $this->getRequest()->getPost('value');
          $name = $this->getRequest()->getPost('name');
          $id = $this->getRequest()->getPost('pk');
-         $valid = new \Zend\Validator\NotEmpty();
-        $result = new Xeditable();
-        if ($valid->isValid($value)) {
-            if($name == "date_open" || $name == "date_end" || $name == "date_open_pr" || $name == "date_end_pr"){
-                $value = Date::changeVNtoDateSQL($value); 
-            }
-             $this->databaseService->changeInfoOfTask($id,$name,$value,$this->auth->getIdentity()->id);
-            
-        }else{
-            $result->setStatus(Xeditable::STATUS_ERROR);
-            $result->setMsg(Xeditable::MSG_DATA_EMPTY);
-        }
+         $user = new User(NULL, NULL, NULL, NULL);
+         $user->email = NULL;
+         $user->phone = NULL;
+         $user->note = NULL;
+         if ($name == "pro-email") {
+             $result = new Xeditable();
+             $validator = new \Zend\Validator\EmailAddress();
+             if ($validator->isValid($value)) {
+                 $user->email = $value;
+                 $this->databaseService->changeUserInfo($this->user->id, $user);
+                 $this->user->email = $value;
+             }else{
+                 $result->setStatus(Xeditable::STATUS_ERROR);
+                 $result->setMsg(Xeditable::MSG_DATA_ERROR);
+             }
+             echo \Zend\Json\Json::encode($result, false);
+             exit;
+         }
 
-        echo \Zend\Json\Json::encode($result, false);
-        exit;
+         if ($name == "pro-phone") {
+             $result = new Xeditable();
+             $validator = new \Zend\Validator\NotEmpty();
+             if ($validator->isValid($value)) {
+                 $user->phone = $value;
+                 $this->databaseService->changeUserInfo($this->user->id, $user);
+                 $this->user->phone = $value;
+             }else{
+                 $result->setStatus(Xeditable::STATUS_ERROR);
+                 $result->setMsg(Xeditable::MSG_DATA_ERROR);
+             }
+             echo \Zend\Json\Json::encode($result, false);
+             exit;
+         }
+
+         if ($name == "pro-note") {
+             $result = new Xeditable();
+             $validator = new \Zend\Validator\NotEmpty();
+             if ($validator->isValid($value)) {
+                 $user->note = $value;
+                 $this->databaseService->changeUserInfo($this->user->id, $user);
+                 $this->user->note = $value;
+             }else{
+                 $result->setStatus(Xeditable::STATUS_ERROR);
+                 $result->setMsg(Xeditable::MSG_DATA_ERROR);
+             }
+             echo \Zend\Json\Json::encode($result, false);
+             exit;
+         }
+
+         $valid = new \Zend\Validator\NotEmpty();
+         $result = new Xeditable();
+         if ($valid->isValid($value)) {
+             if($name == "date_open" || $name == "date_end" || $name == "date_open_pr" || $name == "date_end_pr"){
+                $value = Date::changeVNtoDateSQL($value);
+             }
+             $this->databaseService->changeInfoOfTask($id,$name,$value,$this->auth->getIdentity()->id);
+
+         }else{
+             $result->setStatus(Xeditable::STATUS_ERROR);
+             $result->setMsg(Xeditable::MSG_DATA_EMPTY);
+         }
+
+         echo \Zend\Json\Json::encode($result, false);
+         exit;
      }
      public function payAction(){
         $this->checkLevel2();
