@@ -1,7 +1,53 @@
 <section class="content">
+	
+	<form class="form-horizontal">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="inputEmail3" class="col-sm-2 control-label">Từ</label>
+                      <div class="col-sm-4">
+                        <input type="email" class="form-control" id="inputEmail3">
+                      </div>
+                      <label for="inputEmail3" class="col-sm-2 control-label">Đến</label>
+                       <div class="col-sm-4">
+                       <input type="email" class="form-control" id="inputEmail3" >
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="inputEmail3" class="col-sm-2 control-label">Người Gủi</label>
+                      <div class="col-sm-4">
+                         <select id="agency_id"class="form-control js-example-basic-single" name="agency_id" >
+                               <?php foreach($agencys as $agency){
+                                 echo "<option  value=".$agency->getId().">".$agency->getUsername()."</option>";
+                                }?>
+                          </select>
+                      </div>
+                      <label for="inputEmail3" class="col-sm-2 control-label">Đến</label>
+                       <div class="col-sm-4">
+                       <input type="email" class="form-control" id="inputEmail3" >
+                      </div>
+                    </div>
+                  </div><!-- /.box-body -->
+    </form>
+	<div>
+		Ẩn Hiện: 
+		<a class="toggle-vis" data-column="1">Tên</a>
+		 - <a class="toggle-vis" data-column="2">Hồ Sơ</a>
+		 - <a class="toggle-vis" data-column="3">Trạng Thái</a> 
+		  - <a class="toggle-vis" data-column="4">Người Gửi</a> 
+		 - <a class="toggle-vis" data-column="5">Thỏa Thuận</a> 
+		  - <a class="toggle-vis" data-column="6">Đã Nhận</a>
+		 - <a class="toggle-vis" data-column="7">Ngày Nhận</a> 
+		 - <a class="toggle-vis" data-column="8">Ngày Trả</a> 
+		 -<a class="toggle-vis" data-column="9">Xỷ Lý</a>
+		 -<a class="toggle-vis" data-column="10">Phải Chi</a>
+		-<a class="toggle-vis" data-column="11">Đã Chi</a>
+		-<a class="toggle-vis" data-column="12">Ngày Xử Lý</a>
+		-<a class="toggle-vis" data-column="13">Xử Lý Xong</a>
+	</div>
 	<table id="users-table" class="display nowrap" cellspacing="0" width="100%">
 	  
 	          <thead>
+	        
 	            <tr>
 	            	<th>#</th>
 	                <th>Tên</th>
@@ -9,7 +55,7 @@
 	                <th>Trạng Thái</th>
 	               	<th>Người Gửi</th>
 	               	<th>Thỏa Thuận</th>
-	               	<th>Đã Nhập</th>
+	               	<th>Đã Nhận</th>
 	               	<th>Ngày Nhận</th>
 	               	<th>Ngày Trả</th>
 	               	<th>Xỷ Lý</th>
@@ -97,5 +143,31 @@ var editor; // use a global for the submit and return data rendering in the exam
         var data = table.row( this ).id();
         window.open("/manager-tasks/detail/"+data);
     } );
-	
+	 $('a.toggle-vis').on( 'click', function (e) {
+        e.preventDefault();
+ 
+        // Get the column API object
+        var column = table.column( $(this).attr('data-column') );
+        if($(this).hasClass('toggle-vis-hide')){
+        	$(this).removeClass('toggle-vis-hide');
+        }else{
+			$(this).addClass('toggle-vis-hide');
+        }
+ 		
+        // Toggle the visibility
+        column.visible( ! column.visible() );
+    } );
+	 $('#users-table tbody')
+        .on( 'mouseenter', 'td', function () {
+            var colIdx = table.cell(this).index().column;
+ 
+            $( table.cells().nodes() ).removeClass( 'highlight' );
+            $( table.column( colIdx ).nodes() ).addClass( 'highlight' );
+        } );
+     $(".js-example-basic-single").select2().on("change", function(e) {
+          // mostly used event, fired to the original element when the value changes
+           	$('#users-table').DataTable().column(4).search( e.val,"","").draw();
+        })
+    
+     
 </script>

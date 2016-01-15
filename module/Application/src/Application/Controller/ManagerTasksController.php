@@ -30,7 +30,16 @@ namespace Application\Controller;
      public function indexAction()
      {
          $this->checkLevel2();
-        return new ViewModel();
+         $users = $this->databaseService->getListByRole(Config::ROLE_AGENCY);
+         $agencys = array();
+           array_push($agencys,new User(0,"Tất Cả","",""));
+        foreach ($users as $user) {
+             array_push($agencys,new User($user->id,$user->username,"",""));
+
+        }
+        return new ViewModel(
+             array('agencys'=>$agencys)
+            );
      }
       public function getlistAction(){
          $this->checkAuth();

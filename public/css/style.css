@@ -11,3 +11,12 @@ div.dataTables_wrapper {
         width: 100%;
         margin: 0 auto;
 }
+.toggle-vis{
+	cursor:pointer;
+}
+.toggle-vis-hide{
+	color: red;
+}
+td.highlight {
+    background-color: whitesmoke !important;
+}
