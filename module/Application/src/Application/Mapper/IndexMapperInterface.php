@@ -7,9 +7,9 @@
  {
 
       public function getListRoles();
- 	public function updateAvatar($id_user,$avatar);
- 	public function changeEmail($id_user,$email);
- 	public function getTotalUsers();
+      public function updateAvatar($id_user,$avatar);
+      public function changeUserInfo($id_user,$email);
+      public function getTotalUsers();
       public function getListUsers($start,$length,$search);
       public function changePassword($id_user, $password, $old_password);
       public function getListByRole($role);
@@ -23,4 +23,4 @@
       public function getPayHistory($id,$type);
       public function getTotalTask();
       public function getListTask($start,$length,$search,$columns,$order);
-}     
+}
