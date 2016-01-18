@@ -3,27 +3,48 @@
 	<form class="form-horizontal">
                   <div class="box-body">
                     <div class="form-group">
-                      <label for="inputEmail3" class="col-sm-2 control-label">Từ</label>
-                      <div class="col-sm-4">
-                        <input type="email" class="form-control" id="inputEmail3">
+                      <label for="inputEmail3" class="col-sm-1 control-label col-custum">Nhận Từ</label>
+                      <div class="col-sm-2 col-custum">
+                        <input type="email" class="form-control" id="cus-date-start_1">
                       </div>
-                      <label for="inputEmail3" class="col-sm-2 control-label">Đến</label>
-                       <div class="col-sm-4">
-                       <input type="email" class="form-control" id="inputEmail3" >
+                      <label for="inputEmail3" class="col-sm-1 control-label col-custum">Đến</label>
+                       <div class="col-sm-2 col-custum">
+                       <input type="email" class="form-control" id="cus-date-start_2" >
+                      </div>
+                        <label for="inputEmail3" class="col-sm-1 control-label">Trả Từ</label>
+                      <div class="col-sm-2">
+                        <input type="email" class="form-control" id="cus-date-end_1">
+                      </div>
+                      <label for="inputEmail3" class="col-sm-1 control-label">Đến</label>
+                       <div class="col-sm-2">
+                       <input type="email" class="form-control" id="cus-date-end_2" >
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="inputEmail3" class="col-sm-2 control-label">Người Gủi</label>
-                      <div class="col-sm-4">
+                      <label for="inputEmail3" class="col-sm-2 control-label">Người Gửi</label>
+                      <div class="col-sm-2">
                          <select id="agency_id"class="form-control js-example-basic-single" name="agency_id" >
                                <?php foreach($agencys as $agency){
                                  echo "<option  value=".$agency->getId().">".$agency->getUsername()."</option>";
                                 }?>
                           </select>
                       </div>
-                      <label for="inputEmail3" class="col-sm-2 control-label">Đến</label>
-                       <div class="col-sm-4">
-                       <input type="email" class="form-control" id="inputEmail3" >
+                      <label for="inputEmail3" class="col-sm-2 control-label">Trạng Thái</label>
+                      <div class="col-sm-2">
+                         <select id="process_id"class="form-control js-example-basic-single" name="agency_id" >
+                          		<option  value="0">Tất Cả</option>;
+                               <?php foreach($processes as $process){
+                                 echo "<option  value=".$process->id.">".$process->name."</option>";
+                                }?>
+                          </select>
+                      </div>
+                      <label for="inputEmail3" class="col-sm-2 control-label">Người Xử Lý</label>
+                      <div class="col-sm-2">
+                         <select id="provider_id"class="form-control js-example-basic-single" name="agency_id" >
+                               <?php foreach($agencys as $agency){
+                                 echo "<option  value=".$agency->getId().">".$agency->getUsername()."</option>";
+                                }?>
+                          </select>
                       </div>
                     </div>
                   </div><!-- /.box-body -->
@@ -164,10 +185,46 @@ var editor; // use a global for the submit and return data rendering in the exam
             $( table.cells().nodes() ).removeClass( 'highlight' );
             $( table.column( colIdx ).nodes() ).addClass( 'highlight' );
         } );
-     $(".js-example-basic-single").select2().on("change", function(e) {
+     $("#agency_id").select2().on("change", function(e) {
           // mostly used event, fired to the original element when the value changes
            	$('#users-table').DataTable().column(4).search( e.val,"","").draw();
-        })
-    
-     
+      });
+     $("#provider_id").select2().on("change", function(e) {
+          // mostly used event, fired to the original element when the value changes
+           	$('#users-table').DataTable().column(9).search( e.val,"","").draw();
+      });
+       $("#process_id").select2().on("change", function(e) {
+          // mostly used event, fired to the original element when the value changes
+           	$('#users-table').DataTable().column(3).search( e.val,"","").draw();
+      });
+      function seach_custum_date_start(){
+      		$('#users-table').DataTable().column(7).search( $("#cus-date-start_1").val()+"-"+$("#cus-date-start_2").val(),"","").draw();
+      }
+      function seach_custum_date_end(){
+      		$('#users-table').DataTable().column(8).search( $("#cus-date-end_1").val()+"-"+$("#cus-date-end_2").val(),"","").draw();
+      }
+    $("#cus-date-start_1").datepicker({
+	  onSelect: function(dateText) {
+	     seach_custum_date_start();
+	  }
+	});
+    $("#cus-date-start_1").datepicker( "option", "dateFormat", "dd/mm/yy");
+     $("#cus-date-start_2").datepicker({
+	  onSelect: function(dateText) {
+	      seach_custum_date_start();
+	  }
+	});
+    $("#cus-date-start_2").datepicker( "option", "dateFormat", "dd/mm/yy");
+      $("#cus-date-end_1").datepicker({
+	  onSelect: function(dateText) {
+	     seach_custum_date_end();
+	  }
+	});
+    $("#cus-date-end_1").datepicker( "option", "dateFormat", "dd/mm/yy");
+    $("#cus-date-end_2").datepicker({
+	  onSelect: function(dateText) {
+	      seach_custum_date_end();
+	  }
+	});
+    $("#cus-date-end_2").datepicker( "option", "dateFormat", "dd/mm/yy");
 </script>

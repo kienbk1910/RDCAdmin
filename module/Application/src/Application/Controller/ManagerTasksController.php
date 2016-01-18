@@ -37,8 +37,10 @@ namespace Application\Controller;
              array_push($agencys,new User($user->id,$user->username,"",""));
 
         }
+        $processes = $this->databaseService->getListProcess();
         return new ViewModel(
-             array('agencys'=>$agencys)
+             array('agencys'=>$agencys,
+                'processes'=>$processes)
             );
      }
       public function getlistAction(){
@@ -49,10 +51,11 @@ namespace Application\Controller;
          $start = $request->getPost('start',0);
          $length = $request->getPost('length',10);
          $search = $request->getPost('search','');
+         $columns = $request->getPost('columns','');
          $search = $search['value'];
          $total = $this->databaseService->getTotalTask();
        
-         $tasks =$this->databaseService->getListTask($start,$length,$search,"","");
+         $tasks =$this->databaseService->getListTask($start,$length,$search,$columns,"");
          $data = new DataTablesObject();
          $data->recordsTotal = $total;
          $data->recordsFiltered = $total;

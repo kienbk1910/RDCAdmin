@@ -21,7 +21,8 @@ use Application\Model\User;
 use Application\Config\Config;
 use Application\Model\Task;
 use Application\Model\MoneyHistory;
-
+use Application\Utility\DataTableUtility;
+use Utility\Date\Date;
 class ZendDbSqlMapper implements IndexMapperInterface
 {
 
@@ -264,6 +265,55 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $select->join('users', 'tasks.agency_id = users.id', array('agency_name'=>'username'), 'left');
         $select->join(array('2users' => 'users'), 'tasks.provider_id = 2users.id', array('provider_name'=>'username'), 'left');
         $select->where->like('tasks.custumer', '%' . $search .'%');
+        $agency_seach = DataTableUtility::getSearchValue($columns,"agency_name");
+        if($agency_seach != "" && $agency_seach != 0){
+           $select->Where(array('users.id' => $agency_seach));
+        }
+        $provider_seach = DataTableUtility::getSearchValue($columns,"provider_name");
+        if($provider_seach != "" && $provider_seach != 0){
+           $select->Where(array('2users.id' => $provider_seach));
+        }
+
+        $process_seach = DataTableUtility::getSearchValue($columns,"process_name");
+        if($process_seach != "" && $process_seach != 0){
+           $select->Where(array('process.id' => $process_seach));
+        }
+
+        $date_open = DataTableUtility::getSearchValue($columns,"date_open");
+        $date_open = explode("-", $date_open);
+        $date_open_1 ="";
+        $date_open_2 ="";
+        if( count($date_open) == 2){
+            $date_open_1 =$date_open[0];
+            $date_open_2 =$date_open[1];
+        }
+        if ($date_open_1 != "" && $date_open_2 != "") {
+            $select->where->lessThanOrEqualTo("tasks.date_open", Date::changeVNtoDateSQL($date_open_2))
+                ->and->greaterThanOrEqualTo("tasks.date_open", Date::changeVNtoDateSQL($date_open_1));
+        } elseif ($date_open_1 == "" && $date_open_2 != "") {
+            $select->where->lessThanOrEqualTo("tasks.date_open", Date::changeVNtoDateSQL($date_open_2));
+        } else if ($date_open_1 != "" && $date_open_2 == "") {
+             $select->where->greaterThanOrEqualTo("tasks.date_open", Date::changeVNtoDateSQL($date_open_1));
+        }
+
+        $date_end = DataTableUtility::getSearchValue($columns,"date_end");
+        $date_end = explode("-", $date_end);
+        $date_end_1 ="";
+        $date_end_2 ="";
+        if( count($date_end) == 2){
+            $date_end_1 =$date_end[0];
+            $date_end_2 =$date_end[1];
+        }
+        if ($date_end_1 != "" && $date_end_2 != "") {
+            $select->where->lessThanOrEqualTo("tasks.date_end", Date::changeVNtoDateSQL($date_end_2))
+                ->and->greaterThanOrEqualTo("tasks.date_end", Date::changeVNtoDateSQL($date_end_1));
+        } elseif ($date_end_1 == "" && $date_end_2 != "") {
+            $select->where->lessThanOrEqualTo("tasks.date_end", Date::changeVNtoDateSQL($date_end_2));
+        } else if ($date_end_1 != "" && $date_end_2 == "") {
+             $select->where->greaterThanOrEqualTo("tasks.date_end", Date::changeVNtoDateSQL($date_end_1));
+        }
+
+        $select->order(array('tasks.last_update DESC'));
         $select->offset($start)
                 ->limit($length);
         $selectString = $sql->getSqlStringForSqlObject($select);
