@@ -260,7 +260,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
       }
       public function getListTask($start,$length,$search,$columns,$order){
         $sql = new Sql($this->dbAdapter);
-        $select = $sql->select('tasks');        
+        $select = $sql->select('tasks');
         $select->join('process', 'tasks.process_id = process.id', array('process_name'=>'name'), 'left');
         $select->join('users', 'tasks.agency_id = users.id', array('agency_name'=>'username'), 'left');
         $select->join(array('2users' => 'users'), 'tasks.provider_id = 2users.id', array('provider_name'=>'username'), 'left');
@@ -317,7 +317,17 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $select->offset($start)
                 ->limit($length);
         $selectString = $sql->getSqlStringForSqlObject($select);
-     
+
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+      }
+
+      public function getUserById($id)
+      {
+          $sql = new Sql($this->dbAdapter);
+          $select = $sql->select('users')->join('roles', 'roles.id = users.role_id', array(
+                            'role_name' => 'name'), 'left');
+          $select->Where(array('users.id = ?' => $id));
+          $selectString = $sql->getSqlStringForSqlObject($select);
+          return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
       }
  }

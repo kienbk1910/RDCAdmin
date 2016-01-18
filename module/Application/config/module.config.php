@@ -160,10 +160,10 @@ return array(
                          'route'    => '/change-info',
                            'defaults' => array(
                              'action' => 'changeinfo',
-                       
+
                          ),
                          'constraints' => array(
-                            
+
                          )
                      ),
                      ),
@@ -173,10 +173,10 @@ return array(
                          'route'    => '/pay',
                            'defaults' => array(
                              'action' => 'pay',
-                       
+
                          ),
                          'constraints' => array(
-                            
+
                          )
                      ),
                      ),
@@ -186,10 +186,10 @@ return array(
                          'route'    => '/payhistory',
                            'defaults' => array(
                              'action' => 'payhistory',
-                       
+
                          ),
                          'constraints' => array(
-                            
+
                          )
                      ),
                      ),
@@ -220,14 +220,16 @@ return array(
             ),
             'may_terminate' => true,
             'child_routes' => array (
-                'change-email' => array(
+                'user-info' => array(
                      'type' => 'segment',
                      'options' => array(
-                         'route'    => '/change-email',
+                         'route'    => '/user-info/:id',
                          'defaults' => array(
-                             'action' => 'changeEmail',
+                             'action' => 'userInfo',
+                             'id'=>'0',
                          ),
                          'constraints' => array(
+                              'id'   => '[1-9]\d*',
                          )
                      ),
                  ),

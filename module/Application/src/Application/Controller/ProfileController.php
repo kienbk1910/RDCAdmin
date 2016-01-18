@@ -13,6 +13,7 @@ use Zend\InputFilter\FileInput;
 use Zend\Validator;
 use Application\Model\Xeditable;
 use Application\Config\Config;
+use Application\Model\User;
 
  class ProfileController extends BaseController
  {
@@ -93,5 +94,28 @@ use Application\Config\Config;
                 'usererror'=> $usererror,
             ));
          }
+     }
+
+     public function userInfoAction()
+     {
+         $this->checkLevel2();
+         $id = $this->params()->fromRoute('id', 0);
+         $request = $this->getRequest();
+         $usererror = array();
+         if ($request->isPost()) {
+         }
+         $db_users = $this->databaseService->getUserById($id);
+         $role_name;
+         foreach ($db_users as $db_user) {
+             $user = new User($id, $db_user->username, NULL, NULL);
+             $user->avatar = $db_user->avatar;
+             $role_name = $db_user->role_name;
+         }
+         $usererror = Config::PROCESS_OK;
+         return new ViewModel(array(
+                 'usererror' => $usererror,
+                 'user' => $user,
+                 'role_name' => $role_name,
+         ));
      }
 }

@@ -1,0 +1,189 @@
+<?php use Application\Config\Config; ?>
+  <!-- Main content -->
+<section class="content">
+  <!-- Main row -->
+  <div class="row">
+    <!-- Left col -->
+    <section class="col-lg-3 connectedSortable">
+              <div class="box box-primary">
+                <div class="box-body box-profile">
+                  <img class="profile-user-img img-responsive img-circle" id="image-avartar" src="<?php echo Config::IMAGE_PATH; echo $user->avatar?>" alt="User profile picture">
+                  <h3 class="profile-username text-center"> <?php echo $user->username ?> </h3>
+                  <p class="text-muted text-center"><?php echo $role_name ?></p>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+
+    </section><!-- /.Left col -->
+    <!-- right col (We are only adding the ID to make the widgets sortable)-->
+    <section class="col-lg-9 connectedSortable">
+      <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                  <li class="active"><a href="#activity" data-toggle="tab">Thông Tin Cá Nhân</a></li>
+                  <li><a href="#timeline" data-toggle="tab">Thông Tin Tài Chính</a></li>
+                  <li><a href="#settings" data-toggle="tab">Khôi phục Mật Khẩu</a></li>
+                </ul>
+                <div class="tab-content">
+                  <div class="active tab-pane" id="activity">
+
+                    <form class="form-horizontal">
+                      <div class="form-group">
+                        <label for="inputName" class="col-sm-2 control-label">Email</label>
+                        <div class="col-sm-10">
+                          <a href="#" id="pro-email" data-type="text" data-pk="1" data-url="/manager-tasks/change-info" data-title="Nhập Email"><?php echo $this->identity()->email;?> </a>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="inputEmail" class="col-sm-2 control-label">Phone</label>
+                        <div class="col-sm-10">
+                           <a href="#" id="pro-phone" data-type="text" data-pk="1" data-url="/manager-tasks/change-info" data-title="Enter username"><?php echo $this->identity()->phone;?> </a>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="inputEmail" class="col-sm-2 control-label">Mô tả</label>
+                        <div class="col-sm-10">
+                           <a href="#" id="pro-note" data-type="textarea" data-pk="1" data-url="/manager-tasks/change-info" data-title="Enter username"><?php echo $this->identity()->note;?> </a>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                          <button type="submit" class="btn btn-danger" id="block-user">Block</button>
+                        </div>
+                      </div>
+
+                    </form>
+                  </div><!-- /.tab-pane -->
+                  <div class="tab-pane" id="timeline">
+                    <h1>Đang Phát triển</h1>
+                  </div><!-- /.tab-pane -->
+
+                  <div class="tab-pane" id="settings">
+                    <div class="form-horizontal">
+                     <!-- alert-danger -->
+                     <div id="usererror" style="display: none;">
+                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                         <h4><i class="icon fa fa-ban"></i> Alert! </h4>
+                         <p id="error_message"> </p>
+                     </div><!-- /.alert-danger  -->
+
+                      <div class="form-group">
+                        <label for="inputName" class="col-sm-2 control-label">Mật Khẩu Mới</label>
+                        <div class="col-sm-5">
+                          <input type="password" class="form-control" id="inputName" name="new_password">
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="inputEmail" class="col-sm-2 control-label">Xác Nhận</label>
+                        <div class="col-sm-5">
+                          <input type="password" class="form-control" id="inputName" name="new_password1">
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                          <button type="submit" class="btn btn-danger" id="change-password">Đổi</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div><!-- /.tab-pane -->
+                </div><!-- /.tab-content -->
+              </div><!-- /.nav-tabs-custom -->
+
+    </section><!-- right col -->
+  </div><!-- /.row (main row) -->
+
+</section><!-- /.content -->
+<script type="text/javascript">
+  $('#pro-email').editable({
+     success: function(response, newValue) {
+        response = JSON.parse(response);
+        if(response.status == 'error') return response.msg; //msg will be shown in editable form
+    }
+  });
+
+  $('#pro-phone').editable({
+      success: function(response, newValue) {
+          response = JSON.parse(response);
+          if(response.status == 'error') return response.msg; //msg will be shown in editable form
+      }
+  });
+
+  $('#pro-note').editable({
+      success: function(response, newValue) {
+          response = JSON.parse(response);
+          if(response.status == 'error') return response.msg; //msg will be shown in editable form
+      }
+  });
+
+  // for upload file
+   function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#image-avartar').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $("#choose-image").change(function(){
+        readURL(this);
+        $('#btn-change-avatar').prop("disabled", false);
+    });
+
+    /* Validate form */
+    function validateFormRegister() {
+        /* new password */
+        if ($( "input[name='new_password']" ).val().length == 0 ) {
+            $( "input[name='new_password']" ).parent().addClass("has-error");
+            return false;
+        }
+
+        $( "input[name='new_password']" ).parent().removeClass("has-error");
+        $( "input[name='new_password']" ).parent().addClass("has-success");
+
+        /* new password1 */
+        if ($( "input[name='new_password1']" ).val() != $( "input[name='new_password']" ).val()) {
+            $( "input[name='new_password1']" ).parent().addClass("has-error");
+            return false;
+        }
+
+        $( "input[name='new_password1']" ).parent().removeClass("has-error");
+        $( "input[name='new_password1']" ).parent().addClass("has-success");
+        return true;
+    }
+
+    /* On submit change password */
+    $("#change-password").click(function() {
+        if (validateFormRegister() == true)
+        {
+            $.post("/profile/change-password",
+            {
+              old_password: $("input[name='old_password']").val(),
+              new_password: $("input[name='new_password']").val(),
+              new_password1: $("input[name='new_password1']").val(),
+            },
+            function(data, status) {
+                var usererror_element = document.getElementById("usererror");
+                usererror_element.style.display = "";
+                document.getElementById("error_message").innerHTML = data.usererror;
+                usererror_element.className = "alert alert-success alert-dismissable";
+                if (data.usererror != "<?php Print(Config::PROCESS_OK); ?>") {
+                    usererror_element.className = "alert alert-danger alert-dismissable";
+                }
+                else if (data.usererror == "<?php Print(Config::PASSWORD_BENEATH_MIN_LEN); ?>"
+                    || data.usererror == "<?php Print(Config::PASSWORD_EXCEED_MAX_LEN); ?>")
+                {
+                    $( "input[name='new_password']" ).parent().addClass("has-error");
+                }
+                else if (data.usererror == "<?php Print(Config::PASSWORD_IS_WRONG); ?>")
+                {
+                    $( "input[name='old_password']" ).parent().addClass("has-error");
+                }
+            });
+        }
+    });
+</script>

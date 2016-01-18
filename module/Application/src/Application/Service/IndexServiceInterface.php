@@ -26,4 +26,5 @@
 
      public function getTotalTask();
      public function getListTask($start,$length,$search,$columns,$order);
+     public function getUserById($id);
  }

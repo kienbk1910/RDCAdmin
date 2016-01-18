@@ -5,7 +5,7 @@
 	                <th>Tài Khoản</th>
 	                <th>Quyền</th>
 	                <th>Trạng Thái</th>
-	               
+
 	            </tr>
 	        </thead>
 	        <tfoot>
@@ -18,7 +18,7 @@
 	</table>
 </section>
 <script type="text/javascript" language="javascript" class="init">
-	
+
 var editor; // use a global for the submit and return data rendering in the examples
 
 	/*$('#users-talbe').DataTable( {
@@ -53,17 +53,19 @@ var editor; // use a global for the submit and return data rendering in the exam
 				    		"url": "//cdn.datatables.net/plug-ins/1.10.10/i18n/Vietnamese.json"
 				  		},
 						columns: [
-						
+
 							{ data: "username" },
 							{ data: "role" },
 							{ data: "status" }
-						
+
 						],
 
 				} );
 	 $('#users-table').on('click', 'tr', function () {
+        //var data = table.row( this ).id();
+        //alert( 'You clicked on '+data+'\'s row' );
         var data = table.row( this ).id();
-        alert( 'You clicked on '+data+'\'s row' );
+        window.open("/profile/user-info/"+data);
     } );
-	
+
 </script>
