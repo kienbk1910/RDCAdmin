@@ -69,20 +69,20 @@
                       <div class="form-group">
                         <label for="inputName" class="col-sm-2 control-label">Mật Khẩu Mới</label>
                         <div class="col-sm-5">
-                          <input type="password" class="form-control" id="inputName" name="new_password">
+                          <input type="password" class="form-control" id="new_password" name="new_password" placeholder="" value="">
                         </div>
                       </div>
 
                       <div class="form-group">
                         <label for="inputEmail" class="col-sm-2 control-label">Xác Nhận</label>
                         <div class="col-sm-5">
-                          <input type="password" class="form-control" id="inputName" name="new_password1">
+                          <input type="password" class="form-control" id="new_password1" name="new_password1" placeholder="" value="">
                         </div>
                       </div>
 
                       <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                          <button type="submit" class="btn btn-danger" id="change-password">Đổi</button>
+                          <button type="submit" class="btn btn-danger" id="reset-password">Khôi phục</button>
                         </div>
                       </div>
                     </div>
@@ -157,12 +157,12 @@
     }
 
     /* On submit change password */
-    $("#change-password").click(function() {
+    $("#reset-password").click(function() {
         if (validateFormRegister() == true)
         {
-            $.post("/profile/change-password",
+            $.post("/profile/reset-password",
             {
-              old_password: $("input[name='old_password']").val(),
+              user_id: <?php echo $user->id ?>,
               new_password: $("input[name='new_password']").val(),
               new_password1: $("input[name='new_password1']").val(),
             },
@@ -173,16 +173,13 @@
                 usererror_element.className = "alert alert-success alert-dismissable";
                 if (data.usererror != "<?php Print(Config::PROCESS_OK); ?>") {
                     usererror_element.className = "alert alert-danger alert-dismissable";
-                }
-                else if (data.usererror == "<?php Print(Config::PASSWORD_BENEATH_MIN_LEN); ?>"
-                    || data.usererror == "<?php Print(Config::PASSWORD_EXCEED_MAX_LEN); ?>")
-                {
+                } else if (data.usererror == "<?php Print(Config::PASSWORD_BENEATH_MIN_LEN); ?>"
+                    || data.usererror == "<?php Print(Config::PASSWORD_EXCEED_MAX_LEN); ?>") {
                     $( "input[name='new_password']" ).parent().addClass("has-error");
                 }
-                else if (data.usererror == "<?php Print(Config::PASSWORD_IS_WRONG); ?>")
-                {
-                    $( "input[name='old_password']" ).parent().addClass("has-error");
-                }
+
+                document.getElementById("new_password").value = "";
+                document.getElementById("new_password1").value = "";
             });
         }
     });

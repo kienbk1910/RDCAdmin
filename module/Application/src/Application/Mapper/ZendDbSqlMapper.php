@@ -33,6 +33,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $this->dbAdapter = $dbAdapter;
 
     }
+
      public function getListRoles()
     {
         $sql = new Sql($this->dbAdapter);
@@ -40,6 +41,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $selectString = $sql->getSqlStringForSqlObject($select);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
     }
+
      public function updateAvatar($id_user,$avatar){
         $sql = new Sql($this->dbAdapter);
         $update = $sql->update('users');
@@ -75,16 +77,11 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $sql = new Sql($this->dbAdapter);
         $update = $sql->update('users');
         /* Validate filed */
-        if ($user->email != NULL)
-        {
+        if ($user->email != NULL) {
             $update->set(array('email' => $user->email));
-        }
-        else if ($user->phone != NULL)
-        {
+        } else if ($user->phone != NULL) {
             $update->set(array('phone' => $user->phone));
-        }
-        else if ($user->note != NULL)
-        {
+        } else if ($user->note != NULL) {
             $update->set(array('note' => $user->note));
         }
 
@@ -127,45 +124,52 @@ class ZendDbSqlMapper implements IndexMapperInterface
                         ));
         $selectString = $sql->getSqlStringForSqlObject($select);
         $str_ret = Config::PROCESS_OK;
-        try
-        {
+        try {
             $ret = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
-            if ($ret->count() == 1)
-            {
+            if ($ret->count() == 1) {
                 $update = $sql->update('users');
                 $update->set(array('password' => $new_password));
                 $string = " id = ". $id_user. " AND password = \"" .$old_password. "\" LIMIT 1";
                 $update->Where($string);
                 $selectString = $sql->getSqlStringForSqlObject($update);
 
-                try
-                {
+                try {
                     $ret = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
-                    if ($ret->count() == 1)
-                    {
+                    if ($ret->count() == 1) {
                         $str_ret = Config::PROCESS_OK;
-                    }
-                    else
-                    {
+                    } else {
                         $str_ret =  Config::PASSWORD_IS_THE_SAME;
                     }
-                }
-                catch (\Exception $e)
-                {
+                } catch (\Exception $e) {
                     $str_ret = Config::PROCESS_NG;
                 }
-            }
-            else
-            {
+            } else {
                 /* Password is not map */
                 $str_ret = Config::PASSWORD_IS_WRONG;
             }
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $str_ret =  Config::PROCESS_NG;
         }
 
+        return $str_ret;
+    }
+
+    public function resetPassword($id_user, $password) {
+        $sql = new Sql($this->dbAdapter);
+        $update = $sql->update('users');
+        $update->set(array('password' => $password));
+        $update->Where(array('id = ?' => $id_user));
+        $selectString = $sql->getSqlStringForSqlObject($update);
+        try {
+            $ret = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+            if ($ret->count() == 1) {
+                $str_ret = Config::PROCESS_OK;
+            } else {
+                $str_ret =  Config::PASSWORD_IS_THE_SAME;
+            }
+        } catch (\Exception $e) {
+            $str_ret = Config::PROCESS_NG;
+        }
         return $str_ret;
     }
 
@@ -176,6 +180,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $selectString = $sql->getSqlStringForSqlObject($select);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
     }
+
      public function insertTask(Task $task){
         $sql = new Sql($this->dbAdapter);
         $insert = $sql->insert('tasks');
@@ -184,6 +189,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $selectString = $sql->getSqlStringForSqlObject($insert);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
+
      public function getListUserByBaseRole($role){
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('users');
@@ -191,6 +197,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $selectString = $sql->getSqlStringForSqlObject($select);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
+
      public function getInfoTask($id){
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('tasks');
@@ -198,6 +205,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $selectString = $sql->getSqlStringForSqlObject($select);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
+
      public function changeInfoOfTask($id,$key,$value,$id_user){
         $sql = new Sql($this->dbAdapter);
         $update = $sql->update('tasks');
@@ -206,12 +214,14 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $selectString = $sql->getSqlStringForSqlObject($update);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
+
      public function getListProcess(){
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('process');
         $selectString = $sql->getSqlStringForSqlObject($select);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
+
     public function insertMoneyHistory(MoneyHistory $money){
         $sql = new Sql($this->dbAdapter);
         $insert = $sql->insert('money_history');
@@ -220,6 +230,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $selectString = $sql->getSqlStringForSqlObject($insert);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
     }
+
     public function getTotalPay($id,$type){
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('money_history');
@@ -234,6 +245,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
         }
         return $total;
     }
+
      public function getPayHistory($id,$type){
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('money_history');
@@ -245,6 +257,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $selectString = $sql->getSqlStringForSqlObject($select);
         return $result = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
+
       public function getTotalTask(){
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('tasks')

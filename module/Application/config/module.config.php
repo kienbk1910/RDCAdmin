@@ -311,6 +311,17 @@ return array(
                         )
                     ),
                 ),
+                'reset-password' => array(
+                    'type' => 'segment',
+                    'options' => array(
+                        'route'    => '/reset-password',
+                        'defaults' => array(
+                            'action' => 'resetPassword',
+                         ),
+                         'constraints' => array(
+                         )
+                    ),
+                ),
             )
         )
         ),

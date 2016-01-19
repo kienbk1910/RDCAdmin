@@ -48,8 +48,7 @@ use Application\Model\User;
             $postData = array_merge_recursive($request->getPost()->toArray(), $request->getFiles()->toArray());
 
             $inputFilter = new InputFilter();
-            $inputFilter->add($file)
-                ->setData($postData);
+            $inputFilter->add($file)->setData($postData);
 
             if ($inputFilter->isValid()) {           // FileInput validators are run, but not the filters...
 
@@ -78,13 +77,11 @@ use Application\Model\User;
                 $usererror = Config::PASSWORD_DIFFERENT;
             } else if (strlen($new_password) > Config::PASSWORD_MAX_LEN) {
                 $usererror = Config::PASSWORD_EXCEED_MAX_LEN;
-            }
-            else if (strlen($new_password) < Config::PASSWORD_MIN_LEN) {
+            } else if (strlen($new_password) < Config::PASSWORD_MIN_LEN) {
                 $usererror = Config::PASSWORD_BENEATH_MIN_LEN;
             }
 
-            if (empty($usererror))
-            {
+            if (empty($usererror)) {
                 $new_password_md5 = md5($new_password);
                 $old_password_md5 = md5($old_password);
                 $usererror = $this->databaseService->changePassword($this->user->id, $new_password_md5, $old_password_md5);
@@ -117,5 +114,35 @@ use Application\Model\User;
                  'user' => $user,
                  'role_name' => $role_name,
          ));
+     }
+
+     public function resetPasswordAction()
+     {
+         $this->checkAuth();
+         $request = $this->getRequest();
+         if ($request->isPost()) {
+             $user_id = $this->getRequest ()->getPost('user_id', null);
+             $new_password = $this->getRequest ()->getPost('new_password', null);
+             $new_password1 = $this->getRequest ()->getPost('new_password1', null);
+             $usererror;
+             if ($new_password != $new_password1) {
+                 $usererror = Config::PASSWORD_DIFFERENT;
+             } else if (strlen($new_password) > Config::PASSWORD_MAX_LEN) {
+                 $usererror = Config::PASSWORD_EXCEED_MAX_LEN;
+             }
+             else if (strlen($new_password) < Config::PASSWORD_MIN_LEN) {
+                 $usererror = Config::PASSWORD_BENEATH_MIN_LEN;
+             }
+
+             if (empty($usererror))
+             {
+                 $new_password_md5 = md5($new_password);
+                 $usererror = $this->databaseService->resetPassword($user_id, $new_password_md5);
+             }
+
+             return new JsonModel(array(
+                 'usererror'=> $usererror,
+             ));
+         }
      }
 }

@@ -74,21 +74,21 @@
                       <div class="form-group">
                         <label for="inputName" class="col-sm-2 control-label">Mật Khẩu Cũ</label>
                         <div class="col-sm-5">
-                          <input type="password" class="form-control" id="inputName" name="old_password">
+                          <input type="password" class="form-control" id="old_password" name="old_password">
                         </div>
                       </div>
 
                       <div class="form-group">
                         <label for="inputName" class="col-sm-2 control-label">Mật Khẩu Mới</label>
                         <div class="col-sm-5">
-                          <input type="password" class="form-control" id="inputName" name="new_password">
+                          <input type="password" class="form-control" id="new_password" name="new_password">
                         </div>
                       </div>
 
                       <div class="form-group">
                         <label for="inputEmail" class="col-sm-2 control-label">Xác Nhận</label>
                         <div class="col-sm-5">
-                          <input type="password" class="form-control" id="inputName" name="new_password1">
+                          <input type="password" class="form-control" id="new_password1" name="new_password1">
                         </div>
                       </div>
 
@@ -204,6 +204,10 @@
                 {
                     $( "input[name='old_password']" ).parent().addClass("has-error");
                 }
+
+                document.getElementById("old_password").value = "";
+                document.getElementById("new_password").value = "";
+                document.getElementById("new_password1").value = "";
             });
         }
     });
