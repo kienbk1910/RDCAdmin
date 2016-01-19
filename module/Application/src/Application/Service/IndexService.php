@@ -68,8 +68,8 @@ class IndexService implements IndexServiceInterface
   public function getTotalTask(){
     return $this->databaseMapper->getTotalTask();
   }
-  public function getListTask($start,$length,$search,$columns,$order){
-      return $this->databaseMapper->getListTask($start,$length,$search,$columns,$order);
+  public function getListTask($start,$length,$search,$columns,$order,$agency_id,$provider_id){
+      return $this->databaseMapper->getListTask($start,$length,$search,$columns,$order,$agency_id,$provider_id);
   }
   public function getUserById($id){
       return $this->databaseMapper->getUserById($id);

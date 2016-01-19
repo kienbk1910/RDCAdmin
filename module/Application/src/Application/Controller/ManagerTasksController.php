@@ -55,7 +55,7 @@ namespace Application\Controller;
          $search = $search['value'];
          $total = $this->databaseService->getTotalTask();
        
-         $tasks =$this->databaseService->getListTask($start,$length,$search,$columns,"");
+         $tasks =$this->databaseService->getListTask($start,$length,$search,$columns,"",null,null);
          $data = new DataTablesObject();
          $data->recordsTotal = $total;
          $data->recordsFiltered = $total;
@@ -68,14 +68,14 @@ namespace Application\Controller;
             $item->process_name =$task->process_name; 
             $item->agency_name =$task->agency_name;    
             $item->cost_sell = number_format($task->cost_sell);
-            $item->custumer_pay =0;
+            $item->custumer_pay = number_format($this->databaseService->getTotalPay($task->id,Config::PAY_CUSTUMER));
             $item->date_open = Date::changeDateSQLtoVN($task->date_open);
             $item->date_end = Date::changeDateSQLtoVN($task->date_end);
             $item->process_name =$task->process_name; 
 
             $item->provider_name =$task->provider_name;    
             $item->cost_buy = number_format($task->cost_buy);
-            $item->provider_pay =0;
+            $item->provider_pay = number_format($this->databaseService->getTotalPay($task->id,Config::PAY_PROVIDER));
             $item->date_open_pr = Date::changeDateSQLtoVN($task->date_open_pr);
             $item->date_end_pr = Date::changeDateSQLtoVN($task->date_end_pr);
      
@@ -128,7 +128,7 @@ namespace Application\Controller;
             $task->provider_note = $request->getPost('provider_note'); 
             $result = $this->databaseService->insertTask($task);
             
-            return $this->redirect()->toRoute('manager-tasks/detail',array('id'=>$result->getGeneratedValue()));
+          return $this->redirect()->toRoute('manager-tasks/detail',array('id'=>$result->getGeneratedValue()));
         }
         $users = $this->databaseService->getListByRole(Config::ROLE_AGENCY);
 

@@ -1,0 +1,198 @@
+  <!-- Main content -->
+<section class="content">
+<!-- Button trigger modal -->
+  <!-- Main row -->
+  <div class="row">
+    <!-- Left col -->
+    <section class=" col-lg-12 connectedSortable">
+         <div class="box box-warning">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Thông Tin Hồ Sơ</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <form role="form" class="form-horizontal">
+                    <!-- text input -->
+                    <div class="form-group">
+                      <label for="inputName" class="col-sm-3 control-label">Tên Khách Hàng</label>
+                      <div class="col-sm-9">
+                          <a href="#" id="custumer" data-type="text" data-pk="<?php echo $task->id;?>" data-url="/manager-tasks/change-info" data-inputclass="custum-x-editable" data-title="Nhập tên Khách Hàng"><?php echo $task->custumer;?></a>
+                      </div>
+                     </div>
+                    <div class="form-group">
+                       <label for="inputName" class="col-sm-3 control-label">Sản Phẩm</label>
+                          <div class="col-sm-9">
+                           <a href="#" id="certificate" data-inputclass="custum-x-editable" data-type="text" data-pk="<?php echo $task->id;?>" data-url="/manager-tasks/change-info" data-title="Nhập Tên Sản Phẩm"><?php echo $task->certificate;?></a>
+                          </div>
+                    </div>
+                    <div class="form-group">
+                       <label for="inputName" class="col-sm-3 control-label">Trạng Thái</label>
+                          <div class="col-sm-9">
+                           <a data-inputclass="custum-x-editable" href="#" id="process_id" data-type="select2" data-pk="<?php echo $task->id;?>" data-value="<?php echo $task->process_id;?>"data-url="/manager-tasks/change-info" data-title="Chọn Trạng Thái"></a>
+                          </div>
+                    </div>
+                    <div class="row">
+                          <section class="col-lg-6 connectedSortable">
+                            <div class="box box-primary">
+                               <div class="box-header with-border">
+                                <h3 class="box-title">Khách Hàng</h3>
+                              </div><!-- /.box-header -->
+                            
+                             <div class="box-body">
+                               <div class="row">
+                               <div class=" col-lg-6 form-group">
+                                  <label for="inputName" class="col-sm-6 control-label">Người Gửi</label>
+                                  <div class="col-sm-6">
+                                       <a href="#" id="agency_id" data-inputclass="custum-x-editable" data-type="select2" data-pk="<?php echo $task->id;?>" data-url="/manager-tasks/change-info" data-title="Chọn Cộng Tác Viên" data-value="<?php echo $task->agency_id;?>"></a>
+                                  </div>
+                                </div>
+                                <div class="col-lg-6 form-group">
+                                  <label for="inputName" class="col-sm-6 control-label">Thỏa Thuận</label>
+                                  <div class="col-sm-6">
+                                    <a href="#" id="cost_sell" data-type="text" data-pk="<?php echo $task->id;?>" data-url="/manager-tasks/change-info" data-title="Nhập Giá"><?php echo $task->cost_sell;?></a>
+                                  </div>
+                                </div>
+                                 </div>
+                                <div class="row">
+                                   <div class=" col-lg-6 form-group ">
+                                    <label for="inputName" class="col-sm-6 control-label">Ngày Nhận</label>
+                                    <div class="col-sm-6">
+                                      <a href="#" data-inputclass="custum-x-editable" id="date_open" data-type="combodate" data-pk="<?php echo $task->id;?>" data-url="/manager-tasks/change-info" data-title="Chọn Ngày"  data-value="<?php echo $task->date_open;?>"></a>
+                                    </div>
+                                  </div>
+                                   <div class=" col-lg-6 form-group">
+                                    <label for="inputName" class="col-sm-6 control-label">Ngày Hẹn</label>
+                                    <div class="col-sm-6">
+                                      <a href="#" data-inputclass="custum-x-editable" id="date_end" data-type="combodate" data-pk="<?php echo $task->id;?>" data-url="/manager-tasks/change-info" data-title="Chọn Ngày"  data-value="<?php echo $task->date_end;?>"></a>
+                                    </div>
+                                  </div>
+                                    
+                                </div>
+                                  <div class="row">
+                                   <div class=" col-lg-6 form-group ">
+                                    <label for="inputName" class="col-sm-6 control-label">Thanh Toán</label>
+                                    <div class="col-sm-6">
+                                      <label><?php echo $pay_custumer; ?></label>
+                                    </div>
+                                  </div>
+                                   <div class=" col-lg-6 form-group">
+                                     <label for="inputName" class="col-sm-6 control-label">Dư Nợ</label>
+                                    <div class="col-sm-6">
+                                      
+                                    </div>
+                                  </div>
+                                    
+                                </div>
+                                <button onclick="show_pay_form(1)" type="button" class="btn btn-primary btn-sm" >Thanh Toán</button>
+
+                            </div>
+                        </div>
+                        <!-- TAB -->
+                       
+                          </section>
+                           <section class="col-lg-6 connectedSortable">
+                           <div class="nav-tabs-custom">
+                                <ul class="nav nav-tabs">
+                                  <li class="active"><a href="#activity" data-toggle="tab">Thanh Toán</a></li>
+                                  <li><a href="#timeline" data-toggle="tab">Bình Luận</a></li>
+                                  <li><a href="#settings" data-toggle="tab">Tài Liệu</a></li>
+                                </ul>
+                                <div class="tab-content">
+                                  <div class="active tab-pane box" id="activity">
+                                          <ul class="todo-list">
+                                          <?php foreach ($custumer_historys as $custumer_history) {?>
+                                              <li>
+                                              <!-- drag handle -->
+                                              <span class="handle">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                                <i class="fa fa-ellipsis-v"></i>
+                                              </span>
+                                              <!-- checkbox -->
+                                          
+                                              <!-- todo text -->
+                                              <span class="text"><?php echo date_format(date_create($custumer_history->date_pay),"d/m/Y");?></span>
+                                              <span class="text"><?php echo number_format($custumer_history->money)?></span>
+                                             
+                                               <small class="label label-success"><i class="fa fa-clock-o"></i> <?php echo $custumer_history->name;?></small>
+                                                <!-- Emphasis label -->
+                                              <small class="label label-danger"><i class="fa fa-clock-o"></i> <?php echo $custumer_history->username;?></small>
+                                              <!-- General tools such as edit or delete-->
+                                              <div class="tools">
+                                                <i class="fa fa-edit"></i>
+                                                <i class="fa fa-trash-o" onclick="pay_delete()"></i>
+                                              </div>
+                                            </li>
+                                          <?php }?>
+                                          </ul>
+                                        
+                                  </div><!-- /.tab-pane -->
+                                  <div class="tab-pane" id="timeline">
+                                     <div class="box-body chat" id="chat-box">
+                                      <!-- chat item -->
+                                      <div class="item">
+                                        <img src="dist/img/user4-128x128.jpg" alt="user image" class="online">
+                                        <p class="message">
+                                          <a href="#" class="name">
+                                            <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 2:15</small>
+                                            Mike Doe
+                                          </a>
+                                          I would like to meet you to discuss the latest news about
+                                          the arrival of the new theme. They say it is going to be one the
+                                          best themes on the market
+                                        </p>
+                                        <div class="attachment">
+                                          <h4>Attachments:</h4>
+                                          <p class="filename">
+                                            Theme-thumbnail-image.jpg
+                                          </p>
+                                          <div class="pull-right">
+                                            <button class="btn btn-primary btn-sm btn-flat">Open</button>
+                                          </div>
+                                        </div><!-- /.attachment -->
+                                      </div><!-- /.item -->
+                                      <!-- chat item -->
+                                      <div class="item">
+                                        <img src="dist/img/user3-128x128.jpg" alt="user image" class="offline">
+                                        <p class="message">
+                                          <a href="#" class="name">
+                                            <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 5:15</small>
+                                            Alexander Pierce
+                                          </a>
+                                          I would like to meet you to discuss the latest news about
+                                          the arrival of the new theme. They say it is going to be one the
+                                          best themes on the market
+                                        </p>
+                                      </div><!-- /.item -->
+                                      <!-- chat item -->
+                                      <div class="item">
+                                        <img src="dist/img/user2-160x160.jpg" alt="user image" class="offline">
+                                        <p class="message">
+                                          <a href="#" class="name">
+                                            <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 5:30</small>
+                                            Susan Doe
+                                          </a>
+                                          I would like to meet you to discuss the latest news about
+                                          the arrival of the new theme. They say it is going to be one the
+                                          best themes on the market
+                                        </p>
+                                      </div><!-- /.item -->
+                                    </div><!-- /.chat -->
+                                    <div class="box-footer">
+                                      <div class="input-group">
+                                        <input class="form-control" placeholder="Type message...">
+                                        <div class="input-group-btn">
+                                          <button class="btn btn-success"><i class="fa fa-plus"></i></button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div><!-- /.tab-pane -->
+
+                                  <div class="tab-pane" id="settings">
+                                  
+                                  </div><!-- /.tab-pane -->
+                                </div><!-- /.tab-content -->
+                              </div><!-- /.nav-tabs-custom -->
+                           </section><!-- /.Left col -->
+    <!-- right col (We are only adding the ID to make the widgets sortable)-->
+  </div><!-- /.row (main row) -->
+
+</section><!-- /.content -->

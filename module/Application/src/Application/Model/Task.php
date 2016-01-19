@@ -36,6 +36,7 @@ class Task
 			'agency_id'=> $this->agency_id,
 			'date_open'=> $this->date_open,
 			'date_end'=> $this->date_end,
+			'cost_sell'=> $this->cost_sell,
 			'agency_note'=> $this->agency_note,
 
 			'provider_id'=> $this->provider_id,

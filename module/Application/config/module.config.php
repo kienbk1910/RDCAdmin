@@ -77,6 +77,73 @@ return array(
 
                 ),
             ),
+//  begin tasks
+            'tasks' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/tasks',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller'    => 'Tasks',
+                        'action'        => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'order' => array(
+                         'type' => 'segment',
+                         'options' => array(
+                             'route'    => '/order',
+                             'defaults' => array(
+                                 'action' => 'order',
+                             ),
+                             'constraints' => array(
+                             )
+                         ),
+
+                     ),
+                    'getlisttasks' => array(
+                         'type' => 'segment',
+                         'options' => array(
+                             'route'    => '/getlisttasks',
+                             'defaults' => array(
+                                 'action' => 'getlisttasks',
+                             ),
+                             'constraints' => array(
+                             )
+                         ),
+
+                     ),
+                     'getlistorders' => array(
+                         'type' => 'segment',
+                         'options' => array(
+                             'route'    => '/getlistorders',
+                             'defaults' => array(
+                                 'action' => 'getlistorders',
+                             ),
+                             'constraints' => array(
+                             )
+                         ),
+
+                     ), 
+                      'orderdetail' => array(
+                         'type' => 'segment',
+                           'options' => array(
+                             'route'    => '/orderdetail/:id',
+                               'defaults' => array(
+                                 'action' => 'orderdetail',
+                                  'id'=>'0',
+                             ),
+                             'constraints' => array(
+                                 'id'   => '[1-9]\d*',
+                             )
+                            ),
+
+                     ), 
+
+                ),
+            ),
+// end tasks
             'manager-users' => array (
 				'type' => 'Literal',
 				'options' => array (
@@ -280,7 +347,8 @@ return array(
              'Application\Controller\Index' => 'Application\Factory\IndexControllerFactory',
              'Application\Controller\Profile' => 'Application\Factory\ProfileControllerFactory',
              'Application\Controller\ManagerUsers' => 'Application\Factory\ManagerUsersControllerFactory',
-              'Application\Controller\ManagerTasks' => 'Application\Factory\ManagerTasksControllerFactory'
+             'Application\Controller\ManagerTasks' => 'Application\Factory\ManagerTasksControllerFactory',
+             'Application\Controller\Tasks' => 'Application\Factory\TasksControllerFactory'
          )
     ),
     'navigation_helpers' => array (
@@ -436,6 +504,26 @@ return array(
                     ),
                 )
             ),
+            array(
+            'label' => 'Hồ Sơ',
+            'uri' => '#',
+            'icon' => 'files-o',
+            'route' => 'manager-tasks',
+            'pages' => array(
+                array(
+                    'label' => 'Công Việc Của Tôi',
+                    'uri' => '#',
+                    'icon' => 'circle-o',
+                    'route' => 'tasks',
+                ),
+                array(
+                    'label' => 'Đơn Hàng Của Tôi',
+                    'uri' => '#',
+                    'icon' => 'circle-o',
+                    'route' => 'tasks/order',
+                ),
+            )
+        ), 
         ),
     ),
 

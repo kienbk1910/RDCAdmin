@@ -22,6 +22,6 @@
       public function getTotalPay($id,$type);
       public function getPayHistory($id,$type);
       public function getTotalTask();
-      public function getListTask($start,$length,$search,$columns,$order);
+      public function getListTask($start,$length,$search,$columns,$order,$agency_id,$provider_id);
       public function getUserById($id);
 }

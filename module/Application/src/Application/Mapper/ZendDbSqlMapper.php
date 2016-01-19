@@ -258,7 +258,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
         }
         return $count;
       }
-      public function getListTask($start,$length,$search,$columns,$order){
+      public function getListTask($start,$length,$search,$columns,$order,$agency_id,$provider_id){
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('tasks');
         $select->join('process', 'tasks.process_id = process.id', array('process_name'=>'name'), 'left');
@@ -266,6 +266,12 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $select->join(array('2users' => 'users'), 'tasks.provider_id = 2users.id', array('provider_name'=>'username'), 'left');
         $select->where->like('tasks.custumer', '%' . $search .'%');
         $agency_seach = DataTableUtility::getSearchValue($columns,"agency_name");
+        if($agency_id != null){
+            $select->Where(array('users.id' => $agency_id));
+        }
+        if($provider_id != null){
+            $select->Where(array('2users.id' => $provider_id));
+        }
         if($agency_seach != "" && $agency_seach != 0){
            $select->Where(array('users.id' => $agency_seach));
         }
