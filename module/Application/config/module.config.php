@@ -125,7 +125,7 @@ return array(
                              )
                          ),
 
-                     ), 
+                     ),
                       'orderdetail' => array(
                          'type' => 'segment',
                            'options' => array(
@@ -139,7 +139,7 @@ return array(
                              )
                             ),
 
-                     ), 
+                     ),
 
                 ),
             ),
@@ -311,6 +311,17 @@ return array(
                         )
                     ),
                 ),
+                'upload-image' => array(
+                    'type' => 'segment',
+                    'options' => array(
+                        'route'    => '/upload-image',
+                        'defaults' => array(
+                            'action' => 'uploadImage',
+                        ),
+                        'constraints' => array(
+                        )
+                    ),
+                ),
                 'reset-password' => array(
                     'type' => 'segment',
                     'options' => array(
@@ -322,6 +333,17 @@ return array(
                          )
                     ),
                 ),
+               'change-user-info' => array(
+                      'type' => 'segment',
+                      'options' => array(
+                              'route'    => '/change-user-info',
+                              'defaults' => array(
+                                   'action' => 'changeUserInfo',
+                              ),
+                              'constraints' => array(
+                              )
+                      ),
+               ),
             )
         )
         ),
@@ -534,7 +556,7 @@ return array(
                     'route' => 'tasks/order',
                 ),
             )
-        ), 
+        ),
         ),
     ),
 

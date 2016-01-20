@@ -27,11 +27,13 @@ use Application\Model\User;
 
      public function indexAction()
      {
+         return new ViewModel();
+     }
+
+     public function uploadImageAction() {
         $this->checkAuth();
         $request = $this->getRequest();
         if ($request->isPost()) {
-            // save image
-
             // File upload input
             $file = new FileInput('avatar');           // Special File Input type
             $file->getValidatorChain()               // Validators are run first w/ FileInput
@@ -56,12 +58,12 @@ use Application\Model\User;
 
               $avatar = basename($data['avatar']['tmp_name']);
               $this->databaseService->updateAvatar($this->user->id,$avatar);
-               $this->user->avatar = $avatar;
+              $this->user->avatar = $avatar;
              } else {
                 // error
             }
         }
-        return new ViewModel();
+        return $this->redirect()->toRoute('profile');
      }
 
      public function changePasswordAction()
@@ -143,6 +145,61 @@ use Application\Model\User;
              return new JsonModel(array(
                  'usererror'=> $usererror,
              ));
+         }
+     }
+
+     public function changeUserInfoAction(){
+         $this->checkLevel2();
+         $value = $this->getRequest()->getPost('value');
+         $name = $this->getRequest()->getPost('name');
+         $id = $this->getRequest()->getPost('pk');
+         $user = new User(NULL, NULL, NULL, NULL);
+         $user->email = NULL;
+         $user->phone = NULL;
+         $user->note = NULL;
+         if ($name == "pro-email") {
+             $result = new Xeditable();
+             $validator = new \Zend\Validator\EmailAddress();
+             if ($validator->isValid($value)) {
+                 $user->email = $value;
+                 $this->databaseService->changeUserInfo($this->user->id, $user);
+                 $this->user->email = $value;
+             }else{
+                 $result->setStatus(Xeditable::STATUS_ERROR);
+                 $result->setMsg(Xeditable::MSG_DATA_ERROR);
+             }
+             echo \Zend\Json\Json::encode($result, false);
+             exit;
+         }
+
+         if ($name == "pro-phone") {
+             $result = new Xeditable();
+             $validator = new \Zend\Validator\NotEmpty();
+             if ($validator->isValid($value)) {
+                 $user->phone = $value;
+                 $this->databaseService->changeUserInfo($this->user->id, $user);
+                 $this->user->phone = $value;
+             }else{
+                 $result->setStatus(Xeditable::STATUS_ERROR);
+                 $result->setMsg(Xeditable::MSG_DATA_ERROR);
+             }
+             echo \Zend\Json\Json::encode($result, false);
+             exit;
+         }
+
+         if ($name == "pro-note") {
+             $result = new Xeditable();
+             $validator = new \Zend\Validator\NotEmpty();
+             if ($validator->isValid($value)) {
+                 $user->note = $value;
+                 $this->databaseService->changeUserInfo($this->user->id, $user);
+                 $this->user->note = $value;
+             }else{
+                 $result->setStatus(Xeditable::STATUS_ERROR);
+                 $result->setMsg(Xeditable::MSG_DATA_ERROR);
+             }
+             echo \Zend\Json\Json::encode($result, false);
+             exit;
          }
      }
 }

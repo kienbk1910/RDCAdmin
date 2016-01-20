@@ -13,7 +13,7 @@ use Application\Config\Config;
 
  class ManagerUsersController extends BaseController
  {
-     
+
 
      public function __construct(IndexServiceInterface $databaseService,AuthenticationService $auth)
      {
@@ -27,6 +27,7 @@ use Application\Config\Config;
         $this->checkAuth();
         return new ViewModel();
      }
+
      public function getlistAction(){
          $this->checkAuth();
          $request = $this->getRequest();
@@ -37,7 +38,7 @@ use Application\Config\Config;
          $search = $request->getPost('search','');
          $search = $search['value'];
          $total = $this->databaseService->getTotalUsers();
-       
+
          $users =$this->databaseService->getListUsers($start,$length,$search);
          $data = new DataTablesObject();
          $data->recordsTotal = $total;
@@ -103,5 +104,4 @@ use Application\Config\Config;
             'roles' => $roles
         ));
      }
-
 }
