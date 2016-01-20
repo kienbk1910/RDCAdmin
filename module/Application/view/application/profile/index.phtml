@@ -9,7 +9,7 @@
                 <div class="box-body box-profile">
                   <img class="profile-user-img img-responsive img-circle" id="image-avartar" src="<?php echo Config::IMAGE_PATH; echo $this->identity()->avatar?>" alt="User profile picture">
                   <h3 class="profile-username text-center"> <?php echo $this->identity()->username?></h3>
-                  <p class="text-muted text-center">Quản Lý</p>
+                  <p class="text-muted text-center"><?php echo $role_name ?></p>
                   <form class="form-horizontal" method="post" action="/profile/upload-image" enctype="multipart/form-data">
                   <div class="row">
                     <div class="col-lg-6">

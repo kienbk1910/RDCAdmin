@@ -27,7 +27,25 @@ use Application\Model\User;
 
      public function indexAction()
      {
-         return new ViewModel();
+          $this->checkAuth();
+          $request = $this->getRequest();
+          $usererror = array();
+           $db_users = $this->databaseService->getUserById($this->identity()->id);
+           $role_name;
+           foreach ($db_users as $db_user) {
+               $user = new User($this->identity()->id, $db_user->username, NULL, NULL);
+               $user->avatar = $db_user->avatar;
+               $user->note = $db_user->note;
+               $user->phone = $db_user->phone;
+               $user->email = $db_user->email;
+               $role_name = $db_user->role_name;
+           }
+           $usererror = Config::PROCESS_OK;
+           return new ViewModel(array(
+                   'usererror' => $usererror,
+                   'user' => $user,
+                   'role_name' => $role_name,
+           ));
      }
 
      public function uploadImageAction() {
