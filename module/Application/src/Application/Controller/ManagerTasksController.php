@@ -19,13 +19,13 @@ namespace Application\Controller;
  class ManagerTasksController extends BaseController
  {
      public function __construct(IndexServiceInterface $databaseService,AuthenticationService $auth)
-     
+
      {
-        
+
         $this->databaseService = $databaseService;
         $this->auth = $auth;
         $this->user = $auth->getIdentity();
-         
+
      }
 
      public function indexAction()
@@ -55,7 +55,7 @@ namespace Application\Controller;
          $columns = $request->getPost('columns','');
          $search = $search['value'];
          $total = $this->databaseService->getTotalTask();
-       
+
          $tasks =$this->databaseService->getListTask($start,$length,$search,$columns,"",null,null);
          $data = new DataTablesObject();
          $data->recordsTotal = $total;
@@ -66,20 +66,20 @@ namespace Application\Controller;
             $item->DT_RowId =$task->id;
             $item->custumer =$task->custumer;
             $item->certificate =$task->certificate;
-            $item->process_name =$task->process_name; 
-            $item->agency_name =$task->agency_name;    
+            $item->process_name =$task->process_name;
+            $item->agency_name =$task->agency_name;
             $item->cost_sell = number_format($task->cost_sell);
             $item->custumer_pay = number_format($this->databaseService->getTotalPay($task->id,Config::PAY_CUSTUMER));
             $item->date_open = Date::changeDateSQLtoVN($task->date_open);
             $item->date_end = Date::changeDateSQLtoVN($task->date_end);
-            $item->process_name =$task->process_name; 
+            $item->process_name =$task->process_name;
 
-            $item->provider_name =$task->provider_name;    
+            $item->provider_name =$task->provider_name;
             $item->cost_buy = number_format($task->cost_buy);
             $item->provider_pay = number_format($this->databaseService->getTotalPay($task->id,Config::PAY_PROVIDER));
             $item->date_open_pr = Date::changeDateSQLtoVN($task->date_open_pr);
             $item->date_end_pr = Date::changeDateSQLtoVN($task->date_end_pr);
-     
+
             array_push($data->data,$item);
          }
         echo \Zend\Json\Json::encode($data, false);
@@ -92,7 +92,7 @@ namespace Application\Controller;
         if ($request->isPost()) {
             // add task
             $task = new Task();
-            // validate 
+            // validate
             // TO DO
             // user id create
             $task->user_id = $this->auth->getIdentity()->id;
@@ -100,35 +100,35 @@ namespace Application\Controller;
             $task->last_update = $task->create_date;
             $task->last_user_id =  $this->auth->getIdentity()->id;
             $task->process_id = Config::PROCESS_REC;
-            $task->reporter_id = $request->getPost('reporter_id'); 
+            $task->reporter_id = $request->getPost('reporter_id');
             // infor
-            $task->custumer = $request->getPost('custumer'); 
-            $task->certificate = $request->getPost('certificate'); 
+            $task->custumer = $request->getPost('custumer');
+            $task->certificate = $request->getPost('certificate');
             // agency
-            $task->agency_id = $request->getPost('agency_id'); 
-            $task->cost_sell = str_replace(',','',$request->getPost('cost_sell',0)); 
-            $task->date_open = Date::changeVNtoDateSQL($request->getPost('date_open')); 
-            $task->date_end  = Date::changeVNtoDateSQL($request->getPost('date_end')); 
-            $task->agency_note = $request->getPost('agency_note'); 
+            $task->agency_id = $request->getPost('agency_id');
+            $task->cost_sell = str_replace(',','',$request->getPost('cost_sell',0));
+            $task->date_open = Date::changeVNtoDateSQL($request->getPost('date_open'));
+            $task->date_end  = Date::changeVNtoDateSQL($request->getPost('date_end'));
+            $task->agency_note = $request->getPost('agency_note');
 
             // provider
-            $task->provider_id = $request->getPost('provider_id'); 
+            $task->provider_id = $request->getPost('provider_id');
             $task->cost_buy = str_replace(',','',$request->getPost('cost_buy',0));
             $date_open_pr   = $request->getPost('date_open_rp','');
             if($date_open_pr == ''){
                 $task->date_open_pr = $task->date_open;
             }else{
-                $task->date_open_pr = Date::changeVNtoDateSQL($request->getPost('date_open_pr'));  
+                $task->date_open_pr = Date::changeVNtoDateSQL($request->getPost('date_open_pr'));
             }
              $date_end_pr   = $request->getPost('date_end_pr','');
             if($date_end_pr == ''){
                 $task->date_end_pr = $task->date_end;
             }else{
-                $task->date_end_pr = Date::changeVNtoDateSQL($request->getPost('date_end_pr'));  
+                $task->date_end_pr = Date::changeVNtoDateSQL($request->getPost('date_end_pr'));
             }
-            $task->provider_note = $request->getPost('provider_note'); 
+            $task->provider_note = $request->getPost('provider_note');
             $result = $this->databaseService->insertTask($task);
-            
+
           return $this->redirect()->toRoute('manager-tasks/detail',array('id'=>$result->getGeneratedValue()));
         }
         $users = $this->databaseService->getListByRole(Config::ROLE_AGENCY);
@@ -166,14 +166,14 @@ namespace Application\Controller;
         foreach ($users as $user) {
              array_push($agencys,new User($user->id,$user->username,"",""));
 
-        } 
+        }
         $pay_custumer = $this->databaseService->getTotalPay($id,Config::PAY_CUSTUMER);
         $custumer_debt = number_format($task->cost_sell - $pay_custumer);
         $pay_custumer = number_format( $pay_custumer);
         $pay_provider = number_format($this->databaseService->getTotalPay($id,Config::PAY_PROVIDER));
         $custumer_historys = $this->databaseService->getPayHistory($id,Config::PAY_CUSTUMER);
         $provider_historys = $this->databaseService->getPayHistory($id,Config::PAY_PROVIDER);
-        
+
         return new ViewModel(array(
             'task'=> $task,
             'listprocess'=>$listprocess,
@@ -190,54 +190,6 @@ namespace Application\Controller;
          $value = $this->getRequest()->getPost('value');
          $name = $this->getRequest()->getPost('name');
          $id = $this->getRequest()->getPost('pk');
-         $user = new User(NULL, NULL, NULL, NULL);
-         $user->email = NULL;
-         $user->phone = NULL;
-         $user->note = NULL;
-         if ($name == "pro-email") {
-             $result = new Xeditable();
-             $validator = new \Zend\Validator\EmailAddress();
-             if ($validator->isValid($value)) {
-                 $user->email = $value;
-                 $this->databaseService->changeUserInfo($this->user->id, $user);
-                 $this->user->email = $value;
-             }else{
-                 $result->setStatus(Xeditable::STATUS_ERROR);
-                 $result->setMsg(Xeditable::MSG_DATA_ERROR);
-             }
-             echo \Zend\Json\Json::encode($result, false);
-             exit;
-         }
-
-         if ($name == "pro-phone") {
-             $result = new Xeditable();
-             $validator = new \Zend\Validator\NotEmpty();
-             if ($validator->isValid($value)) {
-                 $user->phone = $value;
-                 $this->databaseService->changeUserInfo($this->user->id, $user);
-                 $this->user->phone = $value;
-             }else{
-                 $result->setStatus(Xeditable::STATUS_ERROR);
-                 $result->setMsg(Xeditable::MSG_DATA_ERROR);
-             }
-             echo \Zend\Json\Json::encode($result, false);
-             exit;
-         }
-
-         if ($name == "pro-note") {
-             $result = new Xeditable();
-             $validator = new \Zend\Validator\NotEmpty();
-             if ($validator->isValid($value)) {
-                 $user->note = $value;
-                 $this->databaseService->changeUserInfo($this->user->id, $user);
-                 $this->user->note = $value;
-             }else{
-                 $result->setStatus(Xeditable::STATUS_ERROR);
-                 $result->setMsg(Xeditable::MSG_DATA_ERROR);
-             }
-             echo \Zend\Json\Json::encode($result, false);
-             exit;
-         }
 
          $valid = new \Zend\Validator\NotEmpty();
          $result = new Xeditable();
@@ -281,7 +233,7 @@ namespace Application\Controller;
             $id = $this->databaseService->insertMoneyHistory($pay);
         }
         return new JsonModel(array(
-        
+
         ));
      }
     public function payhistoryAction(){
@@ -301,7 +253,7 @@ namespace Application\Controller;
 
                 array_push($result,$item);
             }
-          
+
         }
         return new JsonModel($result);
     }
@@ -319,7 +271,7 @@ namespace Application\Controller;
             $comment = $this->databaseService->addComment($comment);
         }
         return new JsonModel(array(
-        
+
         ));
     }
     public function getcommentAction(){
@@ -329,7 +281,7 @@ namespace Application\Controller;
             $task_id = $request->getPost('task_id');
             $type = $request->getPost('type');
             $data = $this->databaseService->getListComment($task_id,$type);
-          
+
         }
         return new JsonModel($data);
     }

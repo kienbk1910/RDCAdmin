@@ -25,7 +25,7 @@
                 <div class="tab-content">
                   <div class="active tab-pane" id="activity">
 
-                    <form class="form-horizontal">
+                    <div class="form-horizontal">
                       <div class="form-group">
                         <label for="inputName" class="col-sm-2 control-label">Email</label>
                         <div class="col-sm-10">
@@ -50,8 +50,7 @@
                           <button type="submit" class="btn btn-danger" id="block-user">Block</button>
                         </div>
                       </div>
-
-                    </form>
+                    </div>
                   </div><!-- /.tab-pane -->
                   <div class="tab-pane" id="timeline">
                     <h1>Đang Phát triển</h1>
@@ -182,5 +181,23 @@
                 document.getElementById("new_password1").value = "";
             });
         }
+    });
+
+    /* On block user */
+    $("#block-user").click(function() {
+        $.post("/profile/change-user-info",
+        {
+          pk: <?php echo $user->id ?>,
+          name: "block-user",
+          value: document.getElementById("block-user").innerHTML,
+        },
+        function(data, status) {
+            var old_txt= document.getElementById("block-user").innerHTML;
+            if (old_txt == "Block") {
+                document.getElementById("block-user").innerHTML = "Unblock";
+            } else {
+                document.getElementById("block-user").innerHTML = "Block";
+            }
+        });
     });
 </script>

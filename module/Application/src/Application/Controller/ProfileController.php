@@ -178,13 +178,16 @@ use Application\Model\User;
          $user->email = NULL;
          $user->phone = NULL;
          $user->note = NULL;
+         $user->block = NULL;
          if ($name == "pro-email") {
              $result = new Xeditable();
              $validator = new \Zend\Validator\EmailAddress();
              if ($validator->isValid($value)) {
                  $user->email = $value;
                  $this->databaseService->changeUserInfo($id, $user);
-                 $this->user->email = $value;
+                 if ($this->identity()->id == $id) {
+                    $this->user->email = $value;
+                 }
              }else{
                  $result->setStatus(Xeditable::STATUS_ERROR);
                  $result->setMsg(Xeditable::MSG_DATA_ERROR);
@@ -198,8 +201,10 @@ use Application\Model\User;
              $validator = new \Zend\Validator\NotEmpty();
              if ($validator->isValid($value)) {
                  $user->phone = $value;
-                 $this->databaseService->changeUserInfo($this->user->id, $user);
-                 $this->user->phone = $value;
+                 $this->databaseService->changeUserInfo($id, $user);
+                 if ($this->identity()->id == $id) {
+                    $this->user->phone = $value;
+                 }
              }else{
                  $result->setStatus(Xeditable::STATUS_ERROR);
                  $result->setMsg(Xeditable::MSG_DATA_ERROR);
@@ -213,8 +218,29 @@ use Application\Model\User;
              $validator = new \Zend\Validator\NotEmpty();
              if ($validator->isValid($value)) {
                  $user->note = $value;
-                 $this->databaseService->changeUserInfo($this->user->id, $user);
-                 $this->user->note = $value;
+                 $this->databaseService->changeUserInfo($id, $user);
+                 if ($this->identity()->id == $id) {
+                    $this->user->note = $value;
+                 }
+             }else{
+                 $result->setStatus(Xeditable::STATUS_ERROR);
+                 $result->setMsg(Xeditable::MSG_DATA_ERROR);
+             }
+             echo \Zend\Json\Json::encode($result, false);
+             exit;
+         }
+
+         if ($name == "block-user") {
+             $result = new Xeditable();
+             $validator = new \Zend\Validator\NotEmpty();
+             if ($validator->isValid($value)) {
+                 if ($value == "Block") {
+                    $user->block = 0;
+                 } else {
+                    $user->block = 1;
+                 }
+
+                 $this->databaseService->changeUserInfo($id, $user);
              }else{
                  $result->setStatus(Xeditable::STATUS_ERROR);
                  $result->setMsg(Xeditable::MSG_DATA_ERROR);

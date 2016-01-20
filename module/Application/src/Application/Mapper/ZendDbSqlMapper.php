@@ -84,11 +84,18 @@ class ZendDbSqlMapper implements IndexMapperInterface
             $update->set(array('phone' => $user->phone));
         } else if ($user->note != NULL) {
             $update->set(array('note' => $user->note));
+        } else if ($user->block != NULL) {
+            $update->set(array('block' => $user->block));
         }
 
         $update->Where(array('id = ?' => $id_user));
         $selectString = $sql->getSqlStringForSqlObject($update);
-        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $ret;
+        try {
+            $ret = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        } catch (\Exception $e) {
+            $ret = NULL;
+        }
      }
 
      public function getTotalUsers(){
