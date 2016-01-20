@@ -13,6 +13,7 @@
       public function getTotalUsers();
       public function getListUsers($start,$length,$search);
       public function changePassword($id_user, $password, $old_password);
+      public function resetPassword($id_user, $password);
       public function getListByRole($role);
       public function insertTask(Task $task);
       public function getListUserByBaseRole($role);

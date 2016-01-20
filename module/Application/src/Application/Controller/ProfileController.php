@@ -27,11 +27,31 @@ use Application\Model\User;
 
      public function indexAction()
      {
+          $this->checkAuth();
+          $request = $this->getRequest();
+          $usererror = array();
+           $db_users = $this->databaseService->getUserById($this->identity()->id);
+           $role_name;
+           foreach ($db_users as $db_user) {
+               $user = new User($this->identity()->id, $db_user->username, NULL, NULL);
+               $user->avatar = $db_user->avatar;
+               $user->note = $db_user->note;
+               $user->phone = $db_user->phone;
+               $user->email = $db_user->email;
+               $role_name = $db_user->role_name;
+           }
+           $usererror = Config::PROCESS_OK;
+           return new ViewModel(array(
+                   'usererror' => $usererror,
+                   'user' => $user,
+                   'role_name' => $role_name,
+           ));
+     }
+
+     public function uploadImageAction() {
         $this->checkAuth();
         $request = $this->getRequest();
         if ($request->isPost()) {
-            // save image
-
             // File upload input
             $file = new FileInput('avatar');           // Special File Input type
             $file->getValidatorChain()               // Validators are run first w/ FileInput
@@ -48,8 +68,7 @@ use Application\Model\User;
             $postData = array_merge_recursive($request->getPost()->toArray(), $request->getFiles()->toArray());
 
             $inputFilter = new InputFilter();
-            $inputFilter->add($file)
-                ->setData($postData);
+            $inputFilter->add($file)->setData($postData);
 
             if ($inputFilter->isValid()) {           // FileInput validators are run, but not the filters...
 
@@ -57,12 +76,12 @@ use Application\Model\User;
 
               $avatar = basename($data['avatar']['tmp_name']);
               $this->databaseService->updateAvatar($this->user->id,$avatar);
-               $this->user->avatar = $avatar;
+              $this->user->avatar = $avatar;
              } else {
                 // error
             }
         }
-        return new ViewModel();
+        return $this->redirect()->toRoute('profile');
      }
 
      public function changePasswordAction()
@@ -78,13 +97,11 @@ use Application\Model\User;
                 $usererror = Config::PASSWORD_DIFFERENT;
             } else if (strlen($new_password) > Config::PASSWORD_MAX_LEN) {
                 $usererror = Config::PASSWORD_EXCEED_MAX_LEN;
-            }
-            else if (strlen($new_password) < Config::PASSWORD_MIN_LEN) {
+            } else if (strlen($new_password) < Config::PASSWORD_MIN_LEN) {
                 $usererror = Config::PASSWORD_BENEATH_MIN_LEN;
             }
 
-            if (empty($usererror))
-            {
+            if (empty($usererror)) {
                 $new_password_md5 = md5($new_password);
                 $old_password_md5 = md5($old_password);
                 $usererror = $this->databaseService->changePassword($this->user->id, $new_password_md5, $old_password_md5);
@@ -109,6 +126,9 @@ use Application\Model\User;
          foreach ($db_users as $db_user) {
              $user = new User($id, $db_user->username, NULL, NULL);
              $user->avatar = $db_user->avatar;
+             $user->note = $db_user->note;
+             $user->phone = $db_user->phone;
+             $user->email = $db_user->email;
              $role_name = $db_user->role_name;
          }
          $usererror = Config::PROCESS_OK;
@@ -117,5 +137,90 @@ use Application\Model\User;
                  'user' => $user,
                  'role_name' => $role_name,
          ));
+     }
+
+     public function resetPasswordAction()
+     {
+         $this->checkAuth();
+         $request = $this->getRequest();
+         if ($request->isPost()) {
+             $user_id = $this->getRequest ()->getPost('user_id', null);
+             $new_password = $this->getRequest ()->getPost('new_password', null);
+             $new_password1 = $this->getRequest ()->getPost('new_password1', null);
+             $usererror;
+             if ($new_password != $new_password1) {
+                 $usererror = Config::PASSWORD_DIFFERENT;
+             } else if (strlen($new_password) > Config::PASSWORD_MAX_LEN) {
+                 $usererror = Config::PASSWORD_EXCEED_MAX_LEN;
+             }
+             else if (strlen($new_password) < Config::PASSWORD_MIN_LEN) {
+                 $usererror = Config::PASSWORD_BENEATH_MIN_LEN;
+             }
+
+             if (empty($usererror))
+             {
+                 $new_password_md5 = md5($new_password);
+                 $usererror = $this->databaseService->resetPassword($user_id, $new_password_md5);
+             }
+
+             return new JsonModel(array(
+                 'usererror'=> $usererror,
+             ));
+         }
+     }
+
+     public function changeUserInfoAction(){
+         $this->checkLevel2();
+         $value = $this->getRequest()->getPost('value');
+         $name = $this->getRequest()->getPost('name');
+         $id = $this->getRequest()->getPost('pk');
+         $user = new User(NULL, NULL, NULL, NULL);
+         $user->email = NULL;
+         $user->phone = NULL;
+         $user->note = NULL;
+         if ($name == "pro-email") {
+             $result = new Xeditable();
+             $validator = new \Zend\Validator\EmailAddress();
+             if ($validator->isValid($value)) {
+                 $user->email = $value;
+                 $this->databaseService->changeUserInfo($id, $user);
+                 $this->user->email = $value;
+             }else{
+                 $result->setStatus(Xeditable::STATUS_ERROR);
+                 $result->setMsg(Xeditable::MSG_DATA_ERROR);
+             }
+             echo \Zend\Json\Json::encode($result, false);
+             exit;
+         }
+
+         if ($name == "pro-phone") {
+             $result = new Xeditable();
+             $validator = new \Zend\Validator\NotEmpty();
+             if ($validator->isValid($value)) {
+                 $user->phone = $value;
+                 $this->databaseService->changeUserInfo($this->user->id, $user);
+                 $this->user->phone = $value;
+             }else{
+                 $result->setStatus(Xeditable::STATUS_ERROR);
+                 $result->setMsg(Xeditable::MSG_DATA_ERROR);
+             }
+             echo \Zend\Json\Json::encode($result, false);
+             exit;
+         }
+
+         if ($name == "pro-note") {
+             $result = new Xeditable();
+             $validator = new \Zend\Validator\NotEmpty();
+             if ($validator->isValid($value)) {
+                 $user->note = $value;
+                 $this->databaseService->changeUserInfo($this->user->id, $user);
+                 $this->user->note = $value;
+             }else{
+                 $result->setStatus(Xeditable::STATUS_ERROR);
+                 $result->setMsg(Xeditable::MSG_DATA_ERROR);
+             }
+             echo \Zend\Json\Json::encode($result, false);
+             exit;
+         }
      }
 }

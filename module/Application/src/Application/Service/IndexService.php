@@ -39,6 +39,9 @@ class IndexService implements IndexServiceInterface
    public function changePassword($id_user, $password, $old_password) {
        return $this->databaseMapper->changePassword($id_user, $password, $old_password);
    }
+   public function resetPassword($id_user, $password) {
+       return $this->databaseMapper->resetPassword($id_user, $password);
+   }
     public function getListByRole($role){
       return $this->databaseMapper->getListByRole($role);
   }

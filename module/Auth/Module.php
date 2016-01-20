@@ -1,5 +1,5 @@
 <?php
-namespace Auth; 
+namespace Auth;
 use Auth\Acl\Acl;
 // Add this for Table Date Gateway
 
@@ -18,7 +18,7 @@ class Module
     {
         return include __DIR__ . '/config/module.config.php';
     }
-	
+
     public function getAutoloaderConfig()
     {
         return array(
@@ -48,8 +48,8 @@ class Module
                 },
 				// Add this for SMTP transport
 				'mail.transport' => function (ServiceManager $serviceManager) {
-					$config = $serviceManager->get('Config'); 
-					$transport = new Smtp();                
+					$config = $serviceManager->get('Config');
+					$transport = new Smtp();
 					$transport->setOptions(new SmtpOptions($config['mail']['transport']['options']));
 					return $transport;
 				},
@@ -63,7 +63,7 @@ class Module
         $em = $application->getEventManager();
         $em->attach('route', array($this, 'onRoute'), -100);
     }
-    
+
     // WORKING the main engine for ACL
     public function onRoute(\Zend\EventManager\EventInterface $e) // Event manager of the app
     {
@@ -82,23 +82,23 @@ class Module
             // TODO we don't need that if the names of the roles are comming from the DB
             switch ($usrl_id) {
                 case 1 :
-                    $role = Acl::ADMIN_ROLE; 
+                    $role = Acl::ADMIN_ROLE;
                     break;
                 case 2 :
-                    $role = Acl::MANAGE_ROLE; 
+                    $role = Acl::MANAGE_ROLE;
                     break;
                 case 3 :
-                    $role = cl::SATFF_ROLE; 
+                    $role = Acl::SATFF_ROLE;
                     break;
                 case 4 :
-                    $role = Acl::AGENCY_ROLE; 
+                    $role = Acl::AGENCY_ROLE;
                     break;
                 default :
-                    $role = Acl::DEFAULT_ROLE; 
+                    $role = Acl::DEFAULT_ROLE;
                     break;
             }
         }
 
-       
-    }		
+
+    }
 }
