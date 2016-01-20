@@ -3,6 +3,7 @@
  namespace Application\Service;
  use Application\Model\User;
  use Application\Model\Task;
+  use Application\Model\Comment;
  use Application\Model\MoneyHistory;
  interface IndexServiceInterface
  {
@@ -27,4 +28,7 @@
      public function getTotalTask();
      public function getListTask($start,$length,$search,$columns,$order,$agency_id,$provider_id);
      public function getUserById($id);
+
+     public function addComment(Comment $comment);
+     public function getListComment($task_id,$type);
  }

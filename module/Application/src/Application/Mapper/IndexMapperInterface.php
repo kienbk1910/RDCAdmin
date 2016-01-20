@@ -2,6 +2,7 @@
  // Filename: /module/Blog/src/Blog/Mapper/PostMapperInterface.php
  namespace Application\Mapper;
  use Application\Model\Task;
+ use Application\Model\Comment;
  use Application\Model\MoneyHistory;
  interface IndexMapperInterface
  {
@@ -24,4 +25,7 @@
       public function getTotalTask();
       public function getListTask($start,$length,$search,$columns,$order,$agency_id,$provider_id);
       public function getUserById($id);
+
+      public function addComment(Comment $comment);
+      public function getListComment($task_id,$type);
 }

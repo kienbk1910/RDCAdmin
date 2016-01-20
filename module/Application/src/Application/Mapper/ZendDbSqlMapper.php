@@ -19,6 +19,7 @@ use Zend\Paginator\Paginator;
 use Zend\Db\ResultSet\ResultSet;
 use Application\Model\User;
 use Application\Config\Config;
+use Application\Model\Comment;
 use Application\Model\Task;
 use Application\Model\MoneyHistory;
 use Application\Utility\DataTableUtility;
@@ -194,6 +195,8 @@ class ZendDbSqlMapper implements IndexMapperInterface
      public function getInfoTask($id){
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('tasks');
+         $select->join('users', 'tasks.user_id = users.id', array('user_name'=>'username'), 'left');
+        $select->join(array('2users' => 'users'), 'tasks.last_user_id = 2users.id', array('last_user_name'=>'username'), 'left');
         $select->Where(array('tasks.id = ?' => $id));
         $selectString = $sql->getSqlStringForSqlObject($select);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
@@ -336,4 +339,22 @@ class ZendDbSqlMapper implements IndexMapperInterface
           $selectString = $sql->getSqlStringForSqlObject($select);
           return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
       }
+      public function addComment(Comment $comment){
+        $sql = new Sql($this->dbAdapter);
+        $insert = $sql->insert('task_comments');
+        $newData = $comment->toArray();
+        $insert->values($newData);
+        $selectString = $sql->getSqlStringForSqlObject($insert);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+      }
+      public function getListComment($task_id,$type){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('task_comments');
+        $select->join('users', 'task_comments.user_id = users.id', array('username'=>'username','avatar'=>'avatar'), 'left');
+        $select->Where(array('task_comments.task_id = ?' => $task_id,
+            'task_comments.type = ?' => $type,
+            ));
+         $selectString = $sql->getSqlStringForSqlObject($select);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+     }
  }

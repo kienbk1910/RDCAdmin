@@ -272,6 +272,30 @@ return array(
                          ),
 
                      ),
+                     'addcomment' => array(
+                         'type' => 'segment',
+                         'options' => array(
+                             'route'    => '/addcomment',
+                             'defaults' => array(
+                                 'action' => 'addcomment',
+                             ),
+                             'constraints' => array(
+                             )
+                         ),
+
+                     ),
+                      'getcomment' => array(
+                         'type' => 'segment',
+                         'options' => array(
+                             'route'    => '/getcomment',
+                             'defaults' => array(
+                                 'action' => 'getcomment',
+                             ),
+                             'constraints' => array(
+                             )
+                         ),
+
+                     ),
                 )
             ),
             // profile

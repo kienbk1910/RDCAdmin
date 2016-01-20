@@ -4,6 +4,7 @@ use Application\Mapper\IndexMapperInterface;
 use Application\Service\IndexServiceInterface;
 use Application\Model\User;
 use Application\Model\Task;
+use Application\Model\Comment;
 use Application\Model\MoneyHistory;
 class IndexService implements IndexServiceInterface
 {
@@ -74,4 +75,10 @@ class IndexService implements IndexServiceInterface
   public function getUserById($id){
       return $this->databaseMapper->getUserById($id);
   }
+   public function addComment(Comment $comment){
+    return $this->databaseMapper->addComment($comment);
+   }
+   public function getListComment($task_id,$type){
+    return $this->databaseMapper->getListComment($task_id,$type);
+   }
 }

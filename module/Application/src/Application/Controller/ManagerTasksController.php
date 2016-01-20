@@ -7,6 +7,7 @@ namespace Application\Controller;
  use Zend\Authentication\AuthenticationService;
  use Application\Config\Config;
  use Application\Model\User;
+  use Application\Model\Comment;
  use Application\Model\Task;
  use Application\Model\DataTablesObject;
  use Application\Model\TaskListItem;
@@ -157,6 +158,7 @@ namespace Application\Controller;
         $task->date_end = Date::changeDateSQLtoVN($task->date_end);
         $task->date_open_pr = Date::changeDateSQLtoVN($task->date_open_pr);
         $task->date_end_pr = Date::changeDateSQLtoVN($task->date_end_pr);
+        $task->last_update = Date::changeDateSQLtoVN($task->last_update);
         $listprocess = $this->databaseService->getListProcess();
         $users = $this->databaseService->getListByRole(Config::ROLE_AGENCY);
 
@@ -165,10 +167,13 @@ namespace Application\Controller;
              array_push($agencys,new User($user->id,$user->username,"",""));
 
         } 
-        $pay_custumer = number_format($this->databaseService->getTotalPay($id,Config::PAY_CUSTUMER));
+        $pay_custumer = $this->databaseService->getTotalPay($id,Config::PAY_CUSTUMER);
+        $custumer_debt = number_format($task->cost_sell - $pay_custumer);
+        $pay_custumer = number_format( $pay_custumer);
         $pay_provider = number_format($this->databaseService->getTotalPay($id,Config::PAY_PROVIDER));
         $custumer_historys = $this->databaseService->getPayHistory($id,Config::PAY_CUSTUMER);
         $provider_historys = $this->databaseService->getPayHistory($id,Config::PAY_PROVIDER);
+        
         return new ViewModel(array(
             'task'=> $task,
             'listprocess'=>$listprocess,
@@ -176,7 +181,8 @@ namespace Application\Controller;
             'pay_custumer'=>$pay_custumer,
             'custumer_historys' =>$custumer_historys,
             'pay_provider'=>$pay_provider,
-            'provider_historys'=>$provider_historys
+            'provider_historys'=>$provider_historys,
+             'custumer_debt'=> $custumer_debt
             ));
      }
      public function changeinfoAction(){
@@ -239,8 +245,13 @@ namespace Application\Controller;
              if($name == "date_open" || $name == "date_end" || $name == "date_open_pr" || $name == "date_end_pr"){
                 $value = Date::changeVNtoDateSQL($value);
              }
-             $this->databaseService->changeInfoOfTask($id,$name,$value,$this->auth->getIdentity()->id);
-
+             $validator = new \Zend\Validator\Digits();
+             if(($name == "cost_sell" || $name == "cost_buy") && !$validator->isValid($value)){
+                     $result->setStatus(Xeditable::STATUS_ERROR);
+                     $result->setMsg(Xeditable::MSG_DATA_NOT_NUMBER);
+             }else{
+                $this->databaseService->changeInfoOfTask($id,$name,$value,$this->auth->getIdentity()->id);
+            }
          }else{
              $result->setStatus(Xeditable::STATUS_ERROR);
              $result->setMsg(Xeditable::MSG_DATA_EMPTY);
@@ -293,5 +304,33 @@ namespace Application\Controller;
           
         }
         return new JsonModel($result);
+    }
+    public function addcommentAction(){
+        $this->checkLevel2();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $comment = new Comment();
+            $comment->user_id = $this->auth->getIdentity()->id;
+            $comment->create_date = date('Y-m-d H:i:s');
+            $comment->task_id = $request->getPost('task_id');
+            $comment->comment = $request->getPost('comment');
+            $comment->type = $request->getPost('type');
+            $comment->is_read = 0;
+            $comment = $this->databaseService->addComment($comment);
+        }
+        return new JsonModel(array(
+        
+        ));
+    }
+    public function getcommentAction(){
+        $this->checkAuth();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $task_id = $request->getPost('task_id');
+            $type = $request->getPost('type');
+            $data = $this->databaseService->getListComment($task_id,$type);
+          
+        }
+        return new JsonModel($data);
     }
 }
