@@ -108,6 +108,9 @@ use Application\Model\User;
          foreach ($db_users as $db_user) {
              $user = new User($id, $db_user->username, NULL, NULL);
              $user->avatar = $db_user->avatar;
+             $user->note = $db_user->note;
+             $user->phone = $db_user->phone;
+             $user->email = $db_user->email;
              $role_name = $db_user->role_name;
          }
          $usererror = Config::PROCESS_OK;
@@ -162,7 +165,7 @@ use Application\Model\User;
              $validator = new \Zend\Validator\EmailAddress();
              if ($validator->isValid($value)) {
                  $user->email = $value;
-                 $this->databaseService->changeUserInfo($this->user->id, $user);
+                 $this->databaseService->changeUserInfo($id, $user);
                  $this->user->email = $value;
              }else{
                  $result->setStatus(Xeditable::STATUS_ERROR);
