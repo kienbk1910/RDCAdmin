@@ -21,5 +21,6 @@ class TaskListItem
     public $provider_pay;
     public $date_open_pr;
     public $date_end_pr;
-    	
+    public $assign_name;
+    public $reporter_name;	
 }

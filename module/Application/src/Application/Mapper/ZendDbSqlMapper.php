@@ -307,6 +307,8 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $select->join('process', 'tasks.process_id = process.id', array('process_name'=>'name'), 'left');
         $select->join('users', 'tasks.agency_id = users.id', array('agency_name'=>'username'), 'left');
         $select->join(array('2users' => 'users'), 'tasks.provider_id = 2users.id', array('provider_name'=>'username'), 'left');
+        $select->join(array('reporter' => 'users'), 'tasks.reporter_id = reporter.id', array('reporter_name'=>'username'), 'left');
+        $select->join(array('assign' => 'users'), 'tasks.assign_id = assign.id', array('assign_name'=>'username'), 'left');
         $select->where->like('tasks.custumer', '%' . $search .'%');
         $agency_seach = DataTableUtility::getSearchValue($columns,"agency_name");
         if($agency_id != null){

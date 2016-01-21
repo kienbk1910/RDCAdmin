@@ -38,10 +38,17 @@ namespace Application\Controller;
              array_push($agencys,new User($user->id,$user->username,"",""));
 
         }
+         $users = $this->databaseService->getListUserByBaseRole(Config::USER_LEAVE2);
+        $staffs = array();
+        foreach ($users as $user) {
+             array_push($staffs,new User($user->id,$user->username,"",""));
+
+        }
         $processes = $this->databaseService->getListProcess();
         return new ViewModel(
              array('agencys'=>$agencys,
-                'processes'=>$processes)
+                'processes'=>$processes,
+                 'staffs'=>$staffs)
             );
      }
       public function getlistAction(){
@@ -79,7 +86,8 @@ namespace Application\Controller;
             $item->provider_pay = number_format($this->databaseService->getTotalPay($task->id,Config::PAY_PROVIDER));
             $item->date_open_pr = Date::changeDateSQLtoVN($task->date_open_pr);
             $item->date_end_pr = Date::changeDateSQLtoVN($task->date_end_pr);
-
+            $item->assign_name =$task->assign_name;
+            $item->reporter_name =$task->reporter_name;
             array_push($data->data,$item);
          }
         echo \Zend\Json\Json::encode($data, false);
@@ -172,6 +180,12 @@ namespace Application\Controller;
              array_push($agencys,new User($user->id,$user->username,"",""));
 
         }
+        $users = $this->databaseService->getListUserByBaseRole(Config::USER_LEAVE2);
+        $staffs = array();
+        foreach ($users as $user) {
+             array_push($staffs,new User($user->id,$user->username,"",""));
+
+        }
         $pay_custumer = $this->databaseService->getTotalPay($id,Config::PAY_CUSTUMER);
         $custumer_debt = number_format($task->cost_sell - $pay_custumer);
         $pay_custumer = number_format( $pay_custumer);
@@ -185,6 +199,7 @@ namespace Application\Controller;
             'task'=> $task,
             'listprocess'=>$listprocess,
             'agencys'=>$agencys,
+             'staffs'=>$staffs,
             'pay_custumer'=>$pay_custumer,
             'custumer_historys' =>$custumer_historys,
             'pay_provider'=>$pay_provider,

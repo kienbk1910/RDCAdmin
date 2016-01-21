@@ -55,8 +55,27 @@
                                         <label><?php echo $task->last_update;?></label>
                                   </div>
                             </div>
+                          
                         </section>
                     </div>
+                      <div class="row">
+                              <section class="col-lg-6 ">
+                                   <div class="form-group">
+                                   <label for="inputName" class="col-sm-3 control-label">Người Giám Sát</label>
+                                      <div class="col-sm-9">
+                                       <a data-inputclass="custum-x-editable" href="#" id="reporter_id" data-type="select2" data-pk="<?php echo $task->id;?>" data-value="<?php echo $task->reporter_id;?>"data-url="/manager-tasks/change-info" data-title="Chọn Trạng Thái"></a>
+                                      </div>
+                                  </div>
+                              </section>
+                                <section class="col-lg-6 ">
+                                   <div class="form-group">
+                                   <label for="inputName" class="col-sm-6 control-label">Người Chịu Trách Nhiệm</label>
+                                      <div class="col-sm-6">
+                                       <a data-inputclass="custum-x-editable" href="#" id="assign_id" data-type="select2" data-pk="<?php echo $task->id;?>" data-value="<?php echo $task->assign_id;?>"data-url="/manager-tasks/change-info" data-title="Chọn Trạng Thái"></a>
+                                      </div>
+                                  </div>
+                              </section>
+                            </div>
                     </div><!-- /.box-body -->
                    </div><!-- /.box -->
                     <div class="row">
@@ -506,6 +525,30 @@
         <?php 
           foreach ($agencys as $agency) {
             echo "{value: ".$agency->getId().", text: '".$agency->getUsername()."'},";
+          }
+        ?>
+           ],
+         select2: {
+           multiple: false,
+        }
+    });
+    $('#reporter_id').editable({
+         source: [
+        <?php 
+          foreach ($staffs as $staff) {
+            echo "{value: ".$staff->getId().", text: '".$staff->getUsername()."'},";
+          }
+        ?>
+           ],
+         select2: {
+           multiple: false,
+        }
+    });
+        $('#assign_id').editable({
+         source: [
+        <?php 
+          foreach ($staffs as $staff) {
+            echo "{value: ".$staff->getId().", text: '".$staff->getUsername()."'},";
           }
         ?>
            ],

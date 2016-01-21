@@ -1,6 +1,13 @@
 <section class="content">
-	
-	<form class="form-horizontal">
+	<div class="box box-default">
+		  <div class="box-header with-border">
+		    <h3 class="box-title">Tìm Kiếm Nâng Cao</h3>
+		    <div class="box-tools pull-right">
+		      <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+		    </div><!-- /.box-tools -->
+		  </div><!-- /.box-header -->
+		  <div class="box-body" style="display: none;">
+		  		<form class="form-horizontal">
                   <div class="box-body">
                     <div class="form-group">
                       <label for="inputEmail3" class="col-sm-1 control-label col-custum">Nhận Từ</label>
@@ -47,8 +54,32 @@
                           </select>
                       </div>
                     </div>
+                    <div class="form-group">
+	                        <label class="col-sm-3 control-label">Người Giám Sát</label>
+	                         <div class="col-sm-3">
+	                        	<select class=" form-control js-example-basic-single" id="reporter_id" >
+	                        	<option  value="0">Tất Cả</option>;
+		                           <?php foreach($staffs as $staff){
+		                             echo "<option  value=".$staff->id.">".$staff->username."</option>";
+		                            }?>
+	                          	</select>
+	                         </div>
+	                        <label class="col-sm-3 control-label">Người Chịu Trách Nhiệm</label>
+	                         <div class="col-sm-3">
+	                        <select class="form-control js-example-basic-single" id="assign_id" >
+	                        <option  value="0">Tất Cả</option>;
+	                           <?php foreach($staffs as $staff){
+	                             echo "<option  value=".$staff->id.">".$staff->username."</option>";
+	                            }?>
+	                          </select>
+	                         </div>
+                    </div>
+                    <div>
                   </div><!-- /.box-body -->
     </form>
+		  </div><!-- /.box-body -->
+	</div><!-- /.box -->
+	
 	<div>
 		Ẩn Hiện: 
 		<a class="toggle-vis" data-column="1">Tên</a>
@@ -64,6 +95,8 @@
 		-<a class="toggle-vis" data-column="11">Đã Chi</a>
 		-<a class="toggle-vis" data-column="12">Ngày Xử Lý</a>
 		-<a class="toggle-vis" data-column="13">Xử Lý Xong</a>
+		-<a class="toggle-vis" data-column="14">Người Chịu Trách Nhiệm</a>
+		-<a class="toggle-vis" data-column="15">Người Giám Sát</a>
 	</div>
 	<table id="users-table" class="display nowrap" cellspacing="0" width="100%">
 	  
@@ -84,6 +117,8 @@
 	               	<th>Đã Chi</th>
 	               	<th>Ngày Xử Lý</th>
 	               	<th>Xử Lý Xong</th>
+	               	<th>Người Chịu Trách Nhiệm</th>
+	               	<th>Người Giám Sát</th>
 	            </tr>
 	        </thead>
 	        <tfoot>
@@ -102,6 +137,8 @@
 	               	<th>Đã Chi</th>
 	               	<th>Ngày Xử Lý</th>
 	               	<th>Xử Lý Xong</th>
+	               	<th>Người Chịu Trách Nhiệm</th>
+	               	<th>Người Giám Sát</th>
 	            </tr>
 	        </tfoot>
 	</table>
@@ -157,6 +194,8 @@ var editor; // use a global for the submit and return data rendering in the exam
 							{ data: "provider_pay" },
 							{ data: "date_open_pr" },
 							{ data: "date_end_pr" },
+							{ data: "reporter_name" },
+							{ data: "assign_name" },
 						],
 
 				} );
@@ -196,6 +235,14 @@ var editor; // use a global for the submit and return data rendering in the exam
        $("#process_id").select2().on("change", function(e) {
           // mostly used event, fired to the original element when the value changes
            	$('#users-table').DataTable().column(3).search( e.val,"","").draw();
+      });
+        $("#assign_id").select2().on("change", function(e) {
+          // mostly used event, fired to the original element when the value changes
+           	$('#users-table').DataTable().column(14).search( e.val,"","").draw();
+      });
+         $("#reporter_id").select2().on("change", function(e) {
+          // mostly used event, fired to the original element when the value changes
+           	$('#users-table').DataTable().column(15).search( e.val,"","").draw();
       });
       function seach_custum_date_start(){
       		$('#users-table').DataTable().column(7).search( $("#cus-date-start_1").val()+"-"+$("#cus-date-start_2").val(),"","").draw();
