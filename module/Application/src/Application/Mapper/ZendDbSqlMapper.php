@@ -84,8 +84,11 @@ class ZendDbSqlMapper implements IndexMapperInterface
             $update->set(array('phone' => $user->phone));
         } else if ($user->note != NULL) {
             $update->set(array('note' => $user->note));
-        } else if ($user->block != NULL) {
+        } else if ($user->block == 0 || $user->block == 1) {
             $update->set(array('block' => $user->block));
+        } else {
+            $ret = NULL;
+            return $ret;
         }
 
         $update->Where(array('id = ?' => $id_user));
@@ -96,6 +99,8 @@ class ZendDbSqlMapper implements IndexMapperInterface
         } catch (\Exception $e) {
             $ret = NULL;
         }
+
+        return $ret;
      }
 
      public function getTotalUsers(){

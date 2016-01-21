@@ -38,13 +38,13 @@ class User
 
     /**
      *
-     * @var string
+     * @var int
      */
     public $role_id;
 
     /**
      *
-     * @var string
+     * @var int
      */
     public $block;
 
