@@ -101,6 +101,7 @@ namespace Application\Controller;
             $task->last_user_id =  $this->auth->getIdentity()->id;
             $task->process_id = Config::PROCESS_REC;
             $task->reporter_id = $request->getPost('reporter_id');
+            $task->assign_id = $request->getPost('assign_id');
             // infor
             $task->custumer = $request->getPost('custumer');
             $task->certificate = $request->getPost('certificate');
@@ -138,11 +139,15 @@ namespace Application\Controller;
              array_push($agencys,new User($user->id,$user->username,"",""));
 
         }
-        $reporters = $this->databaseService->getListUserByBaseRole(Config::USER_LEAVE1);
+        $users = $this->databaseService->getListUserByBaseRole(Config::USER_LEAVE2);
+        $staffs = array();
+        foreach ($users as $user) {
+             array_push($staffs,new User($user->id,$user->username,"",""));
 
+        }
         return new ViewModel(array(
             'agencys'=>$agencys,
-            'reporters'=>$reporters
+            'staffs'=>$staffs
             ));
      }
       public function detailAction()
@@ -170,7 +175,9 @@ namespace Application\Controller;
         $pay_custumer = $this->databaseService->getTotalPay($id,Config::PAY_CUSTUMER);
         $custumer_debt = number_format($task->cost_sell - $pay_custumer);
         $pay_custumer = number_format( $pay_custumer);
-        $pay_provider = number_format($this->databaseService->getTotalPay($id,Config::PAY_PROVIDER));
+        $pay_provider = $this->databaseService->getTotalPay($id,Config::PAY_PROVIDER);
+        $provider_debt = number_format($task->cost_buy - $pay_provider);
+        $pay_provider = number_format( $pay_provider);
         $custumer_historys = $this->databaseService->getPayHistory($id,Config::PAY_CUSTUMER);
         $provider_historys = $this->databaseService->getPayHistory($id,Config::PAY_PROVIDER);
 
@@ -182,7 +189,8 @@ namespace Application\Controller;
             'custumer_historys' =>$custumer_historys,
             'pay_provider'=>$pay_provider,
             'provider_historys'=>$provider_historys,
-             'custumer_debt'=> $custumer_debt
+             'custumer_debt'=> $custumer_debt,
+             'provider_debt'=> $provider_debt
             ));
      }
      public function changeinfoAction(){

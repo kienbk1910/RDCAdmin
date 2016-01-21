@@ -7,6 +7,11 @@ class Date {
        
        return date_format(date_create($number),"d/m/Y");
     }
+    public  static  function changeFullDateSQLtoVN($number)
+    {
+       
+       return date_format(date_create($number),"h:m d/m/Y");
+    }
     public static function changeVNtoDateSQL($date_vn){
         $myDateTime = date_create_from_format ('d/m/Y',$date_vn);
       return  date_format($myDateTime,'Y-m-d');

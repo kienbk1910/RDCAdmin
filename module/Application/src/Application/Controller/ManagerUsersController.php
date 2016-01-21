@@ -39,10 +39,10 @@ use Application\Config\Config;
          $search = $search['value'];
          $total = $this->databaseService->getTotalUsers();
 
-         $users =$this->databaseService->getListUsers($start,$length,$search);
+         $users = $this->databaseService->getListUsers($start,$length,$search);
          $data = new DataTablesObject();
          $data->recordsTotal = $total;
-         $data->recordsFiltered = $total;
+         $data->recordsFiltered = $this->databaseService->getCountUsers($search);
          $data->draw = $draw;
          foreach ($users as $user) {
              array_push($data->data,new UserListItem($user->id,$user->username,$user->role_name,$user->block));

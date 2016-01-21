@@ -13,6 +13,7 @@
      public function changeUserInfo($id_user,$user);
      public function getTotalUsers();
      public function getListUsers($start,$length,$search);
+     public function getCountUsers($search);
      public function changePassword($id_user, $password, $old_password);
      public function resetPassword($id_user, $password);
      public function getListByRole($role);

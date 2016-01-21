@@ -27,6 +27,7 @@ class Task
 	public $last_update;
 	public $process_id;
 	public $reporter_id;
+	public $assign_id;
 
 	public function toArray(){
 		return   array(
@@ -50,7 +51,8 @@ class Task
 			'last_update'=> $this->last_update,
 			'last_user_id'=> $this->last_user_id,
 			'process_id'=> $this->process_id,
-			'reporter_id'=> $this->reporter_id,			
+			'reporter_id'=> $this->reporter_id,	
+			'assign_id'=> $this->assign_id,			
 		 );
 	}
 }
