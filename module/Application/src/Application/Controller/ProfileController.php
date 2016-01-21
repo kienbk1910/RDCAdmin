@@ -38,6 +38,7 @@ use Application\Model\User;
                $user->note = $db_user->note;
                $user->phone = $db_user->phone;
                $user->email = $db_user->email;
+               $user->block = $db_user->block;
                $role_name = $db_user->role_name;
            }
            $usererror = Config::PROCESS_OK;
@@ -129,6 +130,7 @@ use Application\Model\User;
              $user->note = $db_user->note;
              $user->phone = $db_user->phone;
              $user->email = $db_user->email;
+             $user->block = $db_user->block;
              $role_name = $db_user->role_name;
          }
          $usererror = Config::PROCESS_OK;
@@ -174,17 +176,18 @@ use Application\Model\User;
          $value = $this->getRequest()->getPost('value');
          $name = $this->getRequest()->getPost('name');
          $id = $this->getRequest()->getPost('pk');
-         $user = new User(NULL, NULL, NULL, NULL);
-         $user->email = NULL;
-         $user->phone = NULL;
-         $user->note = NULL;
-         $user->block = NULL;
+         $selected_user = new User(NULL, NULL, NULL, NULL);
+         $selected_user->email = NULL;
+         $selected_user->phone = NULL;
+         $selected_user->note = NULL;
+         $selected_user->block = NULL;
+
          if ($name == "pro-email") {
              $result = new Xeditable();
              $validator = new \Zend\Validator\EmailAddress();
              if ($validator->isValid($value)) {
-                 $user->email = $value;
-                 $this->databaseService->changeUserInfo($id, $user);
+                 $selected_user->email = $value;
+                 $this->databaseService->changeUserInfo($id, $selected_user);
                  if ($this->identity()->id == $id) {
                     $this->user->email = $value;
                  }
@@ -200,8 +203,8 @@ use Application\Model\User;
              $result = new Xeditable();
              $validator = new \Zend\Validator\NotEmpty();
              if ($validator->isValid($value)) {
-                 $user->phone = $value;
-                 $this->databaseService->changeUserInfo($id, $user);
+                 $selected_user->phone = $value;
+                 $this->databaseService->changeUserInfo($id, $selected_user);
                  if ($this->identity()->id == $id) {
                     $this->user->phone = $value;
                  }
@@ -217,8 +220,8 @@ use Application\Model\User;
              $result = new Xeditable();
              $validator = new \Zend\Validator\NotEmpty();
              if ($validator->isValid($value)) {
-                 $user->note = $value;
-                 $this->databaseService->changeUserInfo($id, $user);
+                 $selected_user->note = $value;
+                 $this->databaseService->changeUserInfo($id, $selected_user);
                  if ($this->identity()->id == $id) {
                     $this->user->note = $value;
                  }
@@ -235,12 +238,22 @@ use Application\Model\User;
              $validator = new \Zend\Validator\NotEmpty();
              if ($validator->isValid($value)) {
                  if ($value == "Block") {
-                    $user->block = 0;
+                    $selected_user->block = 0;
+                 } else if ($value == "Unblock") {
+                    $selected_user->block = 1;
                  } else {
-                    $user->block = 1;
+                     $selected_user->block = NULL;
+                     $result->setStatus(Xeditable::STATUS_ERROR);
+                     $result->setMsg(Xeditable::MSG_DATA_EMPTY);
+                     echo \Zend\Json\Json::encode($result, false);
+                     exit;
                  }
 
-                 $this->databaseService->changeUserInfo($id, $user);
+                 $ret = $this->databaseService->changeUserInfo($id, $selected_user);
+                 if ($ret == NULL) {
+                     $result->setStatus(Xeditable::STATUS_ERROR);
+                     $result->setMsg(Xeditable::MSG_DATA_ERROR);
+                 }
              }else{
                  $result->setStatus(Xeditable::STATUS_ERROR);
                  $result->setMsg(Xeditable::MSG_DATA_ERROR);
