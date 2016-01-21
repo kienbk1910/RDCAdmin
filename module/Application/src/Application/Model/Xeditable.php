@@ -5,7 +5,8 @@ namespace Application\Model;
 class Xeditable
 {
     const STATUS_ERROR = "error";
-    const MSG_DATA_ERROR = "không đúng định dạng";
+    const MSG_DATA_ERROR = "hông đúng định dạng";
+    const ROLE_ERROR = "Không có quyền admin";
     const MSG_DATA_EMPTY = "Dữ liệu rỗng";
     const MSG_DATA_NOT_NUMBER = "Dữ liệu không phải là số";
     /**
@@ -20,7 +21,7 @@ class Xeditable
      */
     public $msg;
 
-  
+
     public function getStatus()
     {
         return $this->status;
@@ -29,7 +30,7 @@ class Xeditable
     {
         $this->status = $status;
     }
-  
+
     public function setMsg($msg)
     {
         $this->msg = $msg;

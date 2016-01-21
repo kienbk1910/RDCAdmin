@@ -39,6 +39,7 @@ use Application\Model\User;
                $user->phone = $db_user->phone;
                $user->email = $db_user->email;
                $user->block = $db_user->block;
+               $user->role_id = $db_user->role_id;
                $role_name = $db_user->role_name;
            }
            $usererror = Config::PROCESS_OK;
@@ -171,8 +172,16 @@ use Application\Model\User;
          }
      }
 
-     public function changeUserInfoAction(){
-         $this->checkLevel2();
+     public function changeUserInfoAction() {
+         /* Only allow Admin */
+         if ($this->auth->getIdentity()->role_id != Config::USER_ADMIN) {
+             $result = new Xeditable();
+             $result->setStatus(Xeditable::STATUS_ERROR);
+             $result->setMsg(Xeditable::ROLE_ERROR);
+             echo \Zend\Json\Json::encode($result, false);
+             exit();
+         }
+
          $value = $this->getRequest()->getPost('value');
          $name = $this->getRequest()->getPost('name');
          $id = $this->getRequest()->getPost('pk');
@@ -188,9 +197,6 @@ use Application\Model\User;
              if ($validator->isValid($value)) {
                  $selected_user->email = $value;
                  $this->databaseService->changeUserInfo($id, $selected_user);
-                 if ($this->identity()->id == $id) {
-                    $this->user->email = $value;
-                 }
              }else{
                  $result->setStatus(Xeditable::STATUS_ERROR);
                  $result->setMsg(Xeditable::MSG_DATA_ERROR);
@@ -205,9 +211,6 @@ use Application\Model\User;
              if ($validator->isValid($value)) {
                  $selected_user->phone = $value;
                  $this->databaseService->changeUserInfo($id, $selected_user);
-                 if ($this->identity()->id == $id) {
-                    $this->user->phone = $value;
-                 }
              }else{
                  $result->setStatus(Xeditable::STATUS_ERROR);
                  $result->setMsg(Xeditable::MSG_DATA_ERROR);
@@ -222,9 +225,6 @@ use Application\Model\User;
              if ($validator->isValid($value)) {
                  $selected_user->note = $value;
                  $this->databaseService->changeUserInfo($id, $selected_user);
-                 if ($this->identity()->id == $id) {
-                    $this->user->note = $value;
-                 }
              }else{
                  $result->setStatus(Xeditable::STATUS_ERROR);
                  $result->setMsg(Xeditable::MSG_DATA_ERROR);
@@ -254,6 +254,62 @@ use Application\Model\User;
                      $result->setStatus(Xeditable::STATUS_ERROR);
                      $result->setMsg(Xeditable::MSG_DATA_ERROR);
                  }
+             }else{
+                 $result->setStatus(Xeditable::STATUS_ERROR);
+                 $result->setMsg(Xeditable::MSG_DATA_ERROR);
+             }
+             echo \Zend\Json\Json::encode($result, false);
+             exit;
+         }
+     }
+
+     public function changeMyInfoAction(){
+         $this->checkAuth();
+         $value = $this->getRequest()->getPost('value');
+         $name = $this->getRequest()->getPost('name');
+         $id = $this->getRequest()->getPost('pk');
+         $selected_user = new User(NULL, NULL, NULL, NULL);
+         $selected_user->email = NULL;
+         $selected_user->phone = NULL;
+         $selected_user->note = NULL;
+
+         if ($name == "pro-email") {
+             $result = new Xeditable();
+             $validator = new \Zend\Validator\EmailAddress();
+             if ($validator->isValid($value)) {
+                 $selected_user->email = $value;
+                 $this->databaseService->changeUserInfo($id, $selected_user);
+                 $this->user->email = $value;
+             }else{
+                 $result->setStatus(Xeditable::STATUS_ERROR);
+                 $result->setMsg(Xeditable::MSG_DATA_ERROR);
+             }
+             echo \Zend\Json\Json::encode($result, false);
+             exit;
+         }
+
+         if ($name == "pro-phone") {
+             $result = new Xeditable();
+             $validator = new \Zend\Validator\NotEmpty();
+             if ($validator->isValid($value)) {
+                 $selected_user->phone = $value;
+                 $this->databaseService->changeUserInfo($id, $selected_user);
+                 $this->user->phone = $value;
+             }else{
+                 $result->setStatus(Xeditable::STATUS_ERROR);
+                 $result->setMsg(Xeditable::MSG_DATA_ERROR);
+             }
+             echo \Zend\Json\Json::encode($result, false);
+             exit;
+         }
+
+         if ($name == "pro-note") {
+             $result = new Xeditable();
+             $validator = new \Zend\Validator\NotEmpty();
+             if ($validator->isValid($value)) {
+                 $selected_user->note = $value;
+                 $this->databaseService->changeUserInfo($id, $selected_user);
+                 $this->user->note = $value;
              }else{
                  $result->setStatus(Xeditable::STATUS_ERROR);
                  $result->setMsg(Xeditable::MSG_DATA_ERROR);

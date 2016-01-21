@@ -360,14 +360,25 @@ return array(
                'change-user-info' => array(
                       'type' => 'segment',
                       'options' => array(
-                              'route'    => '/change-user-info',
-                              'defaults' => array(
-                                   'action' => 'changeUserInfo',
-                              ),
-                              'constraints' => array(
-                              )
+                          'route'    => '/change-user-info',
+                          'defaults' => array(
+                               'action' => 'changeUserInfo',
+                          ),
+                          'constraints' => array(
+                          )
                       ),
                ),
+                'change-my-info' => array(
+                    'type' => 'segment',
+                    'options' => array(
+                        'route'    => '/change-my-info',
+                        'defaults' => array(
+                            'action' => 'changeMyInfo',
+                        ),
+                        'constraints' => array(
+                        )
+                    ),
+                ),
             )
         )
         ),
