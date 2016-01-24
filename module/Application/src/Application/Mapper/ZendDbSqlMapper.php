@@ -329,7 +329,14 @@ class ZendDbSqlMapper implements IndexMapperInterface
         if($process_seach != "" && $process_seach != 0){
            $select->Where(array('process.id' => $process_seach));
         }
-
+        $reporter_seach = DataTableUtility::getSearchValue($columns,"reporter_name");
+        if($reporter_seach != "" && $reporter_seach != 0){
+           $select->Where(array('reporter.id' => $reporter_seach));
+        }
+        $assign_seach = DataTableUtility::getSearchValue($columns,"assign_name");
+        if($assign_seach != "" && $assign_seach != 0){
+           $select->Where(array('assign.id' => $assign_seach));
+        }
         $date_open = DataTableUtility::getSearchValue($columns,"date_open");
         $date_open = explode("-", $date_open);
         $date_open_1 ="";

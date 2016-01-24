@@ -55,23 +55,24 @@
                       </div>
                     </div>
                     <div class="form-group">
-	                        <label class="col-sm-3 control-label">Người Giám Sát</label>
-	                         <div class="col-sm-3">
-	                        	<select class=" form-control js-example-basic-single" id="reporter_id" >
-	                        	<option  value="0">Tất Cả</option>;
-		                           <?php foreach($staffs as $staff){
-		                             echo "<option  value=".$staff->id.">".$staff->username."</option>";
-		                            }?>
-	                          	</select>
-	                         </div>
+	                       
 	                        <label class="col-sm-3 control-label">Người Chịu Trách Nhiệm</label>
 	                         <div class="col-sm-3">
 	                        <select class="form-control js-example-basic-single" id="assign_id" >
-	                        <option  value="0">Tất Cả</option>;
+	                        <option  value="0">Tất Cả</option>
 	                           <?php foreach($staffs as $staff){
 	                             echo "<option  value=".$staff->id.">".$staff->username."</option>";
 	                            }?>
 	                          </select>
+	                         </div>
+	                          <label class="col-sm-3 control-label">Người Giám Sát</label>
+	                         <div class="col-sm-3">
+	                        	<select class="form-control js-example-basic-single" id="reporter_id" >
+	                        	<option  value="0">Tất Cả</option>
+		                           <?php foreach($staffs as $staff){
+		                             echo "<option  value=".$staff->id.">".$staff->username."</option>";
+		                            }?>
+	                          	</select>
 	                         </div>
                     </div>
                     <div>
@@ -193,9 +194,9 @@ var editor; // use a global for the submit and return data rendering in the exam
 							{ data: "cost_buy" },
 							{ data: "provider_pay" },
 							{ data: "date_open_pr" },
-							{ data: "date_end_pr" },
-							{ data: "reporter_name" },
+							{ data: "date_end_pr" },							
 							{ data: "assign_name" },
+							{ data: "reporter_name" },
 						],
 
 				} );
