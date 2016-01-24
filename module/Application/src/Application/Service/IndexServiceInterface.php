@@ -3,8 +3,9 @@
  namespace Application\Service;
  use Application\Model\User;
  use Application\Model\Task;
-  use Application\Model\Comment;
+ use Application\Model\Comment;
  use Application\Model\MoneyHistory;
+ use Application\Model\FileAttachment;
  interface IndexServiceInterface
  {
      public function getListRoles();
@@ -26,11 +27,15 @@
      public function insertMoneyHistory(MoneyHistory $money);
      public function getTotalPay($id,$type);
      public function getPayHistory($id,$type);
+     public function deletePayById($id);
 
      public function getTotalTask();
      public function getListTask($start,$length,$search,$columns,$order,$agency_id,$provider_id);
+     public function getCountTasksFiltered($start,$length,$search,$columns,$order,$agency_id,$provider_id);
      public function getUserById($id);
 
      public function addComment(Comment $comment);
      public function getListComment($task_id,$type);
+
+     public function addFileAttachment(FileAttachment $file);
  }

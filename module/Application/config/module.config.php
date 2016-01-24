@@ -247,18 +247,44 @@ return array(
                          )
                      ),
                      ),
-                     'payhistory' => array(
+                     'deletepay' => array(
                      'type' => 'segment',
                      'options' => array(
-                         'route'    => '/payhistory',
+                         'route'    => '/deletepay',
                            'defaults' => array(
-                             'action' => 'payhistory',
+                             'action' => 'deletepay',
 
                          ),
                          'constraints' => array(
 
                          )
                      ),
+                     ),
+                    'addfile' => array(
+                         'type' => 'segment',
+                         'options' => array(
+                             'route'    => '/addfile',
+                               'defaults' => array(
+                                 'action' => 'addfile',
+
+                             ),
+                             'constraints' => array(
+
+                             )
+                         ),
+                     ),
+                    'payhistory' => array(
+                         'type' => 'segment',
+                         'options' => array(
+                             'route'    => '/payhistory',
+                               'defaults' => array(
+                                 'action' => 'payhistory',
+
+                             ),
+                             'constraints' => array(
+
+                             )
+                         ),
                      ),
                     'getlist' => array(
                          'type' => 'segment',

@@ -6,6 +6,7 @@ use Application\Model\User;
 use Application\Model\Task;
 use Application\Model\Comment;
 use Application\Model\MoneyHistory;
+use Application\Model\FileAttachment;
 class IndexService implements IndexServiceInterface
 {
     protected $databaseMapper;
@@ -78,6 +79,9 @@ class IndexService implements IndexServiceInterface
   public function getListTask($start,$length,$search,$columns,$order,$agency_id,$provider_id){
       return $this->databaseMapper->getListTask($start,$length,$search,$columns,$order,$agency_id,$provider_id);
   }
+  public function getCountTasksFiltered($start,$length,$search,$columns,$order,$agency_id,$provider_id){
+        return $this->databaseMapper->getCountTasksFiltered($start,$length,$search,$columns,$order,$agency_id,$provider_id);
+  }
   public function getUserById($id){
       return $this->databaseMapper->getUserById($id);
   }
@@ -87,4 +91,10 @@ class IndexService implements IndexServiceInterface
    public function getListComment($task_id,$type){
     return $this->databaseMapper->getListComment($task_id,$type);
    }
+   public function deletePayById($id){
+    return $this->databaseMapper->deletePayById($id);
+   }
+  public function addFileAttachment(FileAttachment $file){
+    return $this->databaseMapper->addFileAttachment($file);
+  }
 }

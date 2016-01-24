@@ -170,8 +170,8 @@ var editor; // use a global for the submit and return data rendering in the exam
 	} );*/
 		var table = $('#users-table').DataTable( {
 						"dom": '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>',
-						processing: true,
-				        serverSide: true,
+						"processing": true,
+				        "serverSide": true,
 				        "scrollX": true,
 				        ajax: {
 				            url: "/manager-tasks/getlist",

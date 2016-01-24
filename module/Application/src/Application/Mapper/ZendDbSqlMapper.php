@@ -24,6 +24,7 @@ use Application\Model\Task;
 use Application\Model\MoneyHistory;
 use Application\Utility\DataTableUtility;
 use Utility\Date\Date;
+use Application\Model\FileAttachment;
 class ZendDbSqlMapper implements IndexMapperInterface
 {
 
@@ -256,9 +257,15 @@ class ZendDbSqlMapper implements IndexMapperInterface
 
     public function insertMoneyHistory(MoneyHistory $money){
         $sql = new Sql($this->dbAdapter);
-        $insert = $sql->insert('money_history');
-        $newData = $money->toArray();
-        $insert->values($newData);
+        if($money->id == 0){
+            $insert = $sql->insert('money_history');
+            $newData = $money->toArray();
+            $insert->values($newData);
+        }else{
+            $insert = $sql->update('money_history');
+            $insert->set($money->toArrayUpdate());
+            $insert->Where(array('id = ?' => $money->id));
+        }
         $selectString = $sql->getSqlStringForSqlObject($insert);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
     }
@@ -303,7 +310,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
         }
         return $count;
       }
-      public function getListTask($start,$length,$search,$columns,$order,$agency_id,$provider_id){
+      protected function getSelectList($start,$length,$search,$columns,$order,$agency_id,$provider_id){
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('tasks');
         $select->join('process', 'tasks.process_id = process.id', array('process_name'=>'name'), 'left');
@@ -372,6 +379,11 @@ class ZendDbSqlMapper implements IndexMapperInterface
         } else if ($date_end_1 != "" && $date_end_2 == "") {
              $select->where->greaterThanOrEqualTo("tasks.date_end", Date::changeVNtoDateSQL($date_end_1));
         }
+        return $select;
+      }
+      public function getListTask($start,$length,$search,$columns,$order,$agency_id,$provider_id){
+         $sql = new Sql($this->dbAdapter);
+        $select = $this->getSelectList($start,$length,$search,$columns,$order,$agency_id,$provider_id);
 
         $select->order(array('tasks.last_update DESC'));
         $select->offset($start)
@@ -380,7 +392,19 @@ class ZendDbSqlMapper implements IndexMapperInterface
 
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
       }
-
+     public function getCountTasksFiltered($start,$length,$search,$columns,$order,$agency_id,$provider_id){
+        $sql = new Sql($this->dbAdapter);
+        $select = $this->getSelectList($start,$length,$search,$columns,$order,$agency_id,$provider_id);
+        $select->columns(array('COUNT'=>new \Zend\Db\Sql\Expression('COUNT(*)')));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $resultSet =  $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $count = 0;
+        foreach ($resultSet as $row) {
+            $count = $row->COUNT;
+            break;
+        }
+        return $count;
+      }
       public function getUserById($id)
       {
           $sql = new Sql($this->dbAdapter);
@@ -408,4 +432,19 @@ class ZendDbSqlMapper implements IndexMapperInterface
          $selectString = $sql->getSqlStringForSqlObject($select);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
+      public function deletePayById($id){
+        $sql = new Sql($this->dbAdapter);
+        $insert = $sql->delete('money_history');
+        $insert->where(array('id =?' => $id));
+        $selectString = $sql->getSqlStringForSqlObject($insert);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+      }
+   public function addFileAttachment(FileAttachment $file){
+        $sql = new Sql($this->dbAdapter);
+        $insert = $sql->insert('file_attachment');
+        $newData = $file->toArray();
+        $insert->values($newData);
+        $selectString = $sql->getSqlStringForSqlObject($insert);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);   
+   }
  }

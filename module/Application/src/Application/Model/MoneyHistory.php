@@ -32,5 +32,16 @@ class MoneyHistory
 			'last_update'=> $this->last_update,
 			'last_user_id'=> $this->last_user_id,		
 		 );
+	}
+	public function toArrayUpdate(){
+		return   array(
+			'money'=> $this->money,
+			'date_pay'=> $this->date_pay,
+			'money_option'=> $this->money_option,
+			'note'=> $this->note,
+			'type'=> $this->type,
+			'last_update'=> $this->last_update,
+			'last_user_id'=> $this->last_user_id,		
+		 );
 	}	
 }

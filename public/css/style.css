@@ -24,3 +24,10 @@ td.highlight {
 	padding-left: 5px;
 	padding-right: 5px;
 }
+.dataTables_processing{
+	z-index: 999;
+}
+.tab_height_box{
+	max-height: 200px ;
+	overflow: auto;
+}

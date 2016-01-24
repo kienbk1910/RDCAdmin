@@ -16,6 +16,12 @@ namespace Application\Controller;
  use Zend\Validator;
  use Application\Model\MoneyHistory;
  use Utility\String\StringUtility;
+use Application\Model\FileAttachment;
+use Zend\Http\PhpEnvironment\Request;
+use Zend\Filter;
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\Input;
+use Zend\InputFilter\FileInput;
  class ManagerTasksController extends BaseController
  {
      public function __construct(IndexServiceInterface $databaseService,AuthenticationService $auth)
@@ -66,7 +72,7 @@ namespace Application\Controller;
          $tasks =$this->databaseService->getListTask($start,$length,$search,$columns,"",null,null);
          $data = new DataTablesObject();
          $data->recordsTotal = $total;
-         $data->recordsFiltered = $total;
+         $data->recordsFiltered = $this->databaseService->getCountTasksFiltered($start,$length,$search,$columns,"",null,null);
          $data->draw = $draw;
          foreach ($tasks as $task) {
             $item = new TaskListItem();
@@ -253,11 +259,23 @@ namespace Application\Controller;
             $pay->money_option = $request->getPost('money_option');
             $pay->note = $request->getPost('note');
             $pay->type = $request->getPost('type');
+            $pay->id = $request->getPost('id',0);
             $id = $this->databaseService->insertMoneyHistory($pay);
         }
         return new JsonModel(array(
 
         ));
+     }
+    public function deletepayAction(){
+    $this->checkLevel2();
+    $request = $this->getRequest();
+    if ($request->isPost()) {
+        $id = $request->getPost('id',0);  
+        $id = $this->databaseService->deletePayById($id);
+    }
+    return new JsonModel(array(
+
+    ));
      }
     public function payhistoryAction(){
         $this->checkLevel2();
@@ -307,5 +325,45 @@ namespace Application\Controller;
 
         }
         return new JsonModel($data);
+    }
+    public function addfileAction(){
+        $this->checkAuth();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $file_attach = new FileAttachment();
+            $file_attach->user_create = $this->auth->getIdentity()->id;
+            $file_attach->date_create = date('Y-m-d H:i:s');
+            $file_attach->last_date = $file_attach->date_create ;
+            $file_attach->last_user = $this->auth->getIdentity()->id;
+            // info pay
+            $file_attach->task_id = $request->getPost('task_id');
+            $file_attach->permission_option = $request->getPost('permission_option');
+            // File upload input
+            $file = new FileInput('file_name');           // Special File Input type
+            $file->getValidatorChain()               // Validators are run first w/ FileInput
+            ->attach(new Validator\File\UploadFile());
+            $file->getFilterChain()                  // Filters are run second w/ FileInput
+            ->attach(new Filter\File\RenameUpload(array(
+             'target'    => '.'.Config::FILE_ATTACHMENT_PATH,
+             'use_upload_name'=>true,
+             'randomize' => true,
+            )));
+
+            // Merge $_POST and $_FILES data together
+            $request  = new Request();
+            $postData = array_merge_recursive($request->getPost()->toArray(), $request->getFiles()->toArray());
+
+            $inputFilter = new InputFilter();
+            $inputFilter->add($file)->setData($postData);
+            if ($inputFilter->isValid()) {           // FileInput validators are run, but not the filters...
+                   
+              $data = $inputFilter->getValues();   // This is when the FileInput filters are run.
+
+              $file_attach->file_name = basename($data['file_name']['tmp_name']);
+              $this->databaseService->addFileAttachment($file_attach);
+              $this->user->avatar = $avatar;
+            }
+        }
+          return new JsonModel(array());
     }
 }

@@ -18,6 +18,7 @@ namespace Application\Config;
     const PAY_PROVIDER = 2;
 
     const IMAGE_PATH = "/files/users/avatar/origin/";
+    const FILE_ATTACHMENT_PATH = "/data/attachment/";
 
     const PASSWORD_MAX_LEN = 500;
     const PASSWORD_MIN_LEN = 8;

@@ -78,6 +78,41 @@
                             </div>
                     </div><!-- /.box-body -->
                    </div><!-- /.box -->
+                   <!-- file attachment -->
+                   <div class="box box-default">
+                      <div class="box-header with-border">
+                        <h3 class="box-title">File Đính Kèm <small class="label pull-right bg-red">3</small></h3>
+                        <div class="box-tools pull-right">
+                        <button class="btn" onclick="show_upload_form()">Thêm File</button>
+                          <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                        </div><!-- /.box-tools -->
+                      </div><!-- /.box-header -->
+                      <div class="box-body tab_height_box" style="display:none">
+                        <ul class="todo-list ui-sortable">
+                        <li>
+                          <!-- drag handle -->
+                          <span class="handle ui-sortable-handle">
+                            <i class="fa fa-ellipsis-v"></i>
+                            <i class="fa fa-ellipsis-v"></i>
+                          </span>
+                          <!-- checkbox -->
+                          <input type="checkbox" value="" name="">
+                          <!-- todo text -->
+                          <span class="text">Design a nice theme</span>
+                          <!-- Emphasis label -->
+                          <small class="label label-danger"><i class="fa fa-clock-o"></i> 2 mins</small>
+                          <!-- General tools such as edit or delete-->
+                          <div class="tools"> 
+                            <i class="fa fa-download"></i>
+                            <i class="fa fa-edit"></i>
+                            <i class="fa fa-trash-o"></i>
+                          </div>
+                        </li>
+                        
+                      </ul>
+                      </div><!-- /.box-body -->
+                    </div><!-- /.box -->
+                    <!-- end file attachment -->
                     <div class="row">
                           <section class="col-lg-6 connectedSortable">
                             <div class="box box-primary">
@@ -150,7 +185,7 @@
                                   <li><a href="#timeline" data-toggle="tab">Bình Luận</a></li>
                                 </ul>
                                 <div class="tab-content">
-                                  <div class="active tab-pane box" id="activity">
+                                  <div class="active tab-pane box tab_height_box" id="activity">
                                           <ul class="todo-list">
                                           <?php foreach ($custumer_historys as $custumer_history) {?>
                                               <li>
@@ -170,8 +205,8 @@
                                               <small class="label label-danger"><i class="fa fa-clock-o"></i> <?php echo $custumer_history->username;?></small>
                                               <!-- General tools such as edit or delete-->
                                               <div class="tools">
-                                                <i class="fa fa-edit"></i>
-                                                <i class="fa fa-trash-o" onclick="pay_delete()"></i>
+                                                <i class="fa fa-edit" onclick='pay_edit(<?php echo $custumer_history->id;?>,1,<?php echo '"'.number_format($custumer_history->money).'"'?>,<?php echo  '"'.date_format(date_create($custumer_history->date_pay),"d/m/Y").'"';?>,<?php echo  '"'.$custumer_history->money_option.'"';?>,<?php echo  '"'.$custumer_history->note.'"';?>)'></i>
+                                                <i class="fa fa-trash-o" onclick="confirm_delete(<?php echo $custumer_history->id;?>)"></i>
                                               </div>
                                             </li>
                                           <?php }?>
@@ -179,7 +214,7 @@
                                         
                                   </div><!-- /.tab-pane -->
                                   <div class="tab-pane" id="timeline">
-                                     <div class="box-body chat box" id="custumer-chat-box" style="height: 200px ;overflow: scroll"  >
+                                     <div class="box-body chat box tab_height_box" id="custumer-chat-box"   >
                                       
                                       <!-- chat item -->
                                       <div class="item">
@@ -282,7 +317,7 @@
                                   <li><a href="#timeline_pr" data-toggle="tab">Bình Luận</a></li>
                                 </ul>
                                 <div class="tab-content">
-                                  <div class="active tab-pane" id="activity_pr">
+                                  <div class="active tab-pane tab_height_box" id="activity_pr">
                                        <ul class="todo-list">
                                           <?php foreach ($provider_historys as $custumer_history) {?>
                                               <li>
@@ -301,16 +336,17 @@
                                                 <!-- Emphasis label -->
                                               <small class="label label-danger"><i class="fa fa-clock-o"></i> <?php echo $custumer_history->username;?></small>
                                               <!-- General tools such as edit or delete-->
-                                              <div class="tools">
-                                                <i class="fa fa-edit"></i>
-                                                <i class="fa fa-trash-o"></i>
+                                               <div class="tools">
+                                                <i class="fa fa-edit" onclick='pay_edit(<?php echo $custumer_history->id;?>,2,<?php echo '"'.number_format($custumer_history->money).'"'?>,<?php echo  '"'.date_format(date_create($custumer_history->date_pay),"d/m/Y").'"';?>,<?php echo  '"'.$custumer_history->money_option.'"';?>,<?php echo  '"'.$custumer_history->note.'"';?>)'></i>
+                                                <i class="fa fa-trash-o" onclick="confirm_delete(<?php echo $custumer_history->id;?>)"></i>
                                               </div>
+                                            </li>
                                             </li>
                                           <?php }?>
                                           </ul>
                                   </div><!-- /.tab-pane -->
                                    <div class="tab-pane" id="timeline_pr">
-                                     <div class="box-body chat box" id="provider-chat-box" style="height: 200px ;overflow: scroll"  >
+                                     <div class="box-body chat box tab_height_box" id="provider-chat-box"  >
                                       
                                       <!-- chat item -->
                                       <div class="item">
@@ -363,7 +399,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-        <button type="button" class="btn btn-primary" >Xóa</button>
+        <button type="button" class="btn btn-primary" id="delete-pay" >Xóa</button>
       </div>
     </div>
   </div>
@@ -404,6 +440,7 @@
                             <input type="text" class="form-control number-money"  id="date_pay" name="date_pay">
                             <input type="hidden" class="form-control"  name="task_id" value="<?php echo $task->id;?>">
                             <input type="hidden" class="form-control"  name="type" value="1">
+                            <input type="hidden" class="form-control"  name="id" value="0">
                         </div>
                       </div>
                    
@@ -418,6 +455,49 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
         <button type="button"  class="btn btn-primary" id="btn_submit">Thanh Toán</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal upload  -->
+<div class="modal fade" id="modal-upload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Thêm File</h4>
+      </div>
+      <div class="modal-body">
+            <form class="form-horizontal" id="upload_file_att" enctype="multipart/form-data">
+                      <div class="form-group">
+                        <label for="inputName" class="col-sm-4 control-label">Chọn File</label>
+                        <div class="col-sm-6">
+                          <input type="file" name="file_name" class="form-control ">
+                        </div>
+                      </div>
+                       <div class="form-group">
+                        <label for="inputName" class="col-sm-4 control-label">Quyền Truy Cập</label>
+                        <div class="col-sm-6">
+                           <select name="permission_option" class="form-control">
+                              <option value="1">Chỉ RDC</option>
+                              <option value="2">Cho Phép Khách Hàng</option>
+                              <option value="3">Cho Phép Nhà Cung Cấp</option>
+                              <option value="4">Tất Cả</option>
+                           </select>
+                        </div>
+                          <input type="hidden" class="form-control"  name="task_id" value="<?php echo $task->id;?>">
+                      </div>
+              </form>
+
+      </div>
+       <div class="progress progress-xxs" style="margin-bottom: 0px;">
+                    <div class="progress-bar progress-bar-primary progress-bar-striped" role="progressbar" aria-valuenow="40" id="upload-file-process" aria-valuemin="0" aria-valuemax="100" style="width: 70%">
+                      <span class="sr-only">40% Complete (success)</span>
+                    </div>
+                  </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-primary btn ajax" id="add-file" onclick="add_file()" >Thêm</button>
       </div>
     </div>
   </div>
@@ -574,6 +654,12 @@
   }
   function init_pay_form(type){
     $("input[name='type']" ).val(type); 
+      $("#btn_submit").text("Thanh Toán");
+      $('input[name="id"]').val(0);
+      $('input[name="money"]').val("");
+      $('input[name="date_pay"]').val("");
+      $('textarea[name="note"]').val("");
+      $('select[name="money_option"]').val(1);
     if(type == 1){
         $("#pay-modal-lable").html("Khách Hàng Thanh Toán");
         $("#btn_submit").removeClass("btn-danger");
@@ -584,10 +670,31 @@
          $("#btn_submit").removeClass("btn-primary");
         $("#btn_submit").addClass("btn-danger");
     }
-  
+
+  }
+  function init_pay_edit_form(id,type,money,date,money_option,note){
+    $("input[name='type']" ).val(type); 
+    $("#btn_submit").text("Chỉnh Sửa");
+    if(type == 1){
+        $("#pay-modal-lable").html("Chỉnh Sửa Khách Hàng Thanh Toán");
+        $("#btn_submit").removeClass("btn-danger");
+        $("#btn_submit").addClass("btn-primary");
+    }else{
+       $("#pay-modal-lable").html("Chỉnh Sửa Thanh Toán Cho Nhà Cung Cấp");
+        
+         $("#btn_submit").removeClass("btn-primary");
+        $("#btn_submit").addClass("btn-danger");
+    }
+      $('input[name="money"]').val(money);
+      $('input[name="date_pay"]').val(date);
+      $('input[name="id"]').val(id);
+      $('textarea[name="note"]').val(note);
+      $('select[name="money_option"]').val(money_option);
+      
   }
   function show_pay_form(type){
     init_pay_form(type);
+
     $("#myModal").modal('show');
     
   }
@@ -602,6 +709,7 @@
         var money_option = $( "select[name='money_option']" ).val(); 
         var note = $( "textarea[name='note']" ).val(); 
         var type = $( "input[name='type']" ).val(); 
+         var id = $( "input[name='id']" ).val(); 
         $.ajax({
             type:"POST",                          
             url:"/manager-tasks/pay",
@@ -610,7 +718,8 @@
                    date_pay:date_pay,
                    money_option:money_option,
                    note:note,
-                   type:type
+                   type:type,
+                   id:id
                    },
             success: function(data){
                      location.reload();
@@ -618,10 +727,69 @@
             }
      });
   });
-  function pay_delete(){
-       $("#modal-confirm").modal('show');
+  function delete_pay(id){
+       $.ajax({
+            type:"POST",                          
+            url:"/manager-tasks/deletepay",
+            data:{
+                   id:id
+                   },
+            success: function(data){
+                     location.reload();
+
+            }
+     });
   }
- 
+  function confirm_delete(id){
+     $("#delete-pay").attr('onclick','delete_pay('+id+')');
+      $("#modal-confirm").modal('show');
+  }
+  function pay_edit(id,type,money,date,money_option,note){
+      init_pay_edit_form(id,type,money,date,money_option,note);
+      $("#myModal").modal('show');
+
+  }
+  function show_upload_form(){
+    $("#modal-upload").modal('show');
+  }
+  function progressHandlingFunction(e){
+    if(e.lengthComputable){
+        $('progress').attr({value:e.loaded,max:e.total});
+    }
+  }
+  function progressHandlingFunction(e){
+    if(e.lengthComputable){
+        $("upload-file-process").attr('value', e.loaded);
+        $("upload-file-process").attr('max', e.total);
+      }
+  }
+  function add_file(){
+    var formData = new FormData($('#upload_file_att')[0]);
+    console.log(formData);
+    $.ajax({
+        url: '/manager-tasks/addfile',  //Server script to process data
+        type: 'POST',
+        xhr: function() {  // Custom XMLHttpRequest
+            var myXhr = $.ajaxSettings.xhr();
+            if(myXhr.upload){ // Check if upload property exists
+                myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
+            }
+            return myXhr;
+        },
+        //Ajax events
+       // beforeSend: beforeSendHandler,
+       success: function(){
+        location.reload();
+       },
+     //   error: errorHandler,
+        // Form data
+        data: formData,
+        //Options to tell jQuery not to process data or worry about content-type.
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+  }
   getCommentList('custumer-chat-box',<?php echo $task->id;?>,1,<?php echo "'".\Application\Config\Config::IMAGE_PATH."'"?>);
  getCommentList('provider-chat-box',<?php echo $task->id;?>,2,<?php echo "'".\Application\Config\Config::IMAGE_PATH."'"?>);
   </script>
