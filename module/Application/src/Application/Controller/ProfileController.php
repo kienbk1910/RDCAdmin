@@ -30,24 +30,21 @@ use Application\Model\User;
           $this->checkAuth();
           $request = $this->getRequest();
           $usererror = array();
-           $db_users = $this->databaseService->getUserById($this->identity()->id);
-           $role_name;
-           foreach ($db_users as $db_user) {
-               $user = new User($this->identity()->id, $db_user->username, NULL, NULL);
-               $user->avatar = $db_user->avatar;
-               $user->note = $db_user->note;
-               $user->phone = $db_user->phone;
-               $user->email = $db_user->email;
-               $user->block = $db_user->block;
-               $user->role_id = $db_user->role_id;
-               $role_name = $db_user->role_name;
-           }
-           $usererror = Config::PROCESS_OK;
-           return new ViewModel(array(
-                   'usererror' => $usererror,
-                   'user' => $user,
-                   'role_name' => $role_name,
-           ));
+          $db_users = $this->databaseService->getUserById($this->identity()->id);
+          foreach ($db_users as $db_user) {
+              $user = new User($this->identity()->id, $db_user->username, NULL, NULL);
+              $user->avatar = $db_user->avatar;
+              $user->note = $db_user->note;
+              $user->phone = $db_user->phone;
+              $user->email = $db_user->email;
+              $user->block = $db_user->block;
+              $user->role_id = $db_user->role_id;
+          }
+          $usererror = Config::PROCESS_OK;
+          return new ViewModel(array(
+                  'usererror' => $usererror,
+                  'user' => $user,
+          ));
      }
 
      public function uploadImageAction() {
@@ -121,10 +118,8 @@ use Application\Model\User;
          $id = $this->params()->fromRoute('id', 0);
          $request = $this->getRequest();
          $usererror = array();
-         if ($request->isPost()) {
-         }
+
          $db_users = $this->databaseService->getUserById($id);
-         $role_name;
          foreach ($db_users as $db_user) {
              $user = new User($id, $db_user->username, NULL, NULL);
              $user->avatar = $db_user->avatar;
@@ -132,13 +127,12 @@ use Application\Model\User;
              $user->phone = $db_user->phone;
              $user->email = $db_user->email;
              $user->block = $db_user->block;
-             $role_name = $db_user->role_name;
+             $user->role_id = $db_user->role_id;
          }
          $usererror = Config::PROCESS_OK;
          return new ViewModel(array(
                  'usererror' => $usererror,
                  'user' => $user,
-                 'role_name' => $role_name,
          ));
      }
 

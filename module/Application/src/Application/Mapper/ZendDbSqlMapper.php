@@ -120,7 +120,9 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('users')
                     ->join('roles', 'roles.id = users.role_id', array(
-                            'role_name' => 'name'), 'left');
+                            'role_name' => 'name'), 'left')
+                    ->join('state', 'state.state_id = users.block', array(
+                            'block' => 'state_string'), 'left');
         $select->where->like('users.username', '%' . $search .'%');
         $select->offset($start)
                 ->limit($length);
@@ -193,7 +195,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
             if ($ret->count() == 1) {
                 $str_ret = Config::PROCESS_OK;
             } else {
-                $str_ret =  Config::PASSWORD_IS_THE_SAME;
+                $str_ret = Config::PASSWORD_IS_THE_SAME;
             }
         } catch (\Exception $e) {
             $str_ret = Config::PROCESS_NG;
@@ -383,7 +385,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
       {
           $sql = new Sql($this->dbAdapter);
           $select = $sql->select('users')->join('roles', 'roles.id = users.role_id', array(
-                            'role_name' => 'name'), 'left');
+                            'role_id' => 'name'), 'left');
           $select->Where(array('users.id = ?' => $id));
           $selectString = $sql->getSqlStringForSqlObject($select);
           return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
