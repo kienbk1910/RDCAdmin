@@ -10,6 +10,7 @@ namespace Application\Controller;
  use Application\Model\DataTablesObject;
  use Zend\Debug\Debug;
 use Application\Config\Config;
+use Utility\Date\Date;
 
  class ManagerUsersController extends BaseController
  {
@@ -45,7 +46,8 @@ use Application\Config\Config;
          $data->recordsFiltered = $this->databaseService->getCountUsers($search);
          $data->draw = $draw;
          foreach ($users as $user) {
-             array_push($data->data,new UserListItem($user->id,$user->username,$user->role_name,$user->block));
+             $user->create_date = Date::changeToFullDate($user->create_date );
+             array_push($data->data,new UserListItem($user->id, $user->username, $user->role_name, $user->block, $user->create_date));
          }
         echo \Zend\Json\Json::encode($data, false);
         exit;
