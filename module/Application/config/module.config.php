@@ -205,8 +205,20 @@ return array(
                              'constraints' => array(
                              )
                          ),
-
                      ),
+                    'showlog' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route'    => '/showlog/:id',
+                            'defaults' => array(
+                                'action' => 'showlog',
+                                'id'=>'0',
+                            ),
+                            'constraints' => array(
+                                 'id'   => '[1-9]\d*',
+                            )
+                        ),
+                    ),
                     'detail' => array(
                      'type' => 'segment',
                      'options' => array(
@@ -219,15 +231,14 @@ return array(
                              'id'   => '[1-9]\d*',
                          )
                      ),
-
                      ),
+
                     'change-info' => array(
                      'type' => 'segment',
                      'options' => array(
                          'route'    => '/change-info',
                            'defaults' => array(
                              'action' => 'changeinfo',
-
                          ),
                          'constraints' => array(
 

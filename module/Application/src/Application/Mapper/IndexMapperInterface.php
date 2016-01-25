@@ -1,13 +1,14 @@
 <?php
- // Filename: /module/Blog/src/Blog/Mapper/PostMapperInterface.php
- namespace Application\Mapper;
- use Application\Model\Task;
- use Application\Model\Comment;
- use Application\Model\MoneyHistory;
- use Application\Model\FileAttachment;
- interface IndexMapperInterface
- {
-
+// Filename: /module/Blog/src/Blog/Mapper/PostMapperInterface.php
+namespace Application\Mapper;
+use Application\Model\Task;
+use Application\Model\Comment;
+use Application\Model\MoneyHistory;
+use Application\Model\FileAttachment;
+use Application\Model\User;
+use Application\Model\Log;
+interface IndexMapperInterface
+{
       public function getListRoles();
       public function updateAvatar($id_user,$avatar);
       public function changeUserInfo($id_user,$email);
@@ -18,6 +19,8 @@
       public function resetPassword($id_user, $password);
       public function getListByRole($role);
       public function insertTask(Task $task);
+      public function insertLog($user_id, Task $task, $action);
+      public function showLog($user_id, Task $task, Log $log);
       public function getListUserByBaseRole($role);
 
       public function getInfoTask($id);

@@ -1,10 +1,13 @@
 <?php
 namespace Application\Model;
 
-class Task
+class Log
 {
 	public $id;
-
+	public $user_id;
+	public $task_id;
+	public $value;
+	public $date;
 
 	public $custumer;
 	public $certificate;
@@ -21,7 +24,7 @@ class Task
 	public $date_end_pr;
 	public $provider_note;
 
-	public $user_id;
+	//public $user_id;
 	public $create_date;
 	public $last_user_id;
 	public $last_update;
@@ -30,7 +33,7 @@ class Task
 	public $assign_id;
 
 	public function toArray(){
-		return array(
+		return   array(
 			'custumer'=>$this->custumer,
 			'certificate'=> $this->certificate,
 
