@@ -335,7 +335,7 @@ echo $this->doctype(); ?>
                     <img src="<?php echo Config::IMAGE_PATH; echo $this->identity()->avatar?>" class="img-circle" alt="User Image">
                     <p>
                       <?php echo $this->identity()->username?>
-                      <small>Member since <?php echo Date::changeDateSQLtoVN($this->identity()->create_date)?></small>
+                      <small>Tham gia từ: <?php echo Date::changeDateSQLtoVN($this->identity()->create_date)?></small>
                     </p>
                   </li>
                   <!-- Menu Body -->

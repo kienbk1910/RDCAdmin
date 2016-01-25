@@ -1,33 +1,32 @@
 <?php
 namespace Application\Controller;
- use Application\Service\IndexServiceInterface;
- use Application\Controller\BaseController;
- use Zend\View\Model\ViewModel;
- use Zend\View\Model\JsonModel;
- use Zend\Authentication\AuthenticationService;
- use Application\Config\Config;
- use Application\Model\User;
-  use Application\Model\Comment;
- use Application\Model\Task;
- use Application\Model\DataTablesObject;
- use Application\Model\TaskListItem;
- use Utility\Date\Date;
- use Application\Model\Xeditable;
- use Zend\Validator;
- use Application\Model\MoneyHistory;
- use Utility\String\StringUtility;
+use Application\Service\IndexServiceInterface;
+use Application\Controller\BaseController;
+use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
+use Zend\Authentication\AuthenticationService;
+use Application\Config\Config;
+use Application\Model\User;
+use Application\Model\Comment;
+use Application\Model\Task;
+use Application\Model\DataTablesObject;
+use Application\Model\TaskListItem;
+use Utility\Date\Date;
+use Application\Model\Xeditable;
+use Zend\Validator;
+use Application\Model\MoneyHistory;
+use Utility\String\StringUtility;
 use Application\Model\FileAttachment;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Filter;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\Input;
 use Zend\InputFilter\FileInput;
- class ManagerTasksController extends BaseController
- {
+use Application\Model\Log;
+class ManagerTasksController extends BaseController
+{
      public function __construct(IndexServiceInterface $databaseService,AuthenticationService $auth)
-
      {
-
         $this->databaseService = $databaseService;
         $this->auth = $auth;
         $this->user = $auth->getIdentity();
@@ -135,7 +134,7 @@ use Zend\InputFilter\FileInput;
             }else{
                 $task->date_open_pr = Date::changeVNtoDateSQL($request->getPost('date_open_pr'));
             }
-             $date_end_pr   = $request->getPost('date_end_pr','');
+             $date_end_pr = $request->getPost('date_end_pr','');
             if($date_end_pr == ''){
                 $task->date_end_pr = $task->date_end;
             }else{
@@ -143,15 +142,16 @@ use Zend\InputFilter\FileInput;
             }
             $task->provider_note = $request->getPost('provider_note');
             $result = $this->databaseService->insertTask($task);
+            $task->id = $result->getGeneratedValue();
+            $this->databaseService->insertLog($this->auth->getIdentity()->id, $task, 3);
 
-          return $this->redirect()->toRoute('manager-tasks/detail',array('id'=>$result->getGeneratedValue()));
+            return $this->redirect()->toRoute('manager-tasks/detail',array('id'=>$result->getGeneratedValue()));
         }
         $users = $this->databaseService->getListByRole(Config::ROLE_AGENCY);
 
         $agencys = array();
         foreach ($users as $user) {
              array_push($agencys,new User($user->id,$user->username,"",""));
-
         }
         $users = $this->databaseService->getListUserByBaseRole(Config::USER_LEAVE2);
         $staffs = array();
@@ -270,7 +270,7 @@ use Zend\InputFilter\FileInput;
     $this->checkLevel2();
     $request = $this->getRequest();
     if ($request->isPost()) {
-        $id = $request->getPost('id',0);  
+        $id = $request->getPost('id',0);
         $id = $this->databaseService->deletePayById($id);
     }
     return new JsonModel(array(
@@ -356,7 +356,7 @@ use Zend\InputFilter\FileInput;
             $inputFilter = new InputFilter();
             $inputFilter->add($file)->setData($postData);
             if ($inputFilter->isValid()) {           // FileInput validators are run, but not the filters...
-                   
+
               $data = $inputFilter->getValues();   // This is when the FileInput filters are run.
 
               $file_attach->file_name = basename($data['file_name']['tmp_name']);
@@ -365,5 +365,26 @@ use Zend\InputFilter\FileInput;
             }
         }
           return new JsonModel(array());
+    }
+
+    public function showlogAction() {
+        $this->checkAuth();
+        $request = $this->getRequest();
+        if ($request->isPost())
+        {
+        }
+        $task_id = $this->params()->fromRoute('id', 0);
+        $task = new Task();
+        $task->id = $task_id;
+        $log = new Log();
+        $datas = $this->databaseService->showLog($this->auth->getIdentity()->id, $task, $log);
+        foreach ($datas as $data) {
+            $obj = json_decode($data->value, false);
+            var_dump($obj);
+            exit;
+        }
+        return new JsonModel(array(
+
+        ));
     }
 }

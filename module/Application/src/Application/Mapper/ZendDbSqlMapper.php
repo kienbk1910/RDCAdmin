@@ -25,9 +25,9 @@ use Application\Model\MoneyHistory;
 use Application\Utility\DataTableUtility;
 use Utility\Date\Date;
 use Application\Model\FileAttachment;
+use Application\Model\Log;
 class ZendDbSqlMapper implements IndexMapperInterface
 {
-
     protected $dbAdapter;
 
     public function __construct(AdapterInterface $dbAdapter)
@@ -218,6 +218,36 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $newData = $task->toArray();
         $insert->values($newData);
         $selectString = $sql->getSqlStringForSqlObject($insert);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+     }
+
+     public function insertLog($user_id, Task $task, $action) {
+         /* No need to check exist */
+
+         /* Always insert new value json to db */
+         $data = array(
+                 'user_id' => $user_id,
+                 'task_id' => $task->id,
+                 'action_id' => $action,
+                 //'value' => json_encode($task->toArray()),
+                 'value' => json_encode($task),
+                 'date'=> date("Y-m-d H:i:s"),
+         );
+
+         $sql = new Sql($this->dbAdapter);
+         $insert = $sql->insert('logs');
+         $insert->values($data);
+         $selectString = $sql->getSqlStringForSqlObject($insert);
+         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+     }
+
+     public function showLog($user_id, Task $task, Log $log) {
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('logs');
+        $select->Where(array(
+                'user_id = ?' => $user_id,
+                'task_id' => $task->id));
+        $selectString = $sql->getSqlStringForSqlObject($select);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
 
@@ -445,6 +475,6 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $newData = $file->toArray();
         $insert->values($newData);
         $selectString = $sql->getSqlStringForSqlObject($insert);
-        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);   
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
    }
  }

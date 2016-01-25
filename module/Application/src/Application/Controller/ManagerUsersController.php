@@ -14,8 +14,6 @@ use Utility\Date\Date;
 
  class ManagerUsersController extends BaseController
  {
-
-
      public function __construct(IndexServiceInterface $databaseService,AuthenticationService $auth)
      {
         $this->databaseService = $databaseService;
@@ -46,7 +44,7 @@ use Utility\Date\Date;
          $data->recordsFiltered = $this->databaseService->getCountUsers($search);
          $data->draw = $draw;
          foreach ($users as $user) {
-             $user->create_date = Date::changeToFullDate($user->create_date );
+             $user->create_date = Date::changeDateSQLtoVN($user->create_date);
              array_push($data->data,new UserListItem($user->id, $user->username, $user->role_name, $user->block, $user->create_date));
          }
         echo \Zend\Json\Json::encode($data, false);

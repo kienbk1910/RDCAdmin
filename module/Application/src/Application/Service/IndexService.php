@@ -7,6 +7,7 @@ use Application\Model\Task;
 use Application\Model\Comment;
 use Application\Model\MoneyHistory;
 use Application\Model\FileAttachment;
+use Application\Model\Log;
 class IndexService implements IndexServiceInterface
 {
     protected $databaseMapper;
@@ -46,12 +47,23 @@ class IndexService implements IndexServiceInterface
    public function resetPassword($id_user, $password) {
        return $this->databaseMapper->resetPassword($id_user, $password);
    }
-    public function getListByRole($role){
+
+   public function getListByRole($role){
       return $this->databaseMapper->getListByRole($role);
-  }
+   }
+
    public function insertTask(Task $task){
       return $this->databaseMapper->insertTask($task);
    }
+
+   public function showLog($user_id, Task $task, Log $log) {
+       return $this->databaseMapper->showLog($user_id, $task, $log);
+   }
+
+   public function insertLog($user_id, Task $task, $action) {
+       return $this->databaseMapper->insertLog($user_id, $task, $action);
+   }
+
    public function getListUserByBaseRole($role){
       return $this->databaseMapper->getListUserByBaseRole($role);
    }
