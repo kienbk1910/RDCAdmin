@@ -7,7 +7,7 @@ namespace Application\Controller;
  use Zend\Authentication\AuthenticationService;
  use Application\Config\Config;
  use Application\Model\User;
-  use Application\Model\Comment;
+ use Application\Model\Comment;
  use Application\Model\Task;
  use Application\Model\DataTablesObject;
  use Application\Model\TaskListItem;
@@ -22,6 +22,7 @@ use Zend\Filter;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\Input;
 use Zend\InputFilter\FileInput;
+use Application\Email\MailHelper;
  class ManagerTasksController extends BaseController
  {
      public function __construct(IndexServiceInterface $databaseService,AuthenticationService $auth)
@@ -103,6 +104,7 @@ use Zend\InputFilter\FileInput;
      {
         $this->checkLevel2();
         $request = $this->getRequest();
+         MailHelper::testMail(); 
         if ($request->isPost()) {
             // add task
             $task = new Task();
@@ -361,9 +363,59 @@ use Zend\InputFilter\FileInput;
 
               $file_attach->file_name = basename($data['file_name']['tmp_name']);
               $this->databaseService->addFileAttachment($file_attach);
-              $this->user->avatar = $avatar;
             }
         }
           return new JsonModel(array());
+    }
+    public function filelistAction(){
+        $this->checkAuth();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $task_id = $request->getPost('task_id');
+            $permission = Config::FILE_PERMISSION_RDC;
+            $files = $this->databaseService->getListFileActtacment($task_id,$permission );
+            return new JsonModel($files);
+        }
+    }
+     public function editfileAction(){
+        $this->checkAuth();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $id = $request->getPost('id');
+            $permission = $request->getPost('permission');
+            $files = $this->databaseService->editPermissionFile($id,$permission);
+            return new JsonModel();
+        }
+    }
+   public function deletefileAction(){
+        $this->checkAuth();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $id = $request->getPost('id');
+            $files = $this->databaseService->deleteAttachment($id);
+            return new JsonModel();
+        }
+    }
+     public function downloadfileAction(){
+        $this->checkAuth();
+        $id = $this->params()->fromQuery('id', 0);
+        $attachment = $this->databaseService->getFileAttachment($id);
+        $file = '.'.Config::FILE_ATTACHMENT_PATH.$attachment->file_name;
+
+        $response = new \Zend\Http\Response\Stream();
+        $response->setStream(fopen($file, 'r'));
+        $response->setStatusCode(200);
+        $response->setStreamName(basename($file));
+        $headers = new \Zend\Http\Headers();
+        $headers->addHeaders(array(
+            'Content-Disposition' => 'attachment; filename="' . basename($file) .'"',
+            'Content-Type' => 'application/octet-stream',
+            'Content-Length' => filesize($file),
+            'Expires' => '@0', // @0, because zf2 parses date as string to \DateTime() object
+            'Cache-Control' => 'must-revalidate',
+            'Pragma' => 'public'
+        ));
+        $response->setHeaders($headers);
+        return $response;
     }
 }

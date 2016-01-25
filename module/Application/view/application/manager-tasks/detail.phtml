@@ -81,33 +81,15 @@
                    <!-- file attachment -->
                    <div class="box box-default">
                       <div class="box-header with-border">
-                        <h3 class="box-title">File Đính Kèm <small class="label pull-right bg-red">3</small></h3>
+                        <h3 class="box-title">File Đính Kèm <small class="label pull-right bg-red" id="list_file_num">3</small></h3>
                         <div class="box-tools pull-right">
                         <button class="btn" onclick="show_upload_form()">Thêm File</button>
                           <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
                         </div><!-- /.box-tools -->
                       </div><!-- /.box-header -->
                       <div class="box-body tab_height_box" style="display:none">
-                        <ul class="todo-list ui-sortable">
-                        <li>
-                          <!-- drag handle -->
-                          <span class="handle ui-sortable-handle">
-                            <i class="fa fa-ellipsis-v"></i>
-                            <i class="fa fa-ellipsis-v"></i>
-                          </span>
-                          <!-- checkbox -->
-                          <input type="checkbox" value="" name="">
-                          <!-- todo text -->
-                          <span class="text">Design a nice theme</span>
-                          <!-- Emphasis label -->
-                          <small class="label label-danger"><i class="fa fa-clock-o"></i> 2 mins</small>
-                          <!-- General tools such as edit or delete-->
-                          <div class="tools"> 
-                            <i class="fa fa-download"></i>
-                            <i class="fa fa-edit"></i>
-                            <i class="fa fa-trash-o"></i>
-                          </div>
-                        </li>
+                        <ul class="todo-list ui-sortable" id="file_list">
+                     
                         
                       </ul>
                       </div><!-- /.box-body -->
@@ -502,6 +484,35 @@
     </div>
   </div>
 </div>
+<!-- Change Permission  -->
+<div class="modal fade" id="modal-change-permission" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" >Thay đổi Quyền</h4>
+      </div>
+      <div class="modal-body">
+           <div class="form-group">
+            <label for="inputName" class="col-sm-4 control-label">Quyền Truy Cập</label>
+            <div class="col-sm-6">
+               <select id="permission_option" class="form-control">
+                  <option value="1">Chỉ RDC</option>
+                  <option value="2">Cho Phép Khách Hàng</option>
+                  <option value="3">Cho Phép Nhà Cung Cấp</option>
+                  <option value="4">Tất Cả</option>
+               </select>
+            </div>
+
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-primary btn ajax" id="btn-change-permission" onclick="add_file()" >Đổi</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
   $('#custumer').editable({
     success: function(response, newValue) {
@@ -750,17 +761,15 @@
 
   }
   function show_upload_form(){
+    $("#upload-file-process").css('width',"0%");
     $("#modal-upload").modal('show');
   }
+
   function progressHandlingFunction(e){
     if(e.lengthComputable){
-        $('progress').attr({value:e.loaded,max:e.total});
-    }
-  }
-  function progressHandlingFunction(e){
-    if(e.lengthComputable){
-        $("upload-file-process").attr('value', e.loaded);
-        $("upload-file-process").attr('max', e.total);
+        $("#upload-file-process").attr('value', e.loaded);
+        $("#upload-file-process").attr('max', e.total);
+        $("#upload-file-process").css('width',e.loaded*100/e.total+"%");
       }
   }
   function add_file(){
@@ -779,7 +788,8 @@
         //Ajax events
        // beforeSend: beforeSendHandler,
        success: function(){
-        location.reload();
+         $("#modal-upload").modal('hide');
+         getFileList(<?php echo $task->id;?>);
        },
      //   error: errorHandler,
         // Form data
@@ -789,6 +799,83 @@
         contentType: false,
         processData: false
     });
+  }
+  function change_permission(id){
+    var permission = $("#permission_option").val();
+      $.ajax({
+            type:"POST",                          
+            url:"/manager-tasks/editfile",
+            data:{
+                   id:id,
+                   permission:permission
+                   },
+            success: function(data){
+               $("#modal-change-permission").modal('hide');
+              getFileList(<?php echo $task->id;?>);
+            }
+     });
+  }
+  function delete_file(id){
+    $.ajax({
+            type:"POST",                          
+            url:"/manager-tasks/deletefile",
+            data:{
+                   id:id,
+                   },
+            success: function(data){
+               $("#modal-confirm").modal('hide');
+              getFileList(<?php echo $task->id;?>);
+            }
+     });
+  }
+  function download_file(id){
+    window.location ='/manager-tasks/downloadfile?id='+id;
+  }
+  function show_modal_delete_file(id){
+     $("#delete-pay").attr('onclick','delete_file('+id+')');
+      $("#modal-confirm").modal('show');
+  }
+  function show_modal_change_permission(id,permission){
+    $("#permission_option").val(permission);
+    $("#modal-change-permission").modal('show');
+     $("#btn-change-permission").attr("onclick","change_permission("+id+")");
+  }
+   getFileList(<?php echo $task->id;?>);
+
+  function getFileList(task_id){
+      $.ajax({
+            type:"POST",                          
+            url:"/manager-tasks/filelist",
+            data:{task_id:task_id,
+                   },
+            success: function(data){
+                   var filelist ="";
+                    for(var i = 0 ; i < data.length ;i++){
+                     filelist+="<li>"
+                      filelist   +='<span class="text">'+changedateSQLtoVN(data[i].date_create)+'</span>';
+                     filelist   +='<span class="text">'+data[i].file_name+'</span>';
+                     if(data[i].permission_option ==<?php echo \Application\Config\Config::FILE_PERMISSION_PROVIDER;?>){
+                         filelist+= '<small class="label label-danger">Nhà Cung Cấp</small>';
+                      }else if(data[i].permission_option ==<?php echo \Application\Config\Config::FILE_PERMISSION_CUSTUMER;?>){
+                         filelist+= '<small class="label label-primary">Khách Hàng</small>';
+                      }else if(data[i].permission_option ==<?php echo \Application\Config\Config::FILE_PERMISSION_RDC;?>){
+                         filelist+= '<small class="label label-info">RDC</small>';
+                      }else{
+                          filelist+= '<small class="label label-default">Tất Cả</small>';
+                      }
+                     filelist+=  '<div class="tools"> ';
+                     filelist+=  '<i class="fa fa-download" onclick="download_file('+data[i].id+')"></i>';
+                     filelist+=   '<i class="fa fa-edit" onclick="show_modal_change_permission('+data[i].id+','+data[i].permission_option+')"></i>';
+                     filelist+=       '<i class="fa fa-trash-o" onclick="show_modal_delete_file('+data[i].id+')"></i>';
+                      filelist+= '</div>';
+                     filelist+=   '</li>';
+                    }
+                    $('#file_list').html(filelist);
+                    $('#list_file_num').html(data.length);
+                    
+
+            }
+        });
   }
   getCommentList('custumer-chat-box',<?php echo $task->id;?>,1,<?php echo "'".\Application\Config\Config::IMAGE_PATH."'"?>);
  getCommentList('provider-chat-box',<?php echo $task->id;?>,2,<?php echo "'".\Application\Config\Config::IMAGE_PATH."'"?>);

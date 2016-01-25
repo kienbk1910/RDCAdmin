@@ -322,7 +322,56 @@ return array(
                          ),
 
                      ),
-                )
+                    //
+                      'filelist' => array(
+                         'type' => 'segment',
+                         'options' => array(
+                             'route'    => '/filelist',
+                             'defaults' => array(
+                                 'action' => 'filelist',
+                             ),
+                             'constraints' => array(
+                             )
+                         ),
+
+                     ),
+                    'editfile' => array(
+                         'type' => 'segment',
+                         'options' => array(
+                             'route'    => '/editfile',
+                             'defaults' => array(
+                                 'action' => 'editfile',
+                             ),
+                             'constraints' => array(
+                             )
+                         ),
+
+                     ),
+                  'deletefile' => array(
+                     'type' => 'segment',
+                     'options' => array(
+                         'route'    => '/deletefile',
+                         'defaults' => array(
+                             'action' => 'deletefile',
+                         ),
+                         'constraints' => array(
+                         )
+                     ),
+
+                 ),
+             'downloadfile' => array(
+             'type' => 'segment',
+             'options' => array(
+                 'route'    => '/downloadfile',
+                 'defaults' => array(
+                     'action' => 'downloadfile',
+                 ),
+                 'constraints' => array(
+                 )
+             ),
+
+         ),
+        )
             ),
             // profile
            'profile' => array (

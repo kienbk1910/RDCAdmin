@@ -25,7 +25,11 @@ namespace Application\Config;
     const USERNAME_MAX_LEN = 500;
     const USERNAME_MIN_LEN = 5;
 
-
+    const FILE_PERMISSION_ERROR    = 0;
+    const FILE_PERMISSION_RDC      = 1;
+    const FILE_PERMISSION_CUSTUMER = 2;
+    const FILE_PERMISSION_PROVIDER = 3;
+    const FILE_PERMISSION_ALL = 4;
     /* Add user */
     const PROCESS_OK = "Processing successfully";
     const PROCESS_NG = "Genaral error while processing";

@@ -447,4 +447,34 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $selectString = $sql->getSqlStringForSqlObject($insert);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);   
    }
- }
+    public function editPermissionFile($file_id,$permission){
+        $sql = new Sql($this->dbAdapter);
+        $insert = $sql->update('file_attachment');
+        $insert->set(array('permission_option' => $permission ));
+        $insert->Where(array('id = ?' => $file_id));
+        $selectString = $sql->getSqlStringForSqlObject($insert);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+    }
+    public function deleteAttachment($id){
+         $sql = new Sql($this->dbAdapter);
+        $insert = $sql->delete('file_attachment');
+        $insert->where(array('id =?' => $id));
+        $selectString = $sql->getSqlStringForSqlObject($insert);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+    }
+    public function getListFileActtacment($task_id,$permission){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('file_attachment');
+        $select->where(array('task_id =?' => $task_id));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);   
+    }
+    public function getFileAttachment($id){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('file_attachment');
+        $select->where(array('id =?' => $id));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $files = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE); 
+        return $files->current();
+      }
+}

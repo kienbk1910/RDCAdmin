@@ -97,4 +97,19 @@ class IndexService implements IndexServiceInterface
   public function addFileAttachment(FileAttachment $file){
     return $this->databaseMapper->addFileAttachment($file);
   }
+  public function editPermissionFile($file_id,$permission){
+      return $this->databaseMapper->editPermissionFile($file_id,$permission);
+  }
+  public function deleteAttachment($id){
+    return $this->databaseMapper->deleteAttachment($id);
+  }
+  public function getListFileActtacment($task_id,$permission){
+     return $this->databaseMapper->getListFileActtacment($task_id,$permission);
+  }
+  public function getPermissionByTaskid($id_user,$task_id){
+  //  public function $this->databaseMapper->getPermissionByTaskid($id_user,$task_id);
+  }
+   public function getFileAttachment($id){
+      return $this->databaseMapper->getFileAttachment($id);
+   }
 }

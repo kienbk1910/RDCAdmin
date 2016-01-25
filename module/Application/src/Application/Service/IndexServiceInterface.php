@@ -38,4 +38,9 @@
      public function getListComment($task_id,$type);
 
      public function addFileAttachment(FileAttachment $file);
+     public function editPermissionFile($file_id,$permission);
+     public function deleteAttachment($id);
+     public function getListFileActtacment($task_id,$permission);
+     public function getPermissionByTaskid($id_user,$task_id);
+     public function getFileAttachment($id);
  }

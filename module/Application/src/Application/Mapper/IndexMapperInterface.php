@@ -32,5 +32,10 @@
       public function deletePayById($id);
       public function addComment(Comment $comment);
       public function getListComment($task_id,$type);
+      
       public function addFileAttachment(FileAttachment $file);
+      public function editPermissionFile($file_id,$permission);
+      public function deleteAttachment($id);
+      public function getListFileActtacment($task_id,$permission);
+      public function getFileAttachment($id);
 }
