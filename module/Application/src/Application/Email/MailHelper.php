@@ -12,12 +12,13 @@ class MailHelper
 				$mail = new \PHPMailer();
 					
 				// set mailer to use SMTP
-		/*		$mail->IsSMTP();
-					
+				$mail->IsSMTP();
+				$mail->SMTPDebug = 2;	
 				// As this email.php script lives on the same server as our email server
 				// we are setting the HOST to localhost
-				$mail->Host = "localhost";  // specify main and backup server
-					
+				 $mail->Debugoutput = 'html';
+				$mail->Host = "mail.kienbk1910.com";  // specify main and backup server
+				$mail->Port = 25;	
 				$mail->SMTPAuth = true;     // turn on SMTP authentication
 				$mail->CharSet        =  "utf-8";
 				// When sending email using PHPMailer, you need to send from a valid email address
@@ -46,9 +47,9 @@ class MailHelper
 				{
 					 echo "Message could not be sent. <p>";
 					echo "Mailer Error: " . $mail->ErrorInfo;
-					retrun false;
+					return false;
 				}
-				return true;*/
+				return true;
 
 	}
 }

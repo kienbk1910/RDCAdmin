@@ -23,7 +23,7 @@ use Zend\Filter;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\Input;
 use Zend\InputFilter\FileInput;
-
+use Application\Email\MailHelper;
 class ManagerTasksController extends BaseController
 {
      public function __construct(IndexServiceInterface $databaseService,AuthenticationService $auth)
@@ -103,7 +103,7 @@ class ManagerTasksController extends BaseController
      {
         $this->checkLevel2();
         $request = $this->getRequest();
-         MailHelper::testMail(); 
+      //   MailHelper::testMail(); 
         if ($request->isPost()) {
             // add task
             $task = new Task();
@@ -346,11 +346,13 @@ class ManagerTasksController extends BaseController
             ->attach(new Validator\File\UploadFile());
             $file->getFilterChain()                  // Filters are run second w/ FileInput
             ->attach(new Filter\File\RenameUpload(array(
-             'target'    => '.'.Config::FILE_ATTACHMENT_PATH,
+             'target'    => '.'.Config::FILE_ATTACHMENT_PATH.$file_attach->task_id,
              'use_upload_name'=>true,
              'randomize' => true,
             )));
-
+            if (!file_exists('.'.Config::FILE_ATTACHMENT_PATH.$file_attach->task_id)) {
+                 mkdir('.'.Config::FILE_ATTACHMENT_PATH.$file_attach->task_id, 0700, true);
+            }
             // Merge $_POST and $_FILES data together
             $request  = new Request();
             $postData = array_merge_recursive($request->getPost()->toArray(), $request->getFiles()->toArray());
@@ -361,7 +363,8 @@ class ManagerTasksController extends BaseController
 
               $data = $inputFilter->getValues();   // This is when the FileInput filters are run.
 
-              $file_attach->file_name = basename($data['file_name']['tmp_name']);
+              $file_attach->real_name = basename($data['file_name']['tmp_name']);
+              $file_attach->file_name = basename($data['file_name']['name']);
               $this->databaseService->addFileAttachment($file_attach);
             }
         }
@@ -392,7 +395,11 @@ class ManagerTasksController extends BaseController
         $request = $this->getRequest();
         if ($request->isPost()) {
             $id = $request->getPost('id');
+            $attachment = $this->databaseService->getFileAttachment($id);
             $files = $this->databaseService->deleteAttachment($id);
+            if($attachment != null){
+                unlink('.'.Config::FILE_ATTACHMENT_PATH.$attachment->task_id.'/'.$attachment->real_name);
+            }
             return new JsonModel();
         }
     }
@@ -400,7 +407,7 @@ class ManagerTasksController extends BaseController
         $this->checkAuth();
         $id = $this->params()->fromQuery('id', 0);
         $attachment = $this->databaseService->getFileAttachment($id);
-        $file = '.'.Config::FILE_ATTACHMENT_PATH.$attachment->file_name;
+        $file = '.'.Config::FILE_ATTACHMENT_PATH.$attachment->task_id.'/'.$attachment->real_name;
 
         $response = new \Zend\Http\Response\Stream();
         $response->setStream(fopen($file, 'r'));
@@ -408,7 +415,7 @@ class ManagerTasksController extends BaseController
         $response->setStreamName(basename($file));
         $headers = new \Zend\Http\Headers();
         $headers->addHeaders(array(
-            'Content-Disposition' => 'attachment; filename="' . basename($file) .'"',
+            'Content-Disposition' => 'attachment; filename="' . basename($attachment->file_name) .'"',
             'Content-Type' => 'application/octet-stream',
             'Content-Length' => filesize($file),
             'Expires' => '@0', // @0, because zf2 parses date as string to \DateTime() object
