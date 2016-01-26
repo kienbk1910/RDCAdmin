@@ -497,14 +497,14 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $select = $sql->select('file_attachment');
         $select->where(array('task_id =?' => $task_id));
         $selectString = $sql->getSqlStringForSqlObject($select);
-        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);   
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
     }
     public function getFileAttachment($id){
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('file_attachment');
         $select->where(array('id =?' => $id));
         $selectString = $sql->getSqlStringForSqlObject($select);
-        $files = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE); 
+        $files = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
         return $files->current();
       }
 }

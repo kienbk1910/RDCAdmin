@@ -103,7 +103,6 @@ class ManagerTasksController extends BaseController
      {
         $this->checkLevel2();
         $request = $this->getRequest();
-      //   MailHelper::testMail(); 
         if ($request->isPost()) {
             // add task
             $task = new Task();
@@ -145,7 +144,7 @@ class ManagerTasksController extends BaseController
             $task->provider_note = $request->getPost('provider_note');
             $result = $this->databaseService->insertTask($task);
             $task->id = $result->getGeneratedValue();
-            $this->databaseService->insertLog($this->auth->getIdentity()->id, $task, 3);
+            $this->databaseService->insertLog($this->auth->getIdentity()->id, $task, Config::ADD_ACTION);
 
             return $this->redirect()->toRoute('manager-tasks/detail',array('id'=>$result->getGeneratedValue()));
         }

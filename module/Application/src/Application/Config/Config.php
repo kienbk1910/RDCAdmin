@@ -11,6 +11,11 @@ namespace Application\Config;
     const USER_LEAVE2 =3;
     const ROLE_AGENCY = 4;
 
+    // Acction id
+    const LOGIN_ACTION = 1;
+    const ADD_ACTION = 3;
+    const REMOVE_ACTION = 4;
+
     // process id
     const PROCESS_REC = 1;
     // type pay
