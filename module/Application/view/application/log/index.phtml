@@ -15,27 +15,24 @@
                 </div><!-- /.box-header -->
                 <div class="box-body">
                   <ul class="todo-list">
-                    <li>
+                  <?php
+                    foreach ($logs as $log) {
+                      $task = json_decode( $log->value, false );?>
+                      <li>
                       <!-- drag handle -->
                       <!-- checkbox -->
                       <!-- todo text -->
-                      <span class="text"> <?php echo "User: ". $modified_task->custumer. ". Add date" .$modified_task->date_open; ?></span>
-                      <!-- Emphasis label -->
-                      <small class="label label-danger"><i class="fa fa-clock-o"></i> 2 mins</small>
-                      <!-- General tools such as edit or delete-->
-                      <div class="tools">
-                        <i class="fa fa-edit"></i>
-                        <i class="fa fa-trash-o"></i>
-                      </div>
-                    </li>
-                    <li>
-                      <span class="text"><?php ; echo "User: ".$modified_task->custumer. ". Modify date" .$current_task->date_open; ?></span>
-                      <small class="label label-info"><i class="fa fa-clock-o"></i> 4 hours</small>
-                      <div class="tools">
-                        <i class="fa fa-edit"></i>
-                        <i class="fa fa-trash-o"></i>
-                      </div>
-                    </li>
+                        <span class="text"> <?php echo $task->custumer." ". $log->action_id. " vào ngày " .$task->date_open;?> </span>
+                           <small class="label label-info"><i class="fa fa-clock-o"></i> Show detail</small>
+                           <!-- General tools such as edit or delete-->
+                           <div class="tools">
+                             <i class="fa fa-edit"></i>
+                             <i class="fa fa-trash-o"></i>
+                           </div>
+                        </li>
+                  <?php
+                      }
+                  ?>
                   </ul>
                 </div><!-- /.box-body -->
               </div><!-- /.box -->

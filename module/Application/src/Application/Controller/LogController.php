@@ -38,27 +38,15 @@ class LogController extends BaseController {
         $request = $this->getRequest();
         if ($request->isPost()) {
         }
-        $task_id = $this->params()->fromRoute( 'id', 0 );
-        $task_id = 25;
+
         $task = new Task();
-        $task->id = $task_id;
+        /* Get all logs */
+        $task->id = NULL;
         $log = new Log();
-        $datas = $this->databaseService->showLog( $this->auth->getIdentity()->id, $task, $log );
-
-        foreach ($datas as $data) {
-            $modified_task = json_decode( $data->value, false );
-
-            $tasks = $this->databaseService->getInfoTask($task_id);
-            foreach ($tasks as $task) {
-                $current_task = $task;
-                return new ViewModel( array (
-                        'modified_task' => $modified_task,
-                        'current_task' => $current_task,
-                ) );
-                break;
-            }
-            break;
-        }
+        $logs = $this->databaseService->showLog( $this->auth->getIdentity()->id, $task, $log );
+        return new ViewModel( array (
+                'logs' => $logs,
+        ) );
     }
 
     public function showlogAction() {

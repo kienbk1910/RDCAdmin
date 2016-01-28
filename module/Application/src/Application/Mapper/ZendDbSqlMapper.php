@@ -243,10 +243,16 @@ class ZendDbSqlMapper implements IndexMapperInterface
 
      public function showLog($user_id, Task $task, Log $log) {
         $sql = new Sql($this->dbAdapter);
-        $select = $sql->select('logs');
-        $select->Where(array(
-                'user_id = ?' => $user_id,
-                'task_id' => $task->id));
+        if ($task->id == NULL) {
+            $select = $sql->select('logs')->join('actions', 'logs.action_id = actions.id', array(
+                    'action_id' => 'name'), 'left');
+        } else {
+            $select = $sql->select('logs')->join('actions', 'logs.action_id = actions.id', array(
+                                'action_id' => 'name'), 'left');
+            $select->Where(array(
+                    'user_id = ?' => $user_id,
+                    'task_id' => $task->id));
+        }
         $selectString = $sql->getSqlStringForSqlObject($select);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
