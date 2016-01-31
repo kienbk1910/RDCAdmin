@@ -43,5 +43,5 @@ interface IndexMapperInterface
       public function getListFileActtacment($task_id,$permission);
       public function getFileAttachment($id);
       public function getUserNameByUserID($user_id);
-      
+      public function getProcessBaseID($get_base_id);
 }

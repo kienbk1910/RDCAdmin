@@ -11,6 +11,9 @@ class Log {
     public $date;
 
     public $key;
+    public $key_name;
     public $old_value;
+    public $old_id;
     public $new_value;
+    public $new_id;
 }

@@ -237,10 +237,10 @@ class ManagerTasksController extends BaseController
                 $log->user_id = $this->auth->getIdentity()->id;
                 $log->task_id = $id;
                 $log->key = $name;
-                $log->new_value = $value;
+                $log->new_id = $value;
                 $task = $this->databaseService->getInfoTask($id);
                 $array = $task->current();
-                $log->old_value = $array[$name];
+                $log->old_id = $array[$name];
 
                 $this->databaseService->modifyLog($log);
                 $this->databaseService->changeInfoOfTask($id,$name,$value,$this->auth->getIdentity()->id);
@@ -434,24 +434,5 @@ class ManagerTasksController extends BaseController
         ));
         $response->setHeaders($headers);
         return $response;
-    }
-
-    public function showlogAction() {
-        $this->checkAuth();
-        $request = $this->getRequest();
-        if ($request->isPost())
-        {
-        }
-        $task_id = $this->params()->fromRoute('id', 0);
-        $task = new Task();
-        $task->id = $task_id;
-        $datas = $this->databaseService->showLog($this->auth->getIdentity()->id, $task);
-        foreach ($datas as $data) {
-            $obj = json_decode($data->value, false);
-            var_dump($obj);
-            exit;
-        }
-        return new JsonModel(array(
-        ));
     }
 }

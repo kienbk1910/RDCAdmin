@@ -27,27 +27,38 @@
         <span class="text">
             <!-- user link -->
             <a href="profile/user-info/<?php echo $log->user_id; ?>"><?php echo $log->join_user_name; ?></a>
-            <!-- Action -->
-            <?php
-                if ($log->action_id == (string)Config::EDIT_ACTION) {
-                    echo " đã thay đổi " . $task['key'] . " từ ";
-                    if ($task['key'] == Config::REPORTER_NAME || $task['key'] == Config::PROVIDER_NAME) {?>
-                        <!-- Org link -->
-                        <a href="profile/user-info/<?php echo $log->user_id; ?>">
-                            <?php echo $task['old_value']; ?>
-                        </a>
-                        <?php echo " sang "; ?>
-                        <!-- new link -->
-                        <a href="profile/user-info/<?php echo $log->user_id; ?>">
-                            <?php echo $task['new_value']; ?>
-                        </a> <?php
-                    } else {
-                        echo $task['old_value'] . " sang " .$task['new_value'];
-                    }
+
+            <!-- Action edit -->
+            <?php if ($log->action_id == (string)Config::EDIT_ACTION) {
+                echo " đã thay đổi " . $task['key_name']. " của hồ sơ ";?>
+                <a href="manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->task_id; ?> </a>
+                <!-- If field reporter_id, agency_id ... -->
+                <?php echo " từ "; ?>
+                <?php if ($task['key'] == Config::reporter_id
+                        || $task['key'] == Config::provider_id
+                        || $task['key'] == Config::agency_id
+                        || $task['key'] == Config::assign_id) {?>
+                    <!-- Org link -->
+                    <a href="profile/user-info/<?php echo $task['old_id']; ?>"> <?php echo $task['old_value']; ?> </a>
+                    <?php echo " sang "; ?>
+                    <!-- new link -->
+                    <a href="profile/user-info/<?php echo $task['new_id']; ?>"> <?php echo $task['new_value']; ?> </a> <?php
+                } else if ($task['key'] == Config::process_id) {
+                    echo $task['old_value'] . " sang " .$task['new_value'];
                 } else {
-                    echo " đã thêm: " . $task['certificate'];
+                    echo $task['old_id'] . " sang " .$task['new_id'];
                 }
-            ?>
+            } ?>
+
+            <!-- Action new -->
+            <?php if ($log->action_id == (string)Config::ADD_ACTION) {
+                echo " đã thêm hồ sơ "?>
+                <a href="manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->task_id; ?> </a>
+                <?php
+            }?>
+            
+            <!-- date -->
+            <i><?php echo " vào ngày " . $log->date;?></i>
         </span>
         <!-- General tools such as edit or delete-->
         <div class="tools">

@@ -130,4 +130,7 @@ class IndexService implements IndexServiceInterface
    public function getUserNameByUserID($user_id) {
        return $this->databaseMapper->getUserNameByUserID($user_id);
    }
+   public function getProcessBaseID($get_base_id) {
+       return $this->databaseMapper->getProcessBaseID($get_base_id);
+   }
 }

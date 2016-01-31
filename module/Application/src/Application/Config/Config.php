@@ -50,13 +50,62 @@ namespace Application\Config;
     const USERNAME_BENEATH_MIN_LEN = "Username length beneath minimum length";
 
     /* Task database field */
-    const CUSTUMER = "custumer";
-    const PROVIDER_ID = "provider_id";
-    const PROVIDER_NAME = "nhà cung cấp";
-    const REPORTER_ID = "reporter_id";
-    const REPORTER_NAME = "người report";
+    const custumer_id = "custumer";
+    const custumer_name = "Tên Khách Hàng";
+    
+    const agency_id = "agency_id";
+    const agency_name = "Người Gửi (Bên Khách Hàng)";
+    
+    const provider_id = "provider_id";
+    const provider_name = "Người Gửi (Bên Khách Hàng)";
+    
+    const reporter_id = "reporter_id";
+    const reporter_name = "Người Giám Sát";
+
+    const date_open_id = "date_open";
+    const date_open_name = "Ngày Nhận (Bên Khách Hàng)";
+
+    const date_end = "date_end";
+    const date_end_name = "Ngày Hẹn (Bên Khách Hàng)";
+    
+    const date_open_pr_id = "date_open";
+    const date_open_pr_name = "Ngày Nhận (Bên Nhà Cung Cấp)";
+    
+    const date_end_pr = "date_end";
+    const date_end_pr_name = "Ngày Hẹn (Bên Nhà Cung Cấp)";
+    
+    const certificate_id = "certificate";
+    const certificate_name = "Sản Phẩm";
+    
+    const cost_sell_id = "cost_sell";
+    const cost_sell_name = "Thoả Thuận (Bên Khách Hàng)";
+    
+    const cost_buy = "cost_buy";
+    const cost_buy_name = "Thoả Thuận (Bên Nhà Cung Cấp)";
+    
+    const process_id = "process_id";
+    const process_name = "Trạng Thái";
+    
+    const assign_id = "assign_id";
+    const assign_name = "Người Chịu Trách Nhiệm";
     public static function getMinValue()
     {
         return self::MAX_ITEM_OF_PAGE;
+    }
+    
+    public static function convertFieldID($field_id)
+    {
+        if ($field_id == Config::custumer_id) return Config::custumer_name;
+        if ($field_id == Config::agency_id) return Config::agency_name;
+        if ($field_id == Config::provider_id) return Config::provider_name;
+        if ($field_id == Config::reporter_id) return Config::reporter_name;
+        if ($field_id == Config::date_open_id) return Config::date_open_name;
+        if ($field_id == Config::certificate_id) return Config::certificate_name;
+        if ($field_id == Config::cost_sell_id) return Config::cost_sell_name;
+        if ($field_id == Config::date_end) return Config::date_end_name;
+        if ($field_id == Config::cost_buy) return Config::cost_buy_name;
+        if ($field_id == Config::process_id) return Config::process_name;
+        if ($field_id == Config::assign_id) return Config::assign_name;
+        return $field_id;
     }
  }

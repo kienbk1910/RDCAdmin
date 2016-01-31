@@ -49,5 +49,5 @@ interface IndexServiceInterface
      public function getFileAttachment($id);
      public function modifyLog(Log $log);
      public function getUserNameByUserID($user_id);
-     
+     public function getProcessBaseID($get_base_id);
  }
