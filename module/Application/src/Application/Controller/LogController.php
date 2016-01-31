@@ -36,14 +36,12 @@ class LogController extends BaseController {
     public function indexAction() {
         $this->checkAuth();
         $request = $this->getRequest();
-        if ($request->isPost()) {
-        }
 
         $task = new Task();
         /* Get all logs */
         $task->id = NULL;
         $log = new Log();
-        $logs = $this->databaseService->showLog( $this->auth->getIdentity()->id, $task, $log );
+        $logs = $this->databaseService->showLog($this->auth->getIdentity()->id, $task, $log);
         return new ViewModel( array (
                 'logs' => $logs,
         ) );
@@ -52,19 +50,16 @@ class LogController extends BaseController {
     public function showlogAction() {
         $this->checkAuth();
         $request = $this->getRequest();
-        if ($request->isPost()) {
-        }
+
         $task_id = $this->params()->fromRoute( 'id', 0 );
         $task = new Task();
         $task->id = $task_id;
         $log = new Log();
         $datas = $this->databaseService->showLog( $this->auth->getIdentity()->id, $task, $log );
-        foreach ($datas as $data) {
-            $obj = json_decode( $data->value, false );
-            var_dump( $obj );
-            exit();
-        }
-
-        return new JsonModel( array () );
+        $data = $datas->current();
+        return new ViewModel( array (
+                'data' => $data,
+        ) );
+        break;
     }
 }

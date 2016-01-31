@@ -13,6 +13,7 @@ namespace Application\Config;
 
     // Acction id
     const LOGIN_ACTION = 1;
+    const EDIT_ACTION = 2;
     const ADD_ACTION = 3;
     const REMOVE_ACTION = 4;
 
@@ -48,9 +49,14 @@ namespace Application\Config;
     const USERNAME_EXCEED_MAX_LEN = "Username length exceed maximum length";
     const USERNAME_BENEATH_MIN_LEN = "Username length beneath minimum length";
 
-
-  public static function getMinValue()
-  {
-    return self::MAX_ITEM_OF_PAGE;
-  }
+    /* Task database field */
+    const CUSTUMER = "custumer";
+    const PROVIDER_ID = "provider_id";
+    const PROVIDER_NAME = "nhà cung cấp";
+    const REPORTER_ID = "reporter_id";
+    const REPORTER_NAME = "người report";
+    public static function getMinValue()
+    {
+        return self::MAX_ITEM_OF_PAGE;
+    }
  }

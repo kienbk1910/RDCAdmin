@@ -241,11 +241,43 @@ class ZendDbSqlMapper implements IndexMapperInterface
          return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
 
-     public function showLog($user_id, Task $task, Log $log) {
+     public function getUserNameByUserID($user_id) {
+         $sql = new Sql($this->dbAdapter);
+         $select = $sql->select('users');
+         $select->Where(array('users.id = ?' => $user_id));
+         $select = $this->getUserNameByUserID($log->old_value);
+         $selectString = $sql->getSqlStringForSqlObject($select);
+         $users = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+         $user = $users->current();
+         return $user->username;;
+     }
+     
+     public function modifyLog(Log $log) {
+         $sql = new Sql($this->dbAdapter);
+         /* Always insert new value json to db */
+         $data = array(
+                 'user_id' => $log->user_id,
+                 'task_id' => $log->task_id,
+                 'action_id' => $log->action_id,
+                 'value' => json_encode(array('key' => $log->key,
+                         'old_value' => $log->old_value,
+                         'new_value' => $log->new_value,
+                 )),
+                 'date'=> date("Y-m-d H:i:s"),
+         );
+
+         $sql = new Sql($this->dbAdapter);
+         $insert = $sql->insert('logs');
+         $insert->values($data);
+         $selectString = $sql->getSqlStringForSqlObject($insert);
+         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+     }
+     
+     public function showLog($user_id, Task $task) {
         $sql = new Sql($this->dbAdapter);
         if ($task->id == NULL) {
-            $select = $sql->select('logs')->join('actions', 'logs.action_id = actions.id', array(
-                    'action_id' => 'name'), 'left');
+            $select = $sql->select('logs')->join('users', 'logs.user_id = users.id', array(
+                    'join_user_name' => 'username'), 'left');
         } else {
             $select = $sql->select('logs')->join('actions', 'logs.action_id = actions.id', array(
                                 'action_id' => 'name'), 'left');

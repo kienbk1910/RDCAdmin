@@ -232,6 +232,17 @@ class ManagerTasksController extends BaseController
                      $result->setStatus(Xeditable::STATUS_ERROR);
                      $result->setMsg(Xeditable::MSG_DATA_NOT_NUMBER);
              }else{
+                $log = new Log();
+                $log->action_id = Config::EDIT_ACTION;
+                $log->user_id = $this->auth->getIdentity()->id;
+                $log->task_id = $id;
+                $log->key = $name;
+                $log->new_value = $value;
+                $task = $this->databaseService->getInfoTask($id);
+                $array = $task->current();
+                $log->old_value = $array[$name];
+
+                $this->databaseService->modifyLog($log);
                 $this->databaseService->changeInfoOfTask($id,$name,$value,$this->auth->getIdentity()->id);
             }
          }else{
@@ -434,16 +445,13 @@ class ManagerTasksController extends BaseController
         $task_id = $this->params()->fromRoute('id', 0);
         $task = new Task();
         $task->id = $task_id;
-        $log = new Log();
-        $datas = $this->databaseService->showLog($this->auth->getIdentity()->id, $task, $log);
+        $datas = $this->databaseService->showLog($this->auth->getIdentity()->id, $task);
         foreach ($datas as $data) {
             $obj = json_decode($data->value, false);
             var_dump($obj);
             exit;
         }
         return new JsonModel(array(
-
         ));
-
     }
 }

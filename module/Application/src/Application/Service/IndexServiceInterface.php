@@ -21,7 +21,7 @@ interface IndexServiceInterface
      public function getListByRole($role);
      public function insertTask(Task $task);
 
-     public function showLog($user_id, Task $task, Log $log);
+     public function showLog($user_id, Task $task);
      public function insertLog($user_id, Task $task, $action);
      public function getListUserByBaseRole($role);
      public function getInfoTask($id);
@@ -47,4 +47,7 @@ interface IndexServiceInterface
      public function getListFileActtacment($task_id,$permission);
      public function getPermissionByTaskid($id_user,$task_id);
      public function getFileAttachment($id);
+     public function modifyLog(Log $log);
+     public function getUserNameByUserID($user_id);
+     
  }
