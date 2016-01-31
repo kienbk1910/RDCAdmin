@@ -54,11 +54,10 @@ class LogController extends BaseController {
         $task_id = $this->params()->fromRoute( 'id', 0 );
         $task = new Task();
         $task->id = $task_id;
-        $log = new Log();
-        $datas = $this->databaseService->showLog( $this->auth->getIdentity()->id, $task, $log );
-        $data = $datas->current();
+        $logs = $this->databaseService->showLog( $this->auth->getIdentity()->id, $task);
+        $log = $logs->current();
         return new ViewModel( array (
-                'data' => $data,
+                'logs' => $logs,
         ) );
         break;
     }

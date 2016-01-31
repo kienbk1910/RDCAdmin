@@ -306,10 +306,9 @@ class ZendDbSqlMapper implements IndexMapperInterface
             $select = $sql->select('logs')->join('users', 'logs.user_id = users.id', array(
                     'join_user_name' => 'username'), 'left');
         } else {
-            $select = $sql->select('logs')->join('actions', 'logs.action_id = actions.id', array(
-                                'action_id' => 'name'), 'left');
+            $select = $sql->select('logs')->join('users', 'logs.user_id = users.id', array(
+                    'join_user_name' => 'username'), 'left');
             $select->Where(array(
-                    'user_id = ?' => $user_id,
                     'task_id' => $task->id));
         }
         $selectString = $sql->getSqlStringForSqlObject($select);

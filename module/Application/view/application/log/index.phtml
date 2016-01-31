@@ -26,12 +26,12 @@
       <!-- todo text -->
         <span class="text">
             <!-- user link -->
-            <a href="profile/user-info/<?php echo $log->user_id; ?>"><?php echo $log->join_user_name; ?></a>
+            <a href="/profile/user-info/<?php echo $log->user_id; ?>"><?php echo $log->join_user_name; ?></a>
 
             <!-- Action edit -->
             <?php if ($log->action_id == (string)Config::EDIT_ACTION) {
                 echo " đã thay đổi " . $task['key_name']. " của hồ sơ ";?>
-                <a href="manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->task_id; ?> </a>
+                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->task_id; ?> </a>
                 <!-- If field reporter_id, agency_id ... -->
                 <?php echo " từ "; ?>
                 <?php if ($task['key'] == Config::reporter_id
@@ -39,10 +39,10 @@
                         || $task['key'] == Config::agency_id
                         || $task['key'] == Config::assign_id) {?>
                     <!-- Org link -->
-                    <a href="profile/user-info/<?php echo $task['old_id']; ?>"> <?php echo $task['old_value']; ?> </a>
+                    <a href="/profile/user-info/<?php echo $task['old_id']; ?>"> <?php echo $task['old_value']; ?> </a>
                     <?php echo " sang "; ?>
                     <!-- new link -->
-                    <a href="profile/user-info/<?php echo $task['new_id']; ?>"> <?php echo $task['new_value']; ?> </a> <?php
+                    <a href="/profile/user-info/<?php echo $task['new_id']; ?>"> <?php echo $task['new_value']; ?> </a> <?php
                 } else if ($task['key'] == Config::process_id) {
                     echo $task['old_value'] . " sang " .$task['new_value'];
                 } else {
@@ -53,7 +53,7 @@
             <!-- Action new -->
             <?php if ($log->action_id == (string)Config::ADD_ACTION) {
                 echo " đã thêm hồ sơ "?>
-                <a href="manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->task_id; ?> </a>
+                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->task_id; ?> </a>
                 <?php
             }?>
             
