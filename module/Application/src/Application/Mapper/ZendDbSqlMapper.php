@@ -414,7 +414,10 @@ class ZendDbSqlMapper implements IndexMapperInterface
       public function getListTask($start,$length,$search,$columns,$order,$agency_id,$provider_id){
          $sql = new Sql($this->dbAdapter);
         $select = $this->getSelectList($start,$length,$search,$columns,$order,$agency_id,$provider_id);
-
+       // $sortcolumns = $columns[$order[0]['column']]['data'];
+        
+        $sortby  = $order[0]['dir'];
+        $select->order(array('tasks.date_open '.$sortby));
         $select->order(array('tasks.last_update DESC'));
         $select->offset($start)
                 ->limit($length);

@@ -66,13 +66,15 @@ class ManagerTasksController extends BaseController
          $length = $request->getPost('length',10);
          $search = $request->getPost('search','');
          $columns = $request->getPost('columns','');
+         $orders = $request->getPost('order','');
+
          $search = $search['value'];
          $total = $this->databaseService->getTotalTask();
 
-         $tasks =$this->databaseService->getListTask($start,$length,$search,$columns,"",null,null);
+         $tasks =$this->databaseService->getListTask($start,$length,$search,$columns,$orders ,null,null);
          $data = new DataTablesObject();
          $data->recordsTotal = $total;
-         $data->recordsFiltered = $this->databaseService->getCountTasksFiltered($start,$length,$search,$columns,"",null,null);
+         $data->recordsFiltered = $this->databaseService->getCountTasksFiltered($start,$length,$search,$columns,$orders,null,null);
          $data->draw = $draw;
          foreach ($tasks as $task) {
             $item = new TaskListItem();
