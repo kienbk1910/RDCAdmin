@@ -380,7 +380,6 @@ return array(
                  'constraints' => array(
                  )
              ),
-
          ),
         )
             ),
@@ -465,8 +464,36 @@ return array(
                         )
                     ),
                 ),
-            )
-        )
+            ) /*End child*/
+        ), /* End profile */
+            /* Start log */
+           'log' => array (
+            'type' => 'Literal',
+            'options' => array (
+                'route' => '/log',
+                'defaults' => array (
+                    '__NAMESPACE__' => 'Application\Controller',
+                    'controller' => 'Log',
+                    'action' => 'index'
+                )
+            ),
+            'may_terminate' => true,
+            'child_routes' => array (
+                'showlog' => array(
+                     'type' => 'segment',
+                     'options' => array(
+                         'route'    => '/showlog/:id',
+                         'defaults' => array(
+                             'action' => 'showlog',
+                             'id'=>'0',
+                         ),
+                         'constraints' => array(
+                              'id'   => '[1-9]\d*',
+                         )
+                     ),
+                 ),
+            ) /* End child */
+            ) /* End log */
         ),
     ),
     'service_manager' => array(
@@ -502,7 +529,8 @@ return array(
              'Application\Controller\Profile' => 'Application\Factory\ProfileControllerFactory',
              'Application\Controller\ManagerUsers' => 'Application\Factory\ManagerUsersControllerFactory',
              'Application\Controller\ManagerTasks' => 'Application\Factory\ManagerTasksControllerFactory',
-             'Application\Controller\Tasks' => 'Application\Factory\TasksControllerFactory'
+             'Application\Controller\Tasks' => 'Application\Factory\TasksControllerFactory',
+             'Application\Controller\Log' => 'Application\Factory\LogControllerFactory',
          )
     ),
     'navigation_helpers' => array (

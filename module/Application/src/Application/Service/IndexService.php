@@ -56,8 +56,8 @@ class IndexService implements IndexServiceInterface
       return $this->databaseMapper->insertTask($task);
    }
 
-   public function showLog($user_id, Task $task, Log $log) {
-       return $this->databaseMapper->showLog($user_id, $task, $log);
+   public function showLog($user_id, Task $task) {
+       return $this->databaseMapper->showLog($user_id, $task);
    }
 
    public function insertLog($user_id, Task $task, $action) {
@@ -123,5 +123,14 @@ class IndexService implements IndexServiceInterface
   }
    public function getFileAttachment($id){
       return $this->databaseMapper->getFileAttachment($id);
+   }
+   public function modifyLog(Log $log) {
+       return $this->databaseMapper->modifyLog($log);
+   }
+   public function getUserNameByUserID($user_id) {
+       return $this->databaseMapper->getUserNameByUserID($user_id);
+   }
+   public function getProcessBaseID($get_base_id) {
+       return $this->databaseMapper->getProcessBaseID($get_base_id);
    }
 }

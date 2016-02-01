@@ -7,23 +7,16 @@ namespace Application\Controller;
  use Zend\Authentication\AuthenticationService;
  class IndexController extends BaseController
  {
-
-
      public function __construct(IndexServiceInterface $databaseService,AuthenticationService $auth)
-     
      {
-        
         $this->databaseService = $databaseService;
         $this->auth = $auth;
         $this->user = $auth->getIdentity();
-         
      }
 
      public function indexAction()
      {
         $this->checkAuth();
-        return new ViewModel();  
+        return new ViewModel();
      }
-   
-
 }

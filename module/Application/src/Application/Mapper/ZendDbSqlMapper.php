@@ -241,12 +241,76 @@ class ZendDbSqlMapper implements IndexMapperInterface
          return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
 
-     public function showLog($user_id, Task $task, Log $log) {
+     public function getUserNameByUserID($user_id) {
+         $sql = new Sql($this->dbAdapter);
+         $select = $sql->select('users');
+         $select->Where(array('users.id = ?' => $user_id));
+         $selectString = $sql->getSqlStringForSqlObject($select);
+         $users = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+         $user = $users->current();
+         return $user->username;;
+     }
+     
+     protected function getProcessNameBaseOnID($get_base_id) {
+         $sql = new Sql($this->dbAdapter);
+         $select = $sql->select('process');
+         $select->Where(array('id = ?' => $get_base_id));
+         $selectString = $sql->getSqlStringForSqlObject($select);
+         $processes = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+         $process = $processes->current();
+         return $process['name'];
+     }
+     
+     public function modifyLog(Log $log) {
+         $sql = new Sql($this->dbAdapter);
+         /* Convert to readable value */
+         if ($log->key == Config::process_id) {
+             $log->old_value = $this->getProcessNameBaseOnID($log->old_id);
+             $log->new_value = $this->getProcessNameBaseOnID($log->new_id);
+         } else if ($log->key == Config::reporter_id
+                 || $log->key == Config::assign_id
+                 || $log->key == Config::agency_id
+                 || $log->key == Config::provider_id) {
+             $log->old_value = $this->getUserNameByUserID($log->old_id);
+             $log->new_value = $this->getUserNameByUserID($log->new_id);
+         }
+         
+         $log->key_name = Config::convertFieldID($log->key);
+
+         /* Always insert new value json to db */
+         $data = array(
+                 'user_id' => $log->user_id,
+                 'task_id' => $log->task_id,
+                 'action_id' => $log->action_id,
+                 'value' => json_encode(array(
+                         'key' => $log->key,
+                         'key_name' => $log->key_name,
+                         'old_value' => $log->old_value,
+                         'old_id' => $log->old_id,
+                         'new_value' => $log->new_value,
+                         'new_id' => $log->new_id,
+                 )),
+                 'date'=> date("Y-m-d H:i:s"),
+         );
+
+         $sql = new Sql($this->dbAdapter);
+         $insert = $sql->insert('logs');
+         $insert->values($data);
+         $selectString = $sql->getSqlStringForSqlObject($insert);
+         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+     }
+     
+     public function showLog($user_id, Task $task) {
         $sql = new Sql($this->dbAdapter);
-        $select = $sql->select('logs');
-        $select->Where(array(
-                'user_id = ?' => $user_id,
-                'task_id' => $task->id));
+        if ($task->id == NULL) {
+            $select = $sql->select('logs')->join('users', 'logs.user_id = users.id', array(
+                    'join_user_name' => 'username'), 'left');
+        } else {
+            $select = $sql->select('logs')->join('users', 'logs.user_id = users.id', array(
+                    'join_user_name' => 'username'), 'left');
+            $select->Where(array(
+                    'task_id' => $task->id));
+        }
         $selectString = $sql->getSqlStringForSqlObject($select);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
@@ -285,6 +349,14 @@ class ZendDbSqlMapper implements IndexMapperInterface
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
 
+     public function getProcessBaseID($get_base_id) {
+         $sql = new Sql($this->dbAdapter);
+         $select = $sql->select('process');
+         $select->Where(array('id = ?' => $get_base_id));
+         $selectString = $sql->getSqlStringForSqlObject($select);
+         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+     }
+     
     public function insertMoneyHistory(MoneyHistory $money){
         $sql = new Sql($this->dbAdapter);
         if($money->id == 0){
@@ -500,14 +572,14 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $select = $sql->select('file_attachment');
         $select->where(array('task_id =?' => $task_id));
         $selectString = $sql->getSqlStringForSqlObject($select);
-        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);   
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
     }
     public function getFileAttachment($id){
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('file_attachment');
         $select->where(array('id =?' => $id));
         $selectString = $sql->getSqlStringForSqlObject($select);
-        $files = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE); 
+        $files = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
         return $files->current();
       }
 }

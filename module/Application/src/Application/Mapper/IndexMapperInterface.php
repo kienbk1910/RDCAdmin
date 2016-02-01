@@ -20,7 +20,8 @@ interface IndexMapperInterface
       public function getListByRole($role);
       public function insertTask(Task $task);
       public function insertLog($user_id, Task $task, $action);
-      public function showLog($user_id, Task $task, Log $log);
+      public function modifyLog(Log $log);
+      public function showLog($user_id, Task $task);
       public function getListUserByBaseRole($role);
 
       public function getInfoTask($id);
@@ -41,4 +42,6 @@ interface IndexMapperInterface
       public function deleteAttachment($id);
       public function getListFileActtacment($task_id,$permission);
       public function getFileAttachment($id);
+      public function getUserNameByUserID($user_id);
+      public function getProcessBaseID($get_base_id);
 }
