@@ -80,7 +80,7 @@ namespace Application\Config;
     const cost_sell_id = "cost_sell";
     const cost_sell_name = "Thoả Thuận (Bên Khách Hàng)";
     
-    const cost_buy = "cost_buy";
+    const cost_buy_id = "cost_buy";
     const cost_buy_name = "Thoả Thuận (Bên Nhà Cung Cấp)";
     
     const process_id = "process_id";
@@ -103,7 +103,7 @@ namespace Application\Config;
         if ($field_id == Config::certificate_id) return Config::certificate_name;
         if ($field_id == Config::cost_sell_id) return Config::cost_sell_name;
         if ($field_id == Config::date_end) return Config::date_end_name;
-        if ($field_id == Config::cost_buy) return Config::cost_buy_name;
+        if ($field_id == Config::cost_buy_id) return Config::cost_buy_name;
         if ($field_id == Config::process_id) return Config::process_name;
         if ($field_id == Config::assign_id) return Config::assign_name;
         return $field_id;

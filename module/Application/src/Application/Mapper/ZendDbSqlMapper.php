@@ -247,8 +247,12 @@ class ZendDbSqlMapper implements IndexMapperInterface
          $select->Where(array('users.id = ?' => $user_id));
          $selectString = $sql->getSqlStringForSqlObject($select);
          $users = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
-         $user = $users->current();
-         return $user->username;;
+         if ($users->count() == 1) {
+             $user = $users->current();
+             return $user->username;
+         } else {
+             return "Không Tìm Thấy";
+         }
      }
      
      protected function getProcessNameBaseOnID($get_base_id) {
@@ -273,6 +277,9 @@ class ZendDbSqlMapper implements IndexMapperInterface
                  || $log->key == Config::provider_id) {
              $log->old_value = $this->getUserNameByUserID($log->old_id);
              $log->new_value = $this->getUserNameByUserID($log->new_id);
+         } else if ($log->key == Config::cost_sell_id || $log->key == Config::cost_buy_id) {
+             $log->old_id = number_format($log->old_id);
+             $log->new_id = number_format($log->new_id);
          }
          
          $log->key_name = Config::convertFieldID($log->key);
@@ -305,9 +312,11 @@ class ZendDbSqlMapper implements IndexMapperInterface
         if ($task->id == NULL) {
             $select = $sql->select('logs')->join('users', 'logs.user_id = users.id', array(
                     'join_user_name' => 'username'), 'left');
+            $select->order(array('logs.date DESC'));
         } else {
             $select = $sql->select('logs')->join('users', 'logs.user_id = users.id', array(
                     'join_user_name' => 'username'), 'left');
+            $select->order(array('logs.date DESC'));
             $select->Where(array(
                     'task_id' => $task->id));
         }
