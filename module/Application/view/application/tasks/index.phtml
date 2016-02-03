@@ -1,6 +1,13 @@
 <section class="content">
-	
-	<form class="form-horizontal">
+  <div class="box box-default">
+      <div class="box-header with-border">
+        <h3 class="box-title">Tìm Kiếm Nâng Cao</h3>
+        <div class="box-tools pull-right">
+          <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+        </div><!-- /.box-tools -->
+      </div><!-- /.box-header -->
+      <div class="box-body" style="display: none;">
+          <form class="form-horizontal">
                   <div class="box-body">
                     <div class="form-group">
                       <label for="inputEmail3" class="col-sm-1 control-label col-custum">Nhận Từ</label>
@@ -21,71 +28,185 @@
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="inputEmail3" class="col-sm-2 control-label">Người Gửi</label>
-                      <div class="col-sm-2">
-                         <select id="agency_id"class="form-control js-example-basic-single" name="agency_id" >
-                               <?php foreach($agencys as $agency){
-                                 echo "<option  value=".$agency->getId().">".$agency->getUsername()."</option>";
-                                }?>
-                          </select>
-                      </div>
+                     
                       <label for="inputEmail3" class="col-sm-2 control-label">Trạng Thái</label>
                       <div class="col-sm-2">
                          <select id="process_id"class="form-control js-example-basic-single" name="agency_id" >
-                          		<option  value="0">Tất Cả</option>;
+                              <option  value="0">Tất Cả</option>;
                                <?php foreach($processes as $process){
                                  echo "<option  value=".$process->id.">".$process->name."</option>";
                                 }?>
                           </select>
                       </div>
-                      <label for="inputEmail3" class="col-sm-2 control-label">Người Xử Lý</label>
-                      <div class="col-sm-2">
-                         <select id="provider_id"class="form-control js-example-basic-single" name="agency_id" >
-                               <?php foreach($agencys as $agency){
-                                 echo "<option  value=".$agency->getId().">".$agency->getUsername()."</option>";
-                                }?>
-                          </select>
-                      </div>
+                      
                     </div>
+              
+                    <div>
                   </div><!-- /.box-body -->
     </form>
-	<div>
-		Ẩn Hiện: 
-		<a class="toggle-vis" data-column="1">Tên</a>
-		 - <a class="toggle-vis" data-column="2">Hồ Sơ</a>
-		 - <a class="toggle-vis" data-column="3">Trạng Thái</a> 
-		  - <a class="toggle-vis" data-column="4">Người Gửi</a> 
-		 - <a class="toggle-vis" data-column="5">Thỏa Thuận</a> 
-		  - <a class="toggle-vis" data-column="6">Đã Nhận</a>
-		 - <a class="toggle-vis" data-column="7">Ngày Nhận</a> 
-		 - <a class="toggle-vis" data-column="8">Ngày Trả</a> 
-	</div>
-	<table id="users-table" class="display nowrap" cellspacing="0" width="100%">
-	  
-	          <thead>
-	        
-	            <tr>
-	            	<th>#</th>
-	                <th>Tên</th>
-	                <th>Hồ Sơ</th>
-	                <th>Trạng Thái</th>
-	               	<th>Thỏa Thuận</th>
-	               	<th>Đã Nhận</th>
-	               	<th>Ngày Nhận</th>
-	               	<th>Ngày Trả</th>
-	            </tr>
-	        </thead>
-	        <tfoot>
-	            <tr>
- 					<th>#</th>
-	                <th>Tên</th>
-	                <th>Hồ Sơ</th>
-	                <th>Trạng Thái</th>
-	               	<th>Thỏa Thuận</th>
-	               	<th>Đã Nhận</th>
-	               	<th>Ngày Nhận</th>
-	               	<th>Ngày Trả</th>
-	            </tr>
-	        </tfoot>
-	</table>
+      </div><!-- /.box-body -->
+  </div><!-- /.box -->
+  
+  <div>
+    Ẩn Hiện: 
+    <a class="toggle-vis" data-column="1">Tên</a>
+     - <a class="toggle-vis" data-column="2">Hồ Sơ</a>
+     - <a class="toggle-vis" data-column="3">Trạng Thái</a> 
+     - <a class="toggle-vis" data-column="4">Thỏa Thuận</a> 
+     - <a class="toggle-vis" data-column="5">Đã Nhận</a>
+     - <a class="toggle-vis" data-column="6">Ngày Nhận</a> 
+     - <a class="toggle-vis" data-column="7">Ngày Trả</a> 
+  </div>
+  <table id="users-table" class="display nowrap" cellspacing="0" width="100%">
+    
+            <thead>
+          
+              <tr>
+                  <th>#</th>
+                  <th>Tên</th>
+                  <th>Hồ Sơ</th>
+                  <th>Trạng Thái</th>
+                  <th>Thỏa Thuận</th>
+                  <th>Đã Nhận</th>
+                  <th>Ngày Nhận</th>
+                  <th>Ngày Trả</th>
+              </tr>
+          </thead>
+          <tfoot>
+              <tr>
+                  <th>#</th>
+                  <th>Tên</th>
+                  <th>Hồ Sơ</th>
+                  <th>Trạng Thái</th>
+                  <th>Thỏa Thuận</th>
+                  <th>Đã Nhận</th>
+                  <th>Ngày Nhận</th>
+                  <th>Ngày Trả</th>
+              </tr>
+          </tfoot>
+  </table>
 </section>
+<script type="text/javascript" language="javascript" class="init">
+  
+var editor; // use a global for the submit and return data rendering in the examples
+
+  /*$('#users-talbe').DataTable( {
+    dom: 'lrtip',
+    processing: true,
+        serverSide: true,
+        ajax: {
+            url: "/manager-users/getlist",
+            type: "POST"
+        },
+    columns: [
+      { data: "username" },
+      { data: "role" },
+      { data: "staus" }
+    ],
+    order: [[ 3, "desc" ]],
+    buttons: [
+      { extend: "create", editor: editor },
+      { extend: "edit",   editor: editor },
+      { extend: "remove", editor: editor }
+    ]
+  } );*/
+    var table = $('#users-table').DataTable( {
+            "dom": '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>',
+            "processing": true,
+                "serverSide": true,
+                "scrollX": true,
+                ajax: {
+                    url: "/tasks/getlisttasks",
+                    type: "POST"
+                },
+                "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.10/i18n/Vietnamese.json"
+              },
+            columns: [
+              { data: "DT_RowId" },
+              { data: "custumer" },
+              { data: "certificate" },
+              { data: "process_name" },
+              { data: "cost_buy" },
+              { data: "provider_pay" },
+              { data: "date_open_pr" },
+              { data: "date_end_pr" },              
+            ],
+
+        } );
+   $('#users-table').on('click', 'tr', function () {
+        var data = table.row( this ).id();
+        window.open("/tasks/taskdetail/"+data);
+    } );
+   $('a.toggle-vis').on( 'click', function (e) {
+        e.preventDefault();
+ 
+        // Get the column API object
+        var column = table.column( $(this).attr('data-column') );
+        if($(this).hasClass('toggle-vis-hide')){
+          $(this).removeClass('toggle-vis-hide');
+        }else{
+      $(this).addClass('toggle-vis-hide');
+        }
+    
+        // Toggle the visibility
+        column.visible( ! column.visible() );
+    } );
+   $('#users-table tbody')
+        .on( 'mouseenter', 'td', function () {
+            var colIdx = table.cell(this).index().column;
+ 
+            $( table.cells().nodes() ).removeClass( 'highlight' );
+            $( table.column( colIdx ).nodes() ).addClass( 'highlight' );
+        } );
+     $("#agency_id").select2().on("change", function(e) {
+          // mostly used event, fired to the original element when the value changes
+            $('#users-table').DataTable().column(4).search( e.val,"","").draw();
+      });
+     $("#provider_id").select2().on("change", function(e) {
+          // mostly used event, fired to the original element when the value changes
+            $('#users-table').DataTable().column(9).search( e.val,"","").draw();
+      });
+       $("#process_id").select2().on("change", function(e) {
+          // mostly used event, fired to the original element when the value changes
+            $('#users-table').DataTable().column(3).search( e.val,"","").draw();
+      });
+        $("#assign_id").select2().on("change", function(e) {
+          // mostly used event, fired to the original element when the value changes
+            $('#users-table').DataTable().column(14).search( e.val,"","").draw();
+      });
+         $("#reporter_id").select2().on("change", function(e) {
+          // mostly used event, fired to the original element when the value changes
+            $('#users-table').DataTable().column(15).search( e.val,"","").draw();
+      });
+      function seach_custum_date_start(){
+          $('#users-table').DataTable().column(7).search( $("#cus-date-start_1").val()+"-"+$("#cus-date-start_2").val(),"","").draw();
+      }
+      function seach_custum_date_end(){
+          $('#users-table').DataTable().column(8).search( $("#cus-date-end_1").val()+"-"+$("#cus-date-end_2").val(),"","").draw();
+      }
+    $("#cus-date-start_1").datepicker({
+    onSelect: function(dateText) {
+       seach_custum_date_start();
+    }
+  });
+    $("#cus-date-start_1").datepicker( "option", "dateFormat", "dd/mm/yy");
+     $("#cus-date-start_2").datepicker({
+    onSelect: function(dateText) {
+        seach_custum_date_start();
+    }
+  });
+    $("#cus-date-start_2").datepicker( "option", "dateFormat", "dd/mm/yy");
+      $("#cus-date-end_1").datepicker({
+    onSelect: function(dateText) {
+       seach_custum_date_end();
+    }
+  });
+    $("#cus-date-end_1").datepicker( "option", "dateFormat", "dd/mm/yy");
+    $("#cus-date-end_2").datepicker({
+    onSelect: function(dateText) {
+        seach_custum_date_end();
+    }
+  });
+    $("#cus-date-end_2").datepicker( "option", "dateFormat", "dd/mm/yy");
+</script>

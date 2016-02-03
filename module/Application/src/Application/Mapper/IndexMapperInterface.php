@@ -29,7 +29,7 @@ interface IndexMapperInterface
       public function insertMoneyHistory(MoneyHistory $money);
       public function getTotalPay($id,$type);
       public function getPayHistory($id,$type);
-      public function getTotalTask();
+      public function getTotalTask($agency_id,$provider_id);
       public function getListTask($start,$length,$search,$columns,$order,$agency_id,$provider_id);
       public function getCountTasksFiltered($start,$length,$search,$columns,$order,$agency_id,$provider_id);
       public function getUserById($id);

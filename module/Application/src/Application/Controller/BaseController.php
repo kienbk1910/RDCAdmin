@@ -23,6 +23,12 @@
       protected function checkLevel2(){
               $this->checkRole(Config::USER_LEAVE2);
       }
+      protected function isLevel2(){
+          if($this->auth->getIdentity()->role_id > Config::USER_LEAVE2){
+            return false;
+          }
+           return true;
+      }
       public function checkRole($role){
            $this->checkAuth();
           if($this->auth->getIdentity()->role_id > $role){

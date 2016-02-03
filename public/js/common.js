@@ -1,5 +1,5 @@
 function changedateSQLtoVN (date) {
-	var time = new Date();
+	var time = new Date(date);
 	var hours = time.getHours();
 	var minute = time.getMinutes();
 	var date = time.getDate();

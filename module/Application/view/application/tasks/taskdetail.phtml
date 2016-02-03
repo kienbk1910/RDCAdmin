@@ -124,12 +124,12 @@
                                    <div class=" col-lg-6 form-group ">
                                     <label for="inputName" class="col-sm-6 control-label">Ngày Nhận</label>
                             
-                                     <label><?php echo $task->date_open; ?></label>
+                                     <label><?php echo $task->date_open_pr; ?></label>
                                   </div>
                                    <div class=" col-lg-6 form-group">
                                     <label for="inputName" class="col-sm-6 control-label">Ngày Hẹn</label>
                                     <div class="col-sm-6">
-                                    <label><?php echo $task->date_end; ?></label>
+                                    <label><?php echo $task->date_end_pr; ?></label>
                                     </div>
 
                                   </div>
@@ -139,13 +139,13 @@
                                    <div class=" col-lg-6 form-group ">
                                     <label for="inputName" class="col-sm-6 control-label">Thanh Toán</label>
                                     <div class="col-sm-6">
-                                      <label><?php echo $pay_custumer; ?></label>
+                                      <label><?php echo $pay_provider; ?></label>
                                     </div>
                                   </div>
                                    <div class=" col-lg-6 form-group">
                                      <label for="inputName" class="col-sm-6 control-label">Dư Nợ</label>
                                     <div class="col-sm-6">
-                                       <label><?php echo $custumer_debt; ?></label>
+                                       <label><?php echo $provider_debt; ?></label>
                                     </div>
                                   </div>
                                     
@@ -163,16 +163,15 @@
                         
                           </section>
                            <section class="col-lg-6 connectedSortable">
-                           <!-- TAB -->
                         <div class="nav-tabs-custom">
                                 <ul class="nav nav-tabs">
-                                  <li class="active"><a href="#activity" data-toggle="tab">Thanh Toán</a></li>
-                                  <li><a href="#timeline" data-toggle="tab">Bình Luận</a></li>
+                                  <li class="active"><a href="#activity_pr" data-toggle="tab">Thanh Toán</a></li>
+                                  <li><a href="#timeline_pr" data-toggle="tab">Bình Luận</a></li>
                                 </ul>
                                 <div class="tab-content">
-                                  <div class="active tab-pane box tab_height_box" id="activity">
-                                          <ul class="todo-list">
-                                          <?php foreach ($custumer_historys as $custumer_history) {?>
+                                  <div class="active tab-pane tab_height_box" id="activity_pr">
+                                       <ul class="todo-list">
+                                          <?php foreach ($provider_historys as $custumer_history) {?>
                                               <li>
                                               <!-- drag handle -->
                                               <span class="handle">
@@ -189,14 +188,17 @@
                                                 <!-- Emphasis label -->
                                               <small class="label label-danger"><i class="fa fa-clock-o"></i> <?php echo $custumer_history->username;?></small>
                                               <!-- General tools such as edit or delete-->
-                                           
+                                               <div class="tools">
+                                                <i class="fa fa-edit" onclick='pay_edit(<?php echo $custumer_history->id;?>,2,<?php echo '"'.number_format($custumer_history->money).'"'?>,<?php echo  '"'.date_format(date_create($custumer_history->date_pay),"d/m/Y").'"';?>,<?php echo  '"'.$custumer_history->money_option.'"';?>,<?php echo  '"'.$custumer_history->note.'"';?>)'></i>
+                                                <i class="fa fa-trash-o" onclick="confirm_delete(<?php echo $custumer_history->id;?>)"></i>
+                                              </div>
+                                            </li>
                                             </li>
                                           <?php }?>
                                           </ul>
-                                        
                                   </div><!-- /.tab-pane -->
-                                  <div class="tab-pane" id="timeline">
-                                     <div class="box-body chat box tab_height_box" id="custumer-chat-box"   >
+                                   <div class="tab-pane" id="timeline_pr">
+                                     <div class="box-body chat box tab_height_box" id="provider-chat-box"  >
                                       
                                       <!-- chat item -->
                                       <div class="item">
@@ -215,17 +217,16 @@
                                     </div><!-- /.chat -->
                                     <div class="box-footer">
                                       <div class="input-group">
-                                        <input class="form-control" id="custumer-comment"placeholder="Type message...">
+                                        <input class="form-control" id="provider-comment"placeholder="Type message...">
                                         <div class="input-group-btn">
                                           <button class="btn btn-success" 
-                                          onclick="addcomment('custumer-comment',1,<?php echo $task->id?>,'custumer-chat-box',<?php echo "'".\Application\Config\Config::IMAGE_PATH."'";?>)">
+                                          onclick="addcomment('provider-comment',2,<?php echo $task->id?>,'provider-chat-box',<?php echo "'".\Application\Config\Config::IMAGE_PATH."'";?>)">
                                           <i class="fa fa-plus"></i>
                                           </button>
                                         </div>
                                       </div>
                                     </div>
                                   </div><!-- /.tab-pane -->
-
                                 </div><!-- /.tab-content -->
                               </div><!-- /.nav-tabs-custom -->
                           </section>
@@ -270,7 +271,7 @@
                         <label for="inputName" class="col-sm-4 control-label">Chọn File</label>
                         <div class="col-sm-6">
                           <input type="file" name="file_name" class="form-control ">
-                          <input type="hidden" name="permission_option" value="2" class="form-control ">
+                          <input type="hidden" name="permission_option" value="3" class="form-control ">
                           <input type="hidden" class="form-control"  name="task_id" value="<?php echo $task->id;?>">
                         </div>
                       </div>
@@ -289,35 +290,7 @@
     </div>
   </div>
 </div>
-<!-- Change Permission  -->
-<div class="modal fade" id="modal-change-permission" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" >Thay đổi Quyền</h4>
-      </div>
-      <div class="modal-body">
-           <div class="form-group">
-            <label for="inputName" class="col-sm-4 control-label">Quyền Truy Cập</label>
-            <div class="col-sm-6">
-               <select id="permission_option" class="form-control">
-                  <option value="1">Chỉ RDC</option>
-                  <option value="2">Cho Phép Khách Hàng</option>
-                  <option value="3">Cho Phép Nhà Cung Cấp</option>
-                  <option value="4">Tất Cả</option>
-               </select>
-            </div>
 
-          </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-        <button type="button" class="btn btn-primary btn ajax" id="btn-change-permission" onclick="add_file()" >Đổi</button>
-      </div>
-    </div>
-  </div>
-</div>
 <script type="text/javascript">
 
   function validatePayForm(){

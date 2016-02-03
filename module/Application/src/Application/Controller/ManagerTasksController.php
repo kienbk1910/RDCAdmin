@@ -69,7 +69,7 @@ class ManagerTasksController extends BaseController
          $orders = $request->getPost('order','');
 
          $search = $search['value'];
-         $total = $this->databaseService->getTotalTask();
+         $total = $this->databaseService->getTotalTask(null,null);
 
          $tasks =$this->databaseService->getListTask($start,$length,$search,$columns,$orders ,null,null);
          $data = new DataTablesObject();
@@ -366,6 +366,7 @@ class ManagerTasksController extends BaseController
                  mkdir('.'.Config::FILE_ATTACHMENT_PATH.$file_attach->task_id, 0700, true);
             }
             // Merge $_POST and $_FILES data together
+
             $request  = new Request();
             $postData = array_merge_recursive($request->getPost()->toArray(), $request->getFiles()->toArray());
 
@@ -387,7 +388,11 @@ class ManagerTasksController extends BaseController
         $request = $this->getRequest();
         if ($request->isPost()) {
             $task_id = $request->getPost('task_id');
-            $permission = Config::FILE_PERMISSION_RDC;
+            if($this->isLevel2() == true){
+                $permission = Config::FILE_PERMISSION_RDC;
+            }else{
+                $permission = Config::FILE_PERMISSION_CUSTUMER;
+            }
             $files = $this->databaseService->getListFileActtacment($task_id,$permission );
             return new JsonModel($files);
         }

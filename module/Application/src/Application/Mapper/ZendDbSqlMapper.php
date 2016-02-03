@@ -335,7 +335,10 @@ class ZendDbSqlMapper implements IndexMapperInterface
      public function getInfoTask($id){
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('tasks');
-         $select->join('users', 'tasks.user_id = users.id', array('user_name'=>'username'), 'left');
+        $select->join('users', 'tasks.user_id = users.id', array('user_name'=>'username'), 'left');
+        $select->join('process', 'tasks.process_id = process.id', array('process_name'=>'name'), 'left');
+        $select->join(array('reporter' => 'users'), 'tasks.reporter_id = reporter.id', array('reporter_name'=>'username'), 'left');
+        $select->join(array('assign' => 'users'), 'tasks.assign_id = assign.id', array('assign_name'=>'username'), 'left');
         $select->join(array('2users' => 'users'), 'tasks.last_user_id = 2users.id', array('last_user_name'=>'username'), 'left');
         $select->Where(array('tasks.id = ?' => $id));
         $selectString = $sql->getSqlStringForSqlObject($select);
@@ -408,10 +411,16 @@ class ZendDbSqlMapper implements IndexMapperInterface
         return $result = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
 
-      public function getTotalTask(){
+      public function getTotalTask($agency_id,$provider_id){
         $sql = new Sql($this->dbAdapter);
-        $select = $sql->select('tasks')
-                ->columns(array('COUNT'=>new \Zend\Db\Sql\Expression('COUNT(*)')));
+        $select = $sql->select('tasks');
+        if($agency_id != null){
+            $select->Where(array('tasks.agency_id' => $agency_id));
+        }
+        if($provider_id != null){
+            $select->Where(array('tasks.provider_id' => $provider_id));
+        }
+         $select->columns(array('COUNT'=>new \Zend\Db\Sql\Expression('COUNT(*)')));
         $selectString = $sql->getSqlStringForSqlObject($select);
         $resultSet =  $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
         $count = 0;
@@ -432,7 +441,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $select->where->like('tasks.custumer', '%' . $search .'%');
         $agency_seach = DataTableUtility::getSearchValue($columns,"agency_name");
         if($agency_id != null){
-            $select->Where(array('users.id' => $agency_id));
+            $select->Where(array('tasks.agency_id' => $agency_id));
         }
         if($provider_id != null){
             $select->Where(array('2users.id' => $provider_id));
@@ -580,6 +589,13 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('file_attachment');
         $select->where(array('task_id =?' => $task_id));
+        if($permission == Config::FILE_PERMISSION_CUSTUMER){
+          $select->where ->nest->like("file_attachment.permission_option",Config::FILE_PERMISSION_ALL )
+                ->or->like("file_attachment.permission_option",Config::FILE_PERMISSION_CUSTUMER)
+                ->unnest;
+           
+        }
+       
         $selectString = $sql->getSqlStringForSqlObject($select);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
     }

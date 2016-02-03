@@ -140,6 +140,20 @@ return array(
                             ),
 
                      ),
+                          'taskdetail' => array(
+                         'type' => 'segment',
+                           'options' => array(
+                             'route'    => '/taskdetail/:id',
+                               'defaults' => array(
+                                 'action' => 'taskdetail',
+                                  'id'=>'0',
+                             ),
+                             'constraints' => array(
+                                 'id'   => '[1-9]\d*',
+                             )
+                            ),
+
+                     ),
 
                 ),
             ),
