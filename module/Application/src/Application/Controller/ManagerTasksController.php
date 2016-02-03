@@ -102,7 +102,7 @@ class ManagerTasksController extends BaseController
         exit;
      }
      public function addAction()
-     {
+     { 
         $this->checkLevel2();
         $request = $this->getRequest();
         if ($request->isPost()) {
