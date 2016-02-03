@@ -89,6 +89,10 @@ namespace Application\Config;
     
     const assign_id = "assign_id";
     const assign_name = "Người Chịu Trách Nhiệm";
+    
+    const AGENCY_TYPE = 0;
+    const PROVIDER_TYPE = 1;
+    const ASSIGN_REPORTER_TYPE = 2;
     public static function getMinValue()
     {
         return self::MAX_ITEM_OF_PAGE;

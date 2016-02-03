@@ -1,23 +1,86 @@
 <head>
-<meta charset="UTF-8">
-<style>
-a:hover{
-color:red;
+  <meta charset="UTF-8">
+  <style>
+  a:hover {
+    color:red;
+  }
+  table, th, td {
+    border: 1px solid black;
+  }
+  td, th {
+    display: table-cell;
+    vertical-align: inherit;
+  }
+  strong {
+    color:#2c69c6;
+    line-height:18px;
 }
-</style>
+  </style>
 </head>
 <body>
 <div style=" border: 1px solid wheat;padding: 15px; line-height: 15px;  font-size:20px; " charset='UTF-8'>
-   <div><h2>Xin chào,<span  style="color:blue;">{|name|}!</span></h2></div>
+   <div><h2>Xin chào, <span style="color:blue;">{|name|}!</span></h2></div>
    <div>
-      <p style="size:20px;" >Cảm ơn bạn đã liên lạc với<span  style="color:blue;"> <a style="text-decoration: none;"href="http://daotao.rdc.vn">Trung Tâm Đào Tạo Nghiệp Vụ Xây Dựng RDC</a></span></p>
-	  <p>Chúng tôi sẽ liên hệ sớm nhất với bạn, bạn có thể liên lạc trực tiếp với chúng tôi tai:</p>
-	  <p>Công ty cổ phần Đào Tạo Nguồn Nhân Lực RDC</p>
-	  <p>Tại: 70 Đinh Tiên Hoàng,Phường 1, Quận Bình Thạnh, Tp HCM</p>
-	  <p>Hotline:<span  style="color:red; font-size:25px;">0908.067.780-0979.067.780</span></h2>
-	   <h4>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</h4>
-	   <a href="http://daotao.rdc.vn"><img src="http://d.f16.photo.zdn.vn/upload/original/2013/08/15/19/15/901989215_496169251_574_574.jpg"></a>
-	
+   <p style="padding:0;margin:0;font-weight:600;font-size:20px;color:#2c69c6;line-height:24px">Vào thời điểm hiện tại, thông tin về hồ sơ của quý khách như sau:</p>
+   <br>
+   <table valign="middle" align="center" cellpadding="0" cellspacing="0" style="margin:0;padding:0;border:1px solid" width="50%" >
+      <thead>
+      <tr>
+         <th>Khách Hàng </th>
+         <th>Nguyễn Văn A </th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr>
+          <td>Mã hồ sơ</td>
+          <td>{|ma_ho_so|}</td>
+      </tr>
+      
+      <tr>
+          <td>Giá thoả thuận</td>
+          <td>{|gia_thoa_thuan|}</td>
+      </tr>
+      
+      <tr>
+          <td>Ngày nhận </td>
+          <td>{|ngay_nhan|}</td>
+      </tr>
+      
+      <tr>
+          <td>Ngày hẹn</td>
+          <td>{|ngay_hen|}</td>
+      </tr>
+      
+      <tr>
+          <td>Thanh toán</td>
+          <td><strong>{|thanh_toan|} </strong></td>
+      </tr>
+      
+     <tr>
+          <td>Dư nợ</td>
+          <td><strong>{|du_no|}</strong></td>
+      </tr>
+      
+      <tr>
+          <td>Trạng thái hồ sơ</td>
+          <td><strong> <font color="red">{|trang_thai|}</font></strong></td>
+      </tr>
+      
+      </tbody>
+    </table>
+
+      <p style="size:20px;">Cảm ơn bạn đã sử dụng dịch vụ của <span  style="color:blue;"> <a style="text-decoration: none;"href="http://daotao.rdc.vn">Trung Tâm Đào Tạo Nghiệp Vụ Xây Dựng RDC</a></span></p>
+      <p>Chúng tôi sẽ liên hệ sớm nhất với bạn, bạn có thể liên lạc trực tiếp với chúng tôi tai:</p>
+      <p>Công ty cổ phần Đào Tạo Nguồn Nhân Lực RDC</p>
+      <p>Tại: 70 Đinh Tiên Hoàng,Phường 1, Quận Bình Thạnh, Tp HCM</p>
+      <p>Hotline:<span  style="color:red; font-size:25px;">0908.067.780-0979.067.780</span></h2>
+       <h4>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</h4>
+       <a href="http://daotao.rdc.vn"><img src="http://d.f16.photo.zdn.vn/upload/original/2013/08/15/19/15/901989215_496169251_574_574.jpg"></a>
+    
    </div>
 </div>
+
+<small style="padding:15px 0"><span style="color:#8a8a8a;font-size:14px"> Cảm ơn quý khách đã liên lạc với <a href="http://daotao.rdc.vn" style="color:#0574b5;text-decoration:none" target="_blank">Trung Tâm Đào Tạo Nghiệp Vụ Xây Dựng RDC</a>.<br> Đây là e-mail tự động, vui lòng không trả lời trực tiếp. Quý vị có thể liên lạc với chúng tôi bằng cách gửi e-mail đến support@rdc.com.vn.com. </span></small>
+
 </body>

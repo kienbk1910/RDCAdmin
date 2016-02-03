@@ -131,7 +131,7 @@ class ManagerTasksController extends BaseController
             // provider
             $task->provider_id = $request->getPost('provider_id');
             $task->cost_buy = str_replace(',','',$request->getPost('cost_buy',0));
-            $date_open_pr   = $request->getPost('date_open_rp','');
+            $date_open_pr = $request->getPost('date_open_rp','');
             if($date_open_pr == ''){
                 $task->date_open_pr = $task->date_open;
             }else{
@@ -148,7 +148,23 @@ class ManagerTasksController extends BaseController
             $task->id = $result->getGeneratedValue();
             $this->databaseService->insertLog($this->auth->getIdentity()->id, $task, Config::ADD_ACTION);
 
-            return $this->redirect()->toRoute('manager-tasks/detail',array('id'=>$result->getGeneratedValue()));
+            /* Add send mail */
+            $mail = new MailHelper();
+            $receiver = $this->databaseService->getUserById($task->reporter_id)->current();
+            $mail->notify_create($task, $receiver, Config::ASSIGN_REPORTER_TYPE);
+
+            $receiver = $this->databaseService->getUserById($task->assign_id)->current();
+            $mail->notify_create($task, $receiver, Config::ASSIGN_REPORTER_TYPE);
+
+            // agency
+            $receiver = $this->databaseService->getUserById($task->agency_id)->current();
+            $mail->notify_create($task, $receiver, Config::AGENCY_TYPE);
+
+            // provider
+            $receiver = $this->databaseService->getUserById($task->provider_id)->current();
+            $mail->notify_create($task, $receiver, Config::PROVIDER_TYPE);
+
+            return $this->redirect()->toRoute('manager-tasks/detail',array('id'=> $task->id));
         }
         $users = $this->databaseService->getListByRole(Config::ROLE_AGENCY);
 

@@ -1,6 +1,10 @@
 <?php
 // Filename: /module/Application/src/Application/Model/User.php
 namespace Application\Email;
+use Application\Model\User;
+use Application\Model\Task;
+use Application\Config\Config;
+
 /**
 * 
 */
@@ -9,6 +13,8 @@ class MailHelper
 	const EMAIL_SYSTEM_NAME = "rdc@kienbk1910.com";
 	const EMAIL_SYSTEM_PASS  = "123456789";
     const EMAIL_TEMPLETE_PATH = "./data/email/";
+    const EMAIL_SUBJECT_FILTER_TEMPLATE = "[rdc.com.vn] [Hồ Sơ Số %d - %s]";
+    const FROMFULLNAME = "RDC supporter";
 	/*public static function testMail(){
 				$mail = new \PHPMailer();
 					
@@ -259,27 +265,37 @@ $admin_email)
         fclose($socket);
 
         return TRUE;
-}
-function SendMail($frommail,$tomail,$subject,$message,$fromfullname="Sindre Design")
-{
+    }
 
+    function SendMail($frommail,$tomail,$subject,$message,$fromfullname = MailHelper::FROMFULLNAME)
+    {
+          $from= $fromfullname." <".$frommail.">";
+          $headers ="Return-Path: ".$fromfullname." <".$frommail.">\r\n";
+          $headers.="From: $from\nX-Mailer: ".$fromfullname."\r\n";
+          $headers .="Mime-Version: 1.0\r\n";
+          $headers .="Content-type: text/html; charset=utf-8\r\n";
+          $smtp_host ='mail.kienbk1910.com';//Dia chi mail server
+          $admin_email = MailHelper::EMAIL_SYSTEM_NAME;//User duoc khai bao tren mail server
+          $smtp_username = MailHelper::EMAIL_SYSTEM_NAME;//User duoc khai bao tren mail server
+          $smtp_password = MailHelper::EMAIL_SYSTEM_PASS;//Pass cua email nay
+          $result = $this->smtpmail($tomail,$subject,$message,$headers,$smtp_host, $smtp_username, $smtp_password, $admin_email);
+    }
 
-      $from= $fromfullname." <".$frommail.">";
-      $headers ="Return-Path: ".$fromfullname." <".$frommail.">\r\n";
-      $headers.="From: $from\nX-Mailer: ".$fromfullname."\r\n";
-      $headers .="Mime-Version: 1.0\r\n";
-      $headers .="Content-type: text/html; charset=utf-8\r\n";
-      $smtp_host ='mail.kienbk1910.com';//Dia chi mail server
-      $admin_email = MailHelper::EMAIL_SYSTEM_NAME;//User duoc khai bao tren mail server
-      $smtp_username = MailHelper::EMAIL_SYSTEM_NAME;//User duoc khai bao tren mail server
-      $smtp_password = MailHelper::EMAIL_SYSTEM_PASS;//Pass cua email nay
-      $result = $this->smtpmail($tomail,$subject,$message,$headers,$smtp_host, $smtp_username, $smtp_password, 
-
-	$admin_email);
-  }
- function notify_create(){
-    $getcontent = file_get_contents(MailHelper::EMAIL_TEMPLETE_PATH.'createtask.html');
-    $getcontent = str_replace('{|name|}',  $arrParam['name'] , $getcontent );
-    $mail->SendMail("rdc@kienbk1910.com","kienbk1910@gmail.com","Details of Booking Form",$getcontent);
- }
+    function notify_create(Task $task, $user, $type){
+        $getcontent = file_get_contents(MailHelper::EMAIL_TEMPLETE_PATH.'createtask.html');
+        $getcontent = str_replace('{|name|}', $user->username, $getcontent);
+        $getcontent = str_replace('{|trang_thai|}', "Nhận hồ sơ", $getcontent);
+        if ($type == Config::AGENCY_TYPE) {
+            $getcontent = str_replace('{|gia_thoa_thuan|}', $task->cost_sell, $getcontent);
+            $getcontent = str_replace('{|ngay_nhan|}', $task->date_open, $getcontent);
+            $getcontent = str_replace('{|ngay_hen|}', $task->date_end, $getcontent);
+        } else if ($type == Config::PROVIDER_TYPE) {
+            $getcontent = str_replace('{|gia_thoa_thuan|}', $task->cost_buy, $getcontent);
+            $getcontent = str_replace('{|ngay_nhan|}', $task->date_open_pr, $getcontent);
+            $getcontent = str_replace('{|ngay_hen|}', $task->date_end_pr, $getcontent);
+        } 
+        
+        $subject = sprintf(MailHelper::EMAIL_SUBJECT_FILTER_TEMPLATE." Thông Báo Tạo Hồ Sơ", $task->id, $task->certificate);
+        //$this->SendMail("rdc@kienbk1910.com", $user->email, $subject, $getcontent);
+    }
 }
