@@ -28,6 +28,7 @@ use Application\Model\User;
      public function indexAction()
      {
           $this->checkAuth();
+          $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set("Thông Tin Của Tôi");
           $request = $this->getRequest();
           $usererror = array();
           $db_users = $this->databaseService->getUserById($this->identity()->id);
@@ -129,6 +130,8 @@ use Application\Model\User;
              $user->block = $db_user->block;
              $user->role_id = $db_user->role_id;
          }
+        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set("Thông Tin Của ".$db_user->username);
+
          $usererror = Config::PROCESS_OK;
          return new ViewModel(array(
                  'usererror' => $usererror,

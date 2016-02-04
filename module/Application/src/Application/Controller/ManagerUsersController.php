@@ -23,7 +23,9 @@ use Utility\Date\Date;
 
      public function indexAction()
      {
-        $this->checkAuth();
+        $this->checkLevel2();
+        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set("Danh Sách Tài Khoản");
+
         return new ViewModel();
      }
 
@@ -53,7 +55,8 @@ use Utility\Date\Date;
 
      public function addAction()
      {
-        $this->checkAuth();
+         $this->checkAdmin();
+        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set("Thêm Tài Khoản");
 
         $request = $this->getRequest();
         $roles = $this->databaseService->getListRoles();

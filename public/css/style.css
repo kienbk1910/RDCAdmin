@@ -31,3 +31,13 @@ td.highlight {
 	max-height: 200px ;
 	overflow: auto;
 }
+.old-value{
+	text-decoration:line-through;
+	color: red;
+}
+.new-value{
+	color: #3c8dbc;
+}
+.foucus-value{
+	font-size: 18px;
+}

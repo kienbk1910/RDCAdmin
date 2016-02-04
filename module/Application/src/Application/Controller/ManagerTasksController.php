@@ -36,6 +36,7 @@ class ManagerTasksController extends BaseController
 
      public function indexAction()
      {
+         $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set("Danh Sách Hồ Sơ");
          $this->checkLevel2();
          $users = $this->databaseService->getListByRole(Config::ROLE_AGENCY);
          $agencys = array();
@@ -104,6 +105,7 @@ class ManagerTasksController extends BaseController
      public function addAction()
      { 
         $this->checkLevel2();
+        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set("Thêm Hồ Sơ");
         $request = $this->getRequest();
         if ($request->isPost()) {
             // add task
@@ -192,6 +194,7 @@ class ManagerTasksController extends BaseController
              return $this->redirect()->toRoute('manager-tasks');
         }
         $task = $task->current();
+        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set($task->id." - ".$task->custumer);
         $task->date_open = Date::changeDateSQLtoVN($task->date_open);
         $task->date_end = Date::changeDateSQLtoVN($task->date_end);
         $task->date_open_pr = Date::changeDateSQLtoVN($task->date_open_pr);

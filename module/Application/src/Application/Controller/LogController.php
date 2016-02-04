@@ -54,8 +54,8 @@ class LogController extends BaseController {
         $task_id = $this->params()->fromRoute( 'id', 0 );
         $task = new Task();
         $task->id = $task_id;
+        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set($task_id.' - Lịch Sử Thay Đổi');
         $logs = $this->databaseService->showLog( $this->auth->getIdentity()->id, $task);
-        $log = $logs->current();
         return new ViewModel( array (
                 'logs' => $logs,
         ) );
