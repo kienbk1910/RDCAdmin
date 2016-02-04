@@ -329,7 +329,8 @@ class ManagerTasksController extends BaseController
         return new JsonModel($result);
     }
     public function addcommentAction(){
-        $this->checkLevel2();
+        $this->checkAuth();
+
         $request = $this->getRequest();
         if ($request->isPost()) {
             $comment = new Comment();
@@ -339,6 +340,18 @@ class ManagerTasksController extends BaseController
             $comment->comment = $request->getPost('comment');
             $comment->type = $request->getPost('type');
             $comment->is_read = 0;
+            if($this->isLevel2() != true){
+                $permission = $this->databaseService->getPermissionUser($comment->task_id,$this->auth->getIdentity()->id);
+                if($permission == Config::FILE_PERMISSION_ERROR){
+                      return new JsonModel(array());
+                }
+                if($permission == Config::FILE_PERMISSION_CUSTUMER){
+                   $type = Config::PAY_CUSTUMER;
+                }
+                if($permission == Config::FILE_PERMISSION_PROVIDER){
+                   $type = Config::PAY_PROVIDER;
+                }
+            }
             $comment = $this->databaseService->addComment($comment);
         }
         return new JsonModel(array(
@@ -351,6 +364,18 @@ class ManagerTasksController extends BaseController
         if ($request->isPost()) {
             $task_id = $request->getPost('task_id');
             $type = $request->getPost('type');
+             if($this->isLevel2() != true){
+                $permission = $this->databaseService->getPermissionUser($task_id,$this->auth->getIdentity()->id);
+                if($permission == Config::FILE_PERMISSION_ERROR){
+                      return new JsonModel(array());
+                }
+                if($permission == Config::FILE_PERMISSION_CUSTUMER){
+                   $type = Config::PAY_CUSTUMER;
+                }
+                if($permission == Config::FILE_PERMISSION_PROVIDER){
+                   $type = Config::PAY_PROVIDER;
+                }
+            }
             $data = $this->databaseService->getListComment($task_id,$type);
 
         }
@@ -358,6 +383,7 @@ class ManagerTasksController extends BaseController
     }
     public function addfileAction(){
         $this->checkAuth();
+
         $request = $this->getRequest();
         if ($request->isPost()) {
             $file_attach = new FileAttachment();
@@ -368,6 +394,18 @@ class ManagerTasksController extends BaseController
             // info pay
             $file_attach->task_id = $request->getPost('task_id');
             $file_attach->permission_option = $request->getPost('permission_option');
+            if($this->isLevel2() != true){
+                $permission = $this->databaseService->getPermissionUser($file_attach->task_id,$file_attach->user_create);
+                if($permission == Config::FILE_PERMISSION_ERROR){
+                      return new JsonModel(array());
+                }
+                if($permission == Config::FILE_PERMISSION_CUSTUMER){
+                   $file_attach->permission_option = Config::FILE_PERMISSION_CUSTUMER; 
+                }
+                if($permission == Config::FILE_PERMISSION_PROVIDER){
+                   $file_attach->permission_option = Config::FILE_PERMISSION_PROVIDER; 
+                }
+            }
             // File upload input
             $file = new FileInput('file_name');           // Special File Input type
             $file->getValidatorChain()               // Validators are run first w/ FileInput
@@ -404,17 +442,26 @@ class ManagerTasksController extends BaseController
         $request = $this->getRequest();
         if ($request->isPost()) {
             $task_id = $request->getPost('task_id');
-            if($this->isLevel2() == true){
-                $permission = Config::FILE_PERMISSION_RDC;
+            if($this->isLevel2() != true){
+                $permission = $this->databaseService->getPermissionUser($task_id, $this->auth->getIdentity()->id);
+                if($permission == Config::FILE_PERMISSION_ERROR){
+                      return new JsonModel(array());
+                }
+                if($permission == Config::FILE_PERMISSION_CUSTUMER){
+                   $permission= Config::FILE_PERMISSION_CUSTUMER; 
+                }
+                if($permission == Config::FILE_PERMISSION_PROVIDER){
+                   $permission = Config::FILE_PERMISSION_PROVIDER; 
+                }
             }else{
-                $permission = Config::FILE_PERMISSION_CUSTUMER;
+                $permission = Config::FILE_PERMISSION_RDC; 
             }
             $files = $this->databaseService->getListFileActtacment($task_id,$permission );
             return new JsonModel($files);
         }
     }
      public function editfileAction(){
-        $this->checkAuth();
+        $this->checkLevel2();
         $request = $this->getRequest();
         if ($request->isPost()) {
             $id = $request->getPost('id');

@@ -119,6 +119,8 @@ namespace Application\Controller;
      }
      public function indexAction()
      {
+
+        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set('Công Việc Của Tôi');
         $this->checkAuth();
         
         $processes = $this->databaseService->getListProcess();
@@ -128,6 +130,7 @@ namespace Application\Controller;
      }
     public function orderAction()
      {
+        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set('Đơn Hàng Của Tôi');
         $this->checkAuth();
         $processes = $this->databaseService->getListProcess();
         return new ViewModel( array(
@@ -170,7 +173,7 @@ namespace Application\Controller;
         $pay_provider = number_format( $pay_provider);
         $custumer_historys = $this->databaseService->getPayHistory($id,Config::PAY_CUSTUMER);
         $provider_historys = $this->databaseService->getPayHistory($id,Config::PAY_PROVIDER);
-
+        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set($task->id." - ".$task->custumer);
         return new ViewModel(array(
             'task'=> $task,
             'listprocess'=>$listprocess,
@@ -198,39 +201,22 @@ namespace Application\Controller;
         $task->date_open_pr = Date::changeDateSQLtoVN($task->date_open_pr);
         $task->date_end_pr = Date::changeDateSQLtoVN($task->date_end_pr);
         $task->last_update = Date::changeDateSQLtoVN($task->last_update);
+       
         $listprocess = $this->databaseService->getListProcess();
         $users = $this->databaseService->getListByRole(Config::ROLE_AGENCY);
-
-        $agencys = array();
-        foreach ($users as $user) {
-             array_push($agencys,new User($user->id,$user->username,"",""));
-
-        }
-        $users = $this->databaseService->getListUserByBaseRole(Config::USER_LEAVE2);
-        $staffs = array();
-        foreach ($users as $user) {
-             array_push($staffs,new User($user->id,$user->username,"",""));
-
-        }
         $pay_custumer = $this->databaseService->getTotalPay($id,Config::PAY_CUSTUMER);
-        $custumer_debt = number_format($task->cost_sell - $pay_custumer);
         $pay_custumer = number_format( $pay_custumer);
         $pay_provider = $this->databaseService->getTotalPay($id,Config::PAY_PROVIDER);
         $provider_debt = number_format($task->cost_buy - $pay_provider);
         $pay_provider = number_format( $pay_provider);
-        $custumer_historys = $this->databaseService->getPayHistory($id,Config::PAY_CUSTUMER);
+        $task->cost_buy =  number_format($task->cost_buy );
         $provider_historys = $this->databaseService->getPayHistory($id,Config::PAY_PROVIDER);
-
+        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set($task->id." - ".$task->custumer);
         return new ViewModel(array(
             'task'=> $task,
             'listprocess'=>$listprocess,
-            'agencys'=>$agencys,
-             'staffs'=>$staffs,
-            'pay_custumer'=>$pay_custumer,
-            'custumer_historys' =>$custumer_historys,
             'pay_provider'=>$pay_provider,
             'provider_historys'=>$provider_historys,
-             'custumer_debt'=> $custumer_debt,
              'provider_debt'=> $provider_debt
             ));
      } 

@@ -133,4 +133,7 @@ class IndexService implements IndexServiceInterface
    public function getProcessBaseID($get_base_id) {
        return $this->databaseMapper->getProcessBaseID($get_base_id);
    }
+    public function getPermissionUser($task_id,$user_id){
+       return $this->databaseMapper->getPermissionUser($task_id,$user_id);      
+    }
 }

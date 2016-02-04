@@ -115,7 +115,7 @@
                                 <div class="col-lg-6 form-group">
                                   <label for="inputName" class="col-sm-6 control-label">Thỏa Thuận</label>
                                   <div class="col-sm-6">
-                                   <label><?php echo $task->cost_sell;?></label>
+                                   <label><?php echo $task->cost_buy;?></label>
                                   </div>
 
                                 </div>
@@ -153,7 +153,7 @@
                                 <div class="row">
                                    <label for="inputName" class="col-sm-3 control-label">Ghi Chú</label>
                                       <div  style="height: 130px ;overflow: scroll" class="col-sm-9">
-                                           <label><?php echo $task->agency_note; ?></label>
+                                           <label><?php echo $task->provider_note; ?></label>
                                       </div>                                      
                                 </div>
                               
@@ -293,107 +293,6 @@
 
 <script type="text/javascript">
 
-  function validatePayForm(){
-    if($( "input[name='money']" ).val().length == 0 ){
-       $( "input[name='money']" ).parent().addClass("has-error");
-       return false;
-    }
-    $( "input[name='money']" ).parent().removeClass("has-error");
-    if($( "input[name='date_pay']" ).val().length == 0 ){
-       $( "input[name='date_pay']" ).parent().addClass("has-error");
-       return false;
-    }
-    $( "input[name='date_pay']" ).parent().removeClass("has-error");
-    return true;
-  }
-  function init_pay_form(type){
-    $("input[name='type']" ).val(type); 
-      $("#btn_submit").text("Thanh Toán");
-      $('input[name="id"]').val(0);
-      $('input[name="money"]').val("");
-      $('input[name="date_pay"]').val("");
-      $('textarea[name="note"]').val("");
-      $('select[name="money_option"]').val(1);
-    if(type == 1){
-        $("#pay-modal-lable").html("Khách Hàng Thanh Toán");
-        $("#btn_submit").removeClass("btn-danger");
-        $("#btn_submit").addClass("btn-primary");
-    }else{
-       $("#pay-modal-lable").html("Thanh Toán Cho Nhà Cung Cấp");
-        
-         $("#btn_submit").removeClass("btn-primary");
-        $("#btn_submit").addClass("btn-danger");
-    }
-
-  }
-  function init_pay_edit_form(id,type,money,date,money_option,note){
-    $("input[name='type']" ).val(type); 
-    $("#btn_submit").text("Chỉnh Sửa");
-    if(type == 1){
-        $("#pay-modal-lable").html("Chỉnh Sửa Khách Hàng Thanh Toán");
-        $("#btn_submit").removeClass("btn-danger");
-        $("#btn_submit").addClass("btn-primary");
-    }else{
-       $("#pay-modal-lable").html("Chỉnh Sửa Thanh Toán Cho Nhà Cung Cấp");
-        
-         $("#btn_submit").removeClass("btn-primary");
-        $("#btn_submit").addClass("btn-danger");
-    }
-      $('input[name="money"]').val(money);
-      $('input[name="date_pay"]').val(date);
-      $('input[name="id"]').val(id);
-      $('textarea[name="note"]').val(note);
-      $('select[name="money_option"]').val(money_option);
-      
-  }
-  function show_pay_form(type){
-    init_pay_form(type);
-
-    $("#myModal").modal('show');
-    
-  }
-
-  $('#btn_submit').click(function(){
-        if(validatePayForm() == false){
-          return;
-        }
-        var task_id = $( "input[name='task_id']" ).val();
-        var money   = $( "input[name='money']" ).val(); 
-        var date_pay= $( "input[name='date_pay']" ).val(); 
-        var money_option = $( "select[name='money_option']" ).val(); 
-        var note = $( "textarea[name='note']" ).val(); 
-        var type = $( "input[name='type']" ).val(); 
-         var id = $( "input[name='id']" ).val(); 
-        $.ajax({
-            type:"POST",                          
-            url:"/manager-tasks/pay",
-            data:{task_id:task_id,
-                   money:money,
-                   date_pay:date_pay,
-                   money_option:money_option,
-                   note:note,
-                   type:type,
-                   id:id
-                   },
-            success: function(data){
-                     location.reload();
-
-            }
-     });
-  });
-  function delete_pay(id){
-       $.ajax({
-            type:"POST",                          
-            url:"/manager-tasks/deletepay",
-            data:{
-                   id:id
-                   },
-            success: function(data){
-                     location.reload();
-
-            }
-     });
-  }
   function confirm_delete(id){
      $("#delete-pay").attr('onclick','delete_pay('+id+')');
       $("#modal-confirm").modal('show');

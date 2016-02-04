@@ -37,6 +37,7 @@ namespace Application\Config;
     const FILE_PERMISSION_CUSTUMER = 2;
     const FILE_PERMISSION_PROVIDER = 3;
     const FILE_PERMISSION_ALL = 4;
+    const FILE_PERMISSION_CUSTUMER_PROVIDER = 6;
     /* Add user */
     const PROCESS_OK = "Processing successfully";
     const PROCESS_NG = "Genaral error while processing";

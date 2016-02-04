@@ -594,6 +594,10 @@ class ZendDbSqlMapper implements IndexMapperInterface
                 ->or->like("file_attachment.permission_option",Config::FILE_PERMISSION_CUSTUMER)
                 ->unnest;
            
+        }else if($permission == Config::FILE_PERMISSION_PROVIDER){
+            $select->where ->nest->like("file_attachment.permission_option",Config::FILE_PERMISSION_ALL )
+                ->or->like("file_attachment.permission_option",Config::FILE_PERMISSION_PROVIDER)
+                ->unnest;
         }
        
         $selectString = $sql->getSqlStringForSqlObject($select);
@@ -606,5 +610,26 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $selectString = $sql->getSqlStringForSqlObject($select);
         $files = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
         return $files->current();
+      }
+      public function getPermissionUser($task_id,$user_id){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('tasks');
+        $select->Where(array('tasks.id = ?' => $task_id));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $task = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        if($task->count() == 0 ){
+            return Config::FILE_PERMISSION_ERROR;
+        }
+        $task = $task->current();
+        if($task->agency_id == $task->provider_id  && $task->agency_id == $user_id){
+              return Config::FILE_PERMISSION_CUSTUMER_PROVIDER;
+        }
+        if($task->agency_id == $user_id){
+              return Config::FILE_PERMISSION_CUSTUMER;
+        }
+        if($task->provider_id == $user_id){
+              return Config::FILE_PERMISSION_PROVIDER;
+        }
+          return Config::FILE_PERMISSION_ERROR;
       }
 }

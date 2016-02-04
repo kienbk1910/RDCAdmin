@@ -21,6 +21,7 @@
               $this->checkRole(Config::USER_LEAVE1);
       }
       protected function checkLevel2(){
+        if($this->isLevel2() != true)
               $this->checkRole(Config::USER_LEAVE2);
       }
       protected function isLevel2(){
@@ -32,7 +33,7 @@
       public function checkRole($role){
            $this->checkAuth();
           if($this->auth->getIdentity()->role_id > $role){
-               return $this->redirect()->toRoute('error');
+               exit();
           }
       }
       
