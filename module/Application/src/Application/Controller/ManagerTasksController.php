@@ -152,18 +152,16 @@ class ManagerTasksController extends BaseController
 
             /* Add send mail */
             $mail = new MailHelper();
-            $receiver = $this->databaseService->getUserById($task->reporter_id)->current();
-            $mail->notify_create($task, $receiver, Config::ASSIGN_REPORTER_TYPE);
-
-            $receiver = $this->databaseService->getUserById($task->assign_id)->current();
+            $receiver['reporter'] = $this->databaseService->getUserById($task->reporter_id)->current();
+            $receiver['assign'] = $this->databaseService->getUserById($task->assign_id)->current();
+            $receiver['agency'] = $this->databaseService->getUserById($task->agency_id)->current();
+            $receiver['provider'] = $this->databaseService->getUserById($task->provider_id)->current();
             $mail->notify_create($task, $receiver, Config::ASSIGN_REPORTER_TYPE);
 
             // agency
-            $receiver = $this->databaseService->getUserById($task->agency_id)->current();
             $mail->notify_create($task, $receiver, Config::AGENCY_TYPE);
 
             // provider
-            $receiver = $this->databaseService->getUserById($task->provider_id)->current();
             $mail->notify_create($task, $receiver, Config::PROVIDER_TYPE);
 
             return $this->redirect()->toRoute('manager-tasks/detail',array('id'=> $task->id));

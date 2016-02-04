@@ -19,15 +19,16 @@
 </head>
 <body>
 <div style=" border: 1px solid wheat;padding: 15px; line-height: 15px;  font-size:20px; " charset='UTF-8'>
-   <div><h2>Xin chào, <span style="color:blue;">{|name|}!</span></h2></div>
+   <div><h2>Xin chào bạn,</h2></div>
+   <p style="padding:0;margin:0;font-weight:600;font-size:15px;color:#2c69c6;line-height:24px">Thông báo về hồ sơ đã tạo.</p>
    <div>
-   <p style="padding:0;margin:0;font-weight:600;font-size:20px;color:#2c69c6;line-height:24px">Vào thời điểm hiện tại, thông tin về hồ sơ của quý khách như sau:</p>
+   <p style="padding:0;margin:0;font-weight:600;font-size:20px;color:#2c69c6;line-height:24px">Thông tin hồ sơ của khách hàng:</p>
    <br>
    <table valign="middle" align="center" cellpadding="0" cellspacing="0" style="margin:0;padding:0;border:1px solid" width="50%" >
       <thead>
       <tr>
-         <th>{|doi_tuong|}</th>
-         <th>{|ten_khach_hang|} </th>
+         <th>Khách Hàng</th>
+         <th>{|ten_khach_hang|}</th>
       </tr>
       </thead>
 
@@ -39,27 +40,77 @@
 
       <tr>
           <td>Giá thoả thuận</td>
-          <td>{|gia_thoa_thuan|} VNĐ</td>
+          <td>{|gia_mua|} VNĐ</td>
       </tr>
 
       <tr>
           <td>Ngày nhận </td>
-          <td>{|ngay_nhan|}</td>
+          <td>{|ngay_nhan_kh|}</td>
       </tr>
 
       <tr>
           <td>Ngày hẹn</td>
-          <td>{|ngay_hen|}</td>
+          <td>{|ngay_hen_kh|}</td>
       </tr>
 
       <tr>
           <td>Thanh toán</td>
-          <td><strong>{|thanh_toan|} VNĐ</strong></td>
+          <td><strong>{|thanh_toan_kh|} VNĐ</strong></td>
       </tr>
 
      <tr>
           <td>Dư nợ</td>
-          <td><strong>{|du_no|} VNĐ</strong></td>
+          <td><strong>{|du_no_kh|} VNĐ</strong></td>
+      </tr>
+
+      <tr>
+          <td>Trạng thái hồ sơ</td>
+          <td><strong> <font color="red">{|trang_thai|}</font></strong></td>
+      </tr>
+
+      </tbody>
+    </table>
+
+   <br>
+   <p style="padding:0;margin:0;font-weight:600;font-size:20px;color:#2c69c6;line-height:24px">Thông tin hồ sơ của nhà cung cấp:</p>
+   <br>
+   <table valign="middle" align="center" cellpadding="0" cellspacing="0" style="margin:0;padding:0;border:1px solid" width="50%" >
+      <thead>
+      <tr>
+         <th>Nhà Cung Cấp</th>
+         <th>{|ten_nha_cung_cap|}</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr>
+          <td>Mã hồ sơ</td>
+          <td><a href="{|link|}"> {|ma_ho_so|} </a></td>
+      </tr>
+
+      <tr>
+          <td>Giá thoả thuận</td>
+          <td>{|gia_ban|} VNĐ</td>
+      </tr>
+
+      <tr>
+          <td>Ngày nhận </td>
+          <td>{|ngay_nhan_cc|}</td>
+      </tr>
+
+      <tr>
+          <td>Ngày hẹn</td>
+          <td>{|ngay_hen_cc|}</td>
+      </tr>
+
+      <tr>
+          <td>Thanh toán</td>
+          <td><strong>{|thanh_toan_cc|} VNĐ</strong></td>
+      </tr>
+
+     <tr>
+          <td>Dư nợ</td>
+          <td><strong>{|du_no_cc|} VNĐ</strong></td>
       </tr>
 
       <tr>
