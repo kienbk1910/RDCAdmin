@@ -51,12 +51,12 @@ use Utility\Date\Date;
                 } else if ($task['key'] == Config::process_id) {
                     echo "<span class='old-value foucus-value'>".$task['old_value'] ."</span>". " sang " ."<span class='new-value foucus-value'>".$task['new_value']."</span>";
                 }  else if ($task['key'] == Config::date_open_id
-                        || $task['key'] == Config::date_end
+                        || $task['key'] == Config::date_end_id
                         || $task['key'] == Config::date_open_pr_id
-                        || $task['key'] == Config::date_end_pr) {
+                        || $task['key'] == Config::date_end_pr_id) {
                     echo "<span class='old-value foucus-value'>". Date::changeDateSQLtoVN($task['old_id']) ."</span>". " sang " ."<span class='new-value foucus-value'>". Date::changeDateSQLtoVN($task['new_id']) ."</span>";
-                } else if ($task['key'] == Config::agency_note
-                        || $task['key'] == Config::provider_note) { ?>
+                } else if ($task['key'] == Config::agency_note_id
+                        || $task['key'] == Config::provider_note_id) { ?>
                     <a href="#" data-toggle="tooltip" title="<?php echo $task['old_id']?>"> <?php echo "<span class='old-value foucus-value'>". substr($task['old_id'], 0, 50) ."</span>" ?></a>
                     <?php echo " sang "; ?>
                     <a href="#" data-toggle="tooltip" title="<?php echo $task['new_id']?>"> <?php echo "<span class='new-value foucus-value'>". substr($task['new_id'], 0, 50) ."</span>"; ?></a>

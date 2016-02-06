@@ -31,7 +31,8 @@ class Task
 
 	public function toArray(){
 		return array(
-			'custumer'=>$this->custumer,
+		    'id' => $this->id,
+			'custumer'=> $this->custumer,
 			'certificate'=> $this->certificate,
 
 			'agency_id'=> $this->agency_id,

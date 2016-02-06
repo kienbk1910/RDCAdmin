@@ -16,10 +16,15 @@ class MailHelper
 	const EMAIL_SYSTEM_NAME = "rdc@kienbk1910.com";
 	const EMAIL_SYSTEM_PASS  = "123456789";
     const EMAIL_TEMPLETE_PATH = "./data/email/";
-    const EMAIL_SUBJECT_FILTER_TEMPLATE = "[rdc.com.vn] [Hồ Sơ Số %d - %s]";
+    const EMAIL_SUBJECT_FILTER_TEMPLATE = "[rdc.com.vn] [Hồ Sơ Số %d - %s] %s";
     const FROMFULLNAME = "RDC supporter";
     const REAL_SERVER_SITE = "http://rdc.kienbk1910.com";
-
+    const MESSAGE_CREATE_SUBJECT = " Thông Báo Tạo Hồ Sơ";
+    const MESSAGE_MODIFY_SUBJECT = " Thông Báo Thay Đổi Thông Tin Hồ Sơ";
+    
+    const MESSAGE_CREATE_CONTENT = " Thông báo về việc tạo hồ sơ";
+    const MESSAGE_MODIFY_CONTENT = " Thông báo về việc thay đổi thông tin hồ sơ";
+    
 	/*public static function testMail(){
 				$mail = new \PHPMailer();
 					
@@ -289,88 +294,99 @@ $admin_email)
           }
     }
 
-    function notify_create(Task $task, $user, $type){
+    function notify_to_user($task, $user, $type, $action) {
+        $agency = $user['agency'];
+        $provider = $user['provider'];
+        $validator = new \Zend\Validator\EmailAddress();
+        $email = NULL;
+        $getcontent = file_get_contents(MailHelper::EMAIL_TEMPLETE_PATH.'createtask.html');
+        if ($action == Config::NOTIFY_CREATE) {
+            $subject = sprintf(MailHelper::EMAIL_SUBJECT_FILTER_TEMPLATE, $task['id'], $task['certificate'], MailHelper::MESSAGE_CREATE_SUBJECT);
+            $getcontent = str_replace('{|message|}', MailHelper::MESSAGE_CREATE_CONTENT, $getcontent);
+        } else {
+            $subject = sprintf(MailHelper::EMAIL_SUBJECT_FILTER_TEMPLATE, $task['id'], $task['certificate'], MailHelper::MESSAGE_MODIFY_SUBJECT);
+            $getcontent = str_replace('{|message|}', MailHelper::MESSAGE_MODIFY_CONTENT, $getcontent);
+        }
+        $getcontent = str_replace('{|trang_thai|}', "Nhận hồ sơ", $getcontent);
+        $getcontent = str_replace('{|ma_ho_so|}', $task['id'], $getcontent);
+        $getcontent = str_replace('{|link|}', MailHelper::REAL_SERVER_SITE. "/manager-tasks/detail/" .$task['id'], $getcontent);
+        $getcontent = str_replace('{|thanh_toan|}', 0, $getcontent);
+
+        if ($type == Config::AGENCY_TYPE) {
+            $getcontent = str_replace('{|name|}', $agency->username, $getcontent);
+            $getcontent = str_replace('{|ten_khach_hang|}', $agency->username, $getcontent);
+            $getcontent = str_replace('{|gia_thoa_thuan|}', number_format($task['cost_sell']), $getcontent);
+            $getcontent = str_replace('{|du_no|}', number_format($task['cost_sell']), $getcontent);
+            $getcontent = str_replace('{|ngay_nhan|}', Date::changeDateSQLtoVN($task['date_open']), $getcontent);
+            $getcontent = str_replace('{|ngay_hen|}', Date::changeDateSQLtoVN($task['date_end']), $getcontent);
+            $getcontent = str_replace('{|doi_tuong|}', "Nhà Cung Cấp", $getcontent);
+            $email = $agency->email;
+        } else if ($type == Config::PROVIDER_TYPE) {
+            $getcontent = str_replace('{|name|}', $provider->username, $getcontent);
+            $getcontent = str_replace('{|ten_khach_hang|}', $provider->username, $getcontent);
+            $getcontent = str_replace('{|gia_thoa_thuan|}', number_format($task['cost_buy']), $getcontent);
+            $getcontent = str_replace('{|du_no|}', number_format($task['cost_buy']), $getcontent);
+            $getcontent = str_replace('{|ngay_nhan|}', Date::changeDateSQLtoVN($task['date_open_pr']), $getcontent);
+            $getcontent = str_replace('{|ngay_hen|}', Date::changeDateSQLtoVN($task['date_end_pr']), $getcontent);
+            $getcontent = str_replace('{|doi_tuong|}', "Khách Hàng", $getcontent);
+            $email = $provider->email;
+        }
+
+        if ($validator->isValid($email)) {
+            // email appears to be valid
+            $this->SendMail("rdc@kienbk1910.com", $email, $subject, $getcontent);
+        } else {
+            // email is invalid; print the reasons
+            foreach ($validator->getMessages() as $message) echo "$message\n";
+        }
+        //echo $getcontent;
+        return;
+    }
+
+    function notify_to_admin($task, $user, $action) {
         $reporter = $user['reporter'];
         $assign = $user['assign'];
         $agency = $user['agency'];
         $provider = $user['provider'];
         $validator = new \Zend\Validator\EmailAddress();
         $email = NULL;
-        $subject = sprintf(MailHelper::EMAIL_SUBJECT_FILTER_TEMPLATE." Thông Báo Tạo Hồ Sơ", $task->id, $task->certificate);
-
-        if ($type == Config::ASSIGN_REPORTER_TYPE) {
-            $getcontent = file_get_contents(MailHelper::EMAIL_TEMPLETE_PATH.'createtask_admin.html');
-            $getcontent = str_replace('{|trang_thai|}', "Nhận hồ sơ", $getcontent);
-            $getcontent = str_replace('{|ma_ho_so|}', $task->id, $getcontent);
-            $getcontent = str_replace('{|link|}', MailHelper::REAL_SERVER_SITE. "/manager-tasks/detail/" .$task->id, $getcontent);
-            $getcontent = str_replace('{|thanh_toan|}', 0, $getcontent);
-            $getcontent = str_replace('{|ten_khach_hang|}', $agency->username, $getcontent);
-            $getcontent = str_replace('{|ten_nha_cung_cap|}', $provider->username, $getcontent);
-            
-            $getcontent = str_replace('{|gia_mua|}', number_format($task->cost_sell), $getcontent);
-            $getcontent = str_replace('{|gia_ban|}', number_format($task->cost_buy), $getcontent);
-            $getcontent = str_replace('{|ngay_nhan_kh|}', Date::changeDateSQLtoVN($task->date_open), $getcontent);
-            $getcontent = str_replace('{|ngay_hen_kh|}', Date::changeDateSQLtoVN($task->date_end), $getcontent);
-            
-            $getcontent = str_replace('{|ngay_nhan_cc|}', Date::changeDateSQLtoVN($task->date_open_pr), $getcontent);
-            $getcontent = str_replace('{|ngay_hen_cc|}', Date::changeDateSQLtoVN($task->date_end_pr), $getcontent);
-            
-            $getcontent = str_replace('{|du_no_kh|}', number_format($task->cost_sell), $getcontent);
-            $getcontent = str_replace('{|du_no_cc|}', number_format($task->cost_buy), $getcontent);
-            
-            $getcontent = str_replace('{|thanh_toan_kh|}', 0, $getcontent);
-            $getcontent = str_replace('{|thanh_toan_cc|}', 0, $getcontent);
-            if ($validator->isValid($reporter->email) && $validator->isValid($assign->email)) {
-                // email appears to be valid
-                $this->SendMail("rdc@kienbk1910.com", $reporter->email, $subject, $getcontent);
-                $this->SendMail("rdc@kienbk1910.com", $assign->email, $subject, $getcontent);
-            } else {
-                // email is invalid; print the reasons
-                foreach ($validator->getMessages() as $message) {
-                    echo "$message\n";
-                }
-            }
-
-            return;
+        $getcontent = file_get_contents(MailHelper::EMAIL_TEMPLETE_PATH.'createtask_admin.html');
+        if ($action == Config::NOTIFY_CREATE) {
+            $subject = sprintf(MailHelper::EMAIL_SUBJECT_FILTER_TEMPLATE, $task['id'], $task['certificate'], MailHelper::MESSAGE_CREATE_SUBJECT);
+            $getcontent = str_replace('{|message|}', MailHelper::MESSAGE_CREATE_CONTENT, $getcontent);
         } else {
-            $getcontent = file_get_contents(MailHelper::EMAIL_TEMPLETE_PATH.'createtask.html');
-            $getcontent = str_replace('{|trang_thai|}', "Nhận hồ sơ", $getcontent);
-            $getcontent = str_replace('{|ma_ho_so|}', $task->id, $getcontent);
-            $getcontent = str_replace('{|link|}', MailHelper::REAL_SERVER_SITE. "/manager-tasks/detail/" .$task->id, $getcontent);
-            $getcontent = str_replace('{|thanh_toan|}', 0, $getcontent);
-
-            if ($type == Config::AGENCY_TYPE) {
-                $getcontent = str_replace('{|name|}', $agency->username, $getcontent);
-                $getcontent = str_replace('{|ten_khach_hang|}', $agency->username, $getcontent);
-                $getcontent = str_replace('{|gia_thoa_thuan|}', number_format($task->cost_sell), $getcontent);
-                $getcontent = str_replace('{|du_no|}', number_format($task->cost_sell), $getcontent);
-                $getcontent = str_replace('{|ngay_nhan|}', Date::changeDateSQLtoVN($task->date_open), $getcontent);
-                $getcontent = str_replace('{|ngay_hen|}', Date::changeDateSQLtoVN($task->date_end), $getcontent);
-                $getcontent = str_replace('{|doi_tuong|}', "Nhà Cung Cấp", $getcontent);
-                $email = $agency->email;
-            } else if ($type == Config::PROVIDER_TYPE) {
-                $getcontent = str_replace('{|name|}', $provider->username, $getcontent);
-                $getcontent = str_replace('{|ten_khach_hang|}', $provider->username, $getcontent);
-                $getcontent = str_replace('{|gia_thoa_thuan|}', number_format($task->cost_buy), $getcontent);
-                $getcontent = str_replace('{|du_no|}', number_format($task->cost_buy), $getcontent);
-                $getcontent = str_replace('{|ngay_nhan|}', Date::changeDateSQLtoVN($task->date_open_pr), $getcontent);
-                $getcontent = str_replace('{|ngay_hen|}', Date::changeDateSQLtoVN($task->date_end_pr), $getcontent);
-                $getcontent = str_replace('{|doi_tuong|}', "Khách Hàng", $getcontent);
-                $email = $provider->email;
-            }
-            
-
-            if ($validator->isValid($email)) {
-                // email appears to be valid
-                $this->SendMail("rdc@kienbk1910.com", $email, $subject, $getcontent);
-            } else {
-                // email is invalid; print the reasons
-                foreach ($validator->getMessages() as $message) {
-                    echo "$message\n";
-                }
-            }
-            
-            return;
+            $subject = sprintf(MailHelper::EMAIL_SUBJECT_FILTER_TEMPLATE, $task['id'], $task['certificate'], MailHelper::MESSAGE_MODIFY_SUBJECT);
+            $getcontent = str_replace('{|message|}', MailHelper::MESSAGE_MODIFY_CONTENT, $getcontent);
         }
+        $getcontent = str_replace('{|trang_thai|}', "Nhận hồ sơ", $getcontent);
+        $getcontent = str_replace('{|ma_ho_so|}', $task['id'], $getcontent);
+        $getcontent = str_replace('{|link|}', MailHelper::REAL_SERVER_SITE. "/manager-tasks/detail/" .$task['id'], $getcontent);
+        $getcontent = str_replace('{|thanh_toan|}', 0, $getcontent);
+        $getcontent = str_replace('{|ten_khach_hang|}', $agency->username, $getcontent);
+        $getcontent = str_replace('{|ten_nha_cung_cap|}', $provider->username, $getcontent);
+
+        $getcontent = str_replace('{|gia_mua|}', number_format($task['cost_sell']), $getcontent);
+        $getcontent = str_replace('{|gia_ban|}', number_format($task['cost_buy']), $getcontent);
+        $getcontent = str_replace('{|ngay_nhan_kh|}', Date::changeDateSQLtoVN($task['date_open']), $getcontent);
+        $getcontent = str_replace('{|ngay_hen_kh|}', Date::changeDateSQLtoVN($task['date_end']), $getcontent);
+
+        $getcontent = str_replace('{|ngay_nhan_cc|}', Date::changeDateSQLtoVN($task['date_open_pr']), $getcontent);
+        $getcontent = str_replace('{|ngay_hen_cc|}', Date::changeDateSQLtoVN($task['date_end_pr']), $getcontent);
+
+        $getcontent = str_replace('{|du_no_kh|}', number_format($task['cost_sell']), $getcontent);
+        $getcontent = str_replace('{|du_no_cc|}', number_format($task['cost_buy']), $getcontent);
+
+        $getcontent = str_replace('{|thanh_toan_kh|}', 0, $getcontent);
+        $getcontent = str_replace('{|thanh_toan_cc|}', 0, $getcontent);
+        if ($validator->isValid($reporter->email) && $validator->isValid($assign->email)) {
+            // email appears to be valid
+            $this->SendMail("rdc@kienbk1910.com", $reporter->email, $subject, $getcontent);
+            $this->SendMail("rdc@kienbk1910.com", $assign->email, $subject, $getcontent);
+        } else {
+            // email is invalid; print the reasons
+            foreach ($validator->getMessages() as $message) echo "$message\n";
+        }
+        //echo $getcontent;
+        return;
     }
 }

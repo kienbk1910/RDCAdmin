@@ -53,6 +53,8 @@ namespace Application\Config;
     const AGENCY_TYPE = 0;
     const PROVIDER_TYPE = 1;
     const ASSIGN_REPORTER_TYPE = 2;
+    const NOTIFY_CREATE = 0;
+    const NOTIFY_MODIFY = 1;
 
     /* Task database field */
     const custumer_id = "custumer";
@@ -61,7 +63,7 @@ namespace Application\Config;
     const agency_id = "agency_id";
     const agency_name = "Người Gửi (Bên Khách Hàng)";
     
-    const agency_note = "agency_note";
+    const agency_note_id = "agency_note";
     const agency_note_name = "Ghi Chú (Bên Khách Hàng)";
     
     const provider_id = "provider_id";
@@ -73,16 +75,16 @@ namespace Application\Config;
     const date_open_id = "date_open";
     const date_open_name = "Ngày Nhận (Bên Khách Hàng)";
 
-    const date_end = "date_end";
+    const date_end_id = "date_end";
     const date_end_name = "Ngày Hẹn (Bên Khách Hàng)";
     
-    const date_open_pr_id = "date_open";
+    const date_open_pr_id = "date_open_pr";
     const date_open_pr_name = "Ngày Nhận (Bên Nhà Cung Cấp)";
     
-    const date_end_pr = "date_end_pr";
+    const date_end_pr_id = "date_end_pr";
     const date_end_pr_name = "Ngày Hẹn (Bên Nhà Cung Cấp)";
     
-    const provider_note = "provider_note";
+    const provider_note_id = "provider_note";
     const provider_note_name = "Ghi Chú (Bên Nhà Cung Cấp)";
     
     const certificate_id = "certificate";
@@ -115,13 +117,13 @@ namespace Application\Config;
         if ($field_id == Config::date_open_pr_id) return Config::date_open_pr_name;
         if ($field_id == Config::certificate_id) return Config::certificate_name;
         if ($field_id == Config::cost_sell_id) return Config::cost_sell_name;
-        if ($field_id == Config::date_end) return Config::date_end_name;
-        if ($field_id == Config::date_end_pr) return Config::date_end_pr_name;
+        if ($field_id == Config::date_end_id) return Config::date_end_name;
+        if ($field_id == Config::date_end_pr_id) return Config::date_end_pr_name;
         if ($field_id == Config::cost_buy_id) return Config::cost_buy_name;
         if ($field_id == Config::process_id) return Config::process_name;
         if ($field_id == Config::assign_id) return Config::assign_name;
-        if ($field_id == Config::agency_note) return Config::agency_note_name;
-        if ($field_id == Config::provider_note) return Config::provider_note_name;
+        if ($field_id == Config::agency_note_id) return Config::agency_note_name;
+        if ($field_id == Config::provider_note_id) return Config::provider_note_name;
         return $field_id;
     }
  }

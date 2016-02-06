@@ -184,18 +184,21 @@ class ManagerTasksController extends BaseController
             // provider
             $task->provider_id = $request->getPost('provider_id');
             $task->cost_buy = str_replace(',','',$request->getPost('cost_buy',0));
-            $date_open_pr = $request->getPost('date_open_rp','');
+            /* Viet change */
+            $date_open_pr = $request->getPost('date_open_pr','');
             if($date_open_pr == ''){
                 $task->date_open_pr = $task->date_open;
             }else{
-                $task->date_open_pr = Date::changeVNtoDateSQL($request->getPost('date_open_pr'));
+                $task->date_open_pr = Date::changeVNtoDateSQL($date_open_pr);
             }
-             $date_end_pr = $request->getPost('date_end_pr','');
+            $date_end_pr = $request->getPost('date_end_pr','');
             if($date_end_pr == ''){
                 $task->date_end_pr = $task->date_end;
             }else{
-                $task->date_end_pr = Date::changeVNtoDateSQL($request->getPost('date_end_pr'));
+                $task->date_end_pr = Date::changeVNtoDateSQL($date_end_pr);
             }
+            /* Viet End change */
+
             $task->provider_note = $request->getPost('provider_note');
             $result = $this->databaseService->insertTask($task);
             $task->id = $result->getGeneratedValue();
@@ -207,13 +210,13 @@ class ManagerTasksController extends BaseController
             $receiver['assign'] = $this->databaseService->getUserById($task->assign_id)->current();
             $receiver['agency'] = $this->databaseService->getUserById($task->agency_id)->current();
             $receiver['provider'] = $this->databaseService->getUserById($task->provider_id)->current();
-            $mail->notify_create($task, $receiver, Config::ASSIGN_REPORTER_TYPE);
+            $mail->notify_to_admin($task->toArray(), $receiver, Config::NOTIFY_CREATE);
 
             // agency
-            $mail->notify_create($task, $receiver, Config::AGENCY_TYPE);
+            $mail->notify_to_user($task->toArray(), $receiver, Config::AGENCY_TYPE, Config::NOTIFY_CREATE);
 
             // provider
-            $mail->notify_create($task, $receiver, Config::PROVIDER_TYPE);
+            $mail->notify_to_user($task->toArray(), $receiver, Config::PROVIDER_TYPE, Config::NOTIFY_CREATE);
 
             return $this->redirect()->toRoute('manager-tasks/detail',array('id'=> $task->id));
         }
@@ -255,13 +258,11 @@ class ManagerTasksController extends BaseController
         $agencys = array();
         foreach ($users as $user) {
              array_push($agencys,new User($user->id,$user->username,"",""));
-
         }
         $users = $this->databaseService->getListUserByBaseRole(Config::USER_LEAVE2);
         $staffs = array();
         foreach ($users as $user) {
              array_push($staffs,new User($user->id,$user->username,"",""));
-
         }
         $pay_custumer = $this->databaseService->getTotalPay($id,Config::PAY_CUSTUMER);
         $custumer_debt = number_format($task->cost_sell - $pay_custumer);
@@ -298,10 +299,10 @@ class ManagerTasksController extends BaseController
                 $value = Date::changeVNtoDateSQL($value);
              }
              $validator = new \Zend\Validator\Digits();
-             if(($name == "cost_sell" || $name == "cost_buy") && !$validator->isValid($value)){
-                     $result->setStatus(Xeditable::STATUS_ERROR);
-                     $result->setMsg(Xeditable::MSG_DATA_NOT_NUMBER);
-             }else{
+             if (($name == "cost_sell" || $name == "cost_buy") && !$validator->isValid($value)) {
+                 $result->setStatus(Xeditable::STATUS_ERROR);
+                 $result->setMsg(Xeditable::MSG_DATA_NOT_NUMBER);
+             } else {
                 $log = new Log();
                 $log->action_id = Config::EDIT_ACTION;
                 $log->user_id = $this->auth->getIdentity()->id;
@@ -314,8 +315,32 @@ class ManagerTasksController extends BaseController
                 $log->old_id = $array[$name];
                 $log->custumer = $array['custumer'];
                 
+                /* Add log */
                 $this->databaseService->modifyLog($log);
                 $this->databaseService->changeInfoOfTask($id,$name,$value,$this->auth->getIdentity()->id);
+                
+                /* Add send mail */
+                $mail = new MailHelper();
+                $receiver['reporter'] = $this->databaseService->getUserById($array['reporter_id'])->current();
+                $receiver['assign'] = $this->databaseService->getUserById($array['assign_id'])->current();
+                $receiver['agency'] = $this->databaseService->getUserById($array['agency_id'])->current();
+                $receiver['provider'] = $this->databaseService->getUserById($array['provider_id'])->current();
+                if ($name == Config::agency_id
+                        || $name == Config::cost_sell_id
+                        || $name == Config::date_open_id
+                        || $name == Config::date_end_id
+                        || $name == Config::agency_note_id) {
+                    /* For agency: agency_id, cost_sell, date_open, date_end, agency_note */
+                    $mail->notify_to_user($array, $receiver, Config::AGENCY_TYPE, Config::NOTIFY_MODIFY);
+                } else if ($name == Config::provider_id
+                        || $name == Config::cost_buy_id
+                        || $name == Config::date_open_pr_id
+                        || $name == Config::date_end_pr_id
+                        || $name == Config::provider_note_id) {
+                    $mail->notify_to_user($array, $receiver, Config::PROVIDER_TYPE, Config::NOTIFY_MODIFY);
+                    /* For agency: provider_id, cost_buy, date_open_pr, date_end_pr, provider_note */
+                }
+                $mail->notify_to_admin($array, $receiver, Config::NOTIFY_MODIFY);
             }
          }else{
              $result->setStatus(Xeditable::STATUS_ERROR);
