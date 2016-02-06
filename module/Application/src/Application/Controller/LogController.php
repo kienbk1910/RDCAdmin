@@ -34,13 +34,14 @@ class LogController extends BaseController {
     }
 
     public function indexAction() {
-        $this->checkAuth();
+        $this->checkAdmin();
         $request = $this->getRequest();
 
         $task = new Task();
         /* Get all logs */
         $task->id = NULL;
         $log = new Log();
+        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set('Lịch Sử Thay Đổi');
         $logs = $this->databaseService->showLog($this->auth->getIdentity()->id, $task, $log);
         return new ViewModel( array (
                 'logs' => $logs,
@@ -48,7 +49,7 @@ class LogController extends BaseController {
     }
 
     public function showlogAction() {
-        $this->checkAuth();
+        $this->checkAdmin();
         $request = $this->getRequest();
 
         $task_id = $this->params()->fromRoute( 'id', 0 );

@@ -10,10 +10,18 @@ class Log {
     public $action_id;
     public $date;
 
+    /*
+     * const assign_id = "assign_id";
+     * const assign_name = "Người Chịu Trách Nhiệm"; 
+     */
     public $key;
     public $key_name;
+    
     public $old_value;
     public $old_id;
+    
     public $new_value;
     public $new_id;
+    
+    public $custumer;
 }

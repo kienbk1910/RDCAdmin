@@ -308,10 +308,12 @@ class ManagerTasksController extends BaseController
                 $log->task_id = $id;
                 $log->key = $name;
                 $log->new_id = $value;
+                /* Get old value of task */
                 $task = $this->databaseService->getInfoTask($id);
                 $array = $task->current();
                 $log->old_id = $array[$name];
-
+                $log->custumer = $array['custumer'];
+                
                 $this->databaseService->modifyLog($log);
                 $this->databaseService->changeInfoOfTask($id,$name,$value,$this->auth->getIdentity()->id);
             }

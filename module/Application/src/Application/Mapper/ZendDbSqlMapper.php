@@ -296,6 +296,8 @@ class ZendDbSqlMapper implements IndexMapperInterface
                          'old_id' => $log->old_id,
                          'new_value' => $log->new_value,
                          'new_id' => $log->new_id,
+                         /* add agency name */
+                         'custumer' => $log->custumer,
                  )),
                  'date'=> date("Y-m-d H:i:s"),
          );
@@ -309,14 +311,12 @@ class ZendDbSqlMapper implements IndexMapperInterface
      
      public function showLog($user_id, Task $task) {
         $sql = new Sql($this->dbAdapter);
-        if ($task->id == NULL) {
-            $select = $sql->select('logs')->join('users', 'logs.user_id = users.id', array(
-                    'join_user_name' => 'username'), 'left');
-            $select->order(array('logs.date DESC'));
-        } else {
-            $select = $sql->select('logs')->join('users', 'logs.user_id = users.id', array(
-                    'join_user_name' => 'username'), 'left');
-            $select->order(array('logs.date DESC'));
+        $select = $sql->select('logs')->join('users', 'logs.user_id = users.id', array(
+                                'join_user_name' => 'username'), 'left')
+                        ->join('tasks', 'logs.task_id = tasks.id', array(
+                                'join_task_name' => 'certificate'), 'left');
+        $select->order(array('logs.date DESC'));
+        if ($task->id != NULL) {
             $select->Where(array(
                     'task_id' => $task->id));
         }

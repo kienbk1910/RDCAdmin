@@ -50,12 +50,19 @@ namespace Application\Config;
     const USERNAME_EXCEED_MAX_LEN = "Username length exceed maximum length";
     const USERNAME_BENEATH_MIN_LEN = "Username length beneath minimum length";
 
+    const AGENCY_TYPE = 0;
+    const PROVIDER_TYPE = 1;
+    const ASSIGN_REPORTER_TYPE = 2;
+
     /* Task database field */
     const custumer_id = "custumer";
     const custumer_name = "Tên Khách Hàng";
     
     const agency_id = "agency_id";
     const agency_name = "Người Gửi (Bên Khách Hàng)";
+    
+    const agency_note = "agency_note";
+    const agency_note_name = "Ghi Chú (Bên Khách Hàng)";
     
     const provider_id = "provider_id";
     const provider_name = "Người Gửi (Bên Khách Hàng)";
@@ -72,11 +79,14 @@ namespace Application\Config;
     const date_open_pr_id = "date_open";
     const date_open_pr_name = "Ngày Nhận (Bên Nhà Cung Cấp)";
     
-    const date_end_pr = "date_end";
+    const date_end_pr = "date_end_pr";
     const date_end_pr_name = "Ngày Hẹn (Bên Nhà Cung Cấp)";
     
+    const provider_note = "provider_note";
+    const provider_note_name = "Ghi Chú (Bên Nhà Cung Cấp)";
+    
     const certificate_id = "certificate";
-    const certificate_name = "Sản Phẩm";
+    const certificate_name = "Tên Sản Phẩm";
     
     const cost_sell_id = "cost_sell";
     const cost_sell_name = "Thoả Thuận (Bên Khách Hàng)";
@@ -89,10 +99,7 @@ namespace Application\Config;
     
     const assign_id = "assign_id";
     const assign_name = "Người Chịu Trách Nhiệm";
-    
-    const AGENCY_TYPE = 0;
-    const PROVIDER_TYPE = 1;
-    const ASSIGN_REPORTER_TYPE = 2;
+
     public static function getMinValue()
     {
         return self::MAX_ITEM_OF_PAGE;
@@ -105,12 +112,16 @@ namespace Application\Config;
         if ($field_id == Config::provider_id) return Config::provider_name;
         if ($field_id == Config::reporter_id) return Config::reporter_name;
         if ($field_id == Config::date_open_id) return Config::date_open_name;
+        if ($field_id == Config::date_open_pr_id) return Config::date_open_pr_name;
         if ($field_id == Config::certificate_id) return Config::certificate_name;
         if ($field_id == Config::cost_sell_id) return Config::cost_sell_name;
         if ($field_id == Config::date_end) return Config::date_end_name;
+        if ($field_id == Config::date_end_pr) return Config::date_end_pr_name;
         if ($field_id == Config::cost_buy_id) return Config::cost_buy_name;
         if ($field_id == Config::process_id) return Config::process_name;
         if ($field_id == Config::assign_id) return Config::assign_name;
+        if ($field_id == Config::agency_note) return Config::agency_note_name;
+        if ($field_id == Config::provider_note) return Config::provider_note_name;
         return $field_id;
     }
  }
