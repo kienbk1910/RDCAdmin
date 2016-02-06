@@ -73,6 +73,19 @@ use Utility\Date\Date;
                 <?php
             }?>
             
+            <!-- Action pay -->
+            <?php if ($log->action_id == (string)Config::PAY_ACTION) {
+                echo " đã <span class='foucus-value'> Thanh Toán</span> ";
+                if ($task['type'] == 1) echo " (Bên Khách Hàng) ";
+                else echo "(Bên Nhà Cung Cấp) ";
+                echo "cho hồ sơ "?>
+                <?php if (! empty($task['custumer']))
+                    echo "của <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ ";
+                else echo " của chứng chỉ: "; ?>
+                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <?php
+            }?>
+            
             <!-- date -->
             <i><?php echo " vào ngày " ."<i class='foucus-value'>".Date::changeDateSQLtoVN($log->date);?></i></i>
         </span>

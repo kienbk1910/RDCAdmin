@@ -22,7 +22,8 @@ interface IndexServiceInterface
      public function insertTask(Task $task);
 
      public function showLog($user_id, Task $task);
-     public function insertLog($user_id, Task $task, $action);
+     public function insertLog($user_id, Task $task);
+     public function payLog($user_id, MoneyHistory $money);
      public function getListUserByBaseRole($role);
      public function getInfoTask($id);
 

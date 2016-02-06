@@ -19,7 +19,8 @@ interface IndexMapperInterface
       public function resetPassword($id_user, $password);
       public function getListByRole($role);
       public function insertTask(Task $task);
-      public function insertLog($user_id, Task $task, $action);
+      public function insertLog($user_id, Task $task);
+      public function payLog($user_id, MoneyHistory $money);
       public function modifyLog(Log $log);
       public function showLog($user_id, Task $task);
       public function getListUserByBaseRole($role);

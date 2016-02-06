@@ -221,14 +221,14 @@ class ZendDbSqlMapper implements IndexMapperInterface
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
 
-     public function insertLog($user_id, Task $task, $action) {
+     public function insertLog($user_id, Task $task) {
          /* No need to check exist */
 
          /* Always insert new value json to db */
          $data = array(
                  'user_id' => $user_id,
                  'task_id' => $task->id,
-                 'action_id' => $action,
+                 'action_id' => Config::ADD_ACTION,
                  //'value' => json_encode($task->toArray()),
                  'value' => json_encode($task),
                  'date'=> date("Y-m-d H:i:s"),
@@ -241,6 +241,24 @@ class ZendDbSqlMapper implements IndexMapperInterface
          return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
 
+     public function payLog($user_id, MoneyHistory $money) {
+         /* No need to check exist */
+         /* Always insert new value json to db */
+         $data = array(
+                 'user_id' => $user_id,
+                 'task_id' => $money->task_id,
+                 'action_id' => Config::PAY_ACTION,
+                 'value' => json_encode($money),
+                 'date'=> date("Y-m-d H:i:s"),
+         );
+     
+         $sql = new Sql($this->dbAdapter);
+         $insert = $sql->insert('logs');
+         $insert->values($data);
+         $selectString = $sql->getSqlStringForSqlObject($insert);
+         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+     }
+     
      public function getUserNameByUserID($user_id) {
          $sql = new Sql($this->dbAdapter);
          $select = $sql->select('users');

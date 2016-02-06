@@ -337,10 +337,12 @@ $admin_email)
             $this->SendMail("rdc@kienbk1910.com", $email, $subject, $getcontent);
         } else {
             // email is invalid; print the reasons
-            foreach ($validator->getMessages() as $message) echo "$message\n";
+            foreach ($validator->getMessages() as $message) {
+                return "$message";
+            }
         }
         //echo $getcontent;
-        return;
+        return NULL;
     }
 
     function notify_to_admin($task, $user, $action) {
@@ -384,9 +386,11 @@ $admin_email)
             $this->SendMail("rdc@kienbk1910.com", $assign->email, $subject, $getcontent);
         } else {
             // email is invalid; print the reasons
-            foreach ($validator->getMessages() as $message) echo "$message\n";
+            foreach ($validator->getMessages() as $message) {
+                return "$message";
+            }
         }
         //echo $getcontent;
-        return;
+        return NULL;
     }
 }

@@ -60,10 +60,14 @@ class IndexService implements IndexServiceInterface
        return $this->databaseMapper->showLog($user_id, $task);
    }
 
-   public function insertLog($user_id, Task $task, $action) {
-       return $this->databaseMapper->insertLog($user_id, $task, $action);
+   public function insertLog($user_id, Task $task) {
+       return $this->databaseMapper->insertLog($user_id, $task);
    }
-
+   
+   public function payLog($user_id, MoneyHistory $money) {
+       return $this->databaseMapper->payLog($user_id, $money);
+   }
+   
    public function getListUserByBaseRole($role){
       return $this->databaseMapper->getListUserByBaseRole($role);
    }

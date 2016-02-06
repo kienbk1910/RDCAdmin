@@ -18,8 +18,10 @@ class MoneyHistory
 	public $note;
 	public $type;
 	public $username;
+	/* Viet add */
+	public $custumer;
 	public function toArray(){
-		return   array(
+		return array(
 			'task_id'=>$this->task_id,
 			'money'=> $this->money,
 			'date_pay'=> $this->date_pay,
@@ -30,11 +32,11 @@ class MoneyHistory
 			'user_id'=> $this->user_id,
 			'create_date'=> $this->create_date,
 			'last_update'=> $this->last_update,
-			'last_user_id'=> $this->last_user_id,		
-		 );
+			'last_user_id'=> $this->last_user_id,
+		);
 	}
 	public function toArrayUpdate(){
-		return   array(
+		return array(
 			'money'=> $this->money,
 			'date_pay'=> $this->date_pay,
 			'money_option'=> $this->money_option,

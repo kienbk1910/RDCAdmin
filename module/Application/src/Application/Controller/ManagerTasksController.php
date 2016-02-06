@@ -202,7 +202,7 @@ class ManagerTasksController extends BaseController
             $task->provider_note = $request->getPost('provider_note');
             $result = $this->databaseService->insertTask($task);
             $task->id = $result->getGeneratedValue();
-            $this->databaseService->insertLog($this->auth->getIdentity()->id, $task, Config::ADD_ACTION);
+            $this->databaseService->insertLog($this->auth->getIdentity()->id, $task);
 
             /* Add send mail */
             $mail = new MailHelper();
@@ -325,22 +325,28 @@ class ManagerTasksController extends BaseController
                 $receiver['assign'] = $this->databaseService->getUserById($array['assign_id'])->current();
                 $receiver['agency'] = $this->databaseService->getUserById($array['agency_id'])->current();
                 $receiver['provider'] = $this->databaseService->getUserById($array['provider_id'])->current();
+                $ret = NULL;
                 if ($name == Config::agency_id
                         || $name == Config::cost_sell_id
                         || $name == Config::date_open_id
                         || $name == Config::date_end_id
                         || $name == Config::agency_note_id) {
                     /* For agency: agency_id, cost_sell, date_open, date_end, agency_note */
-                    $mail->notify_to_user($array, $receiver, Config::AGENCY_TYPE, Config::NOTIFY_MODIFY);
+                    $ret = $mail->notify_to_user($array, $receiver, Config::AGENCY_TYPE, Config::NOTIFY_MODIFY);
                 } else if ($name == Config::provider_id
                         || $name == Config::cost_buy_id
                         || $name == Config::date_open_pr_id
                         || $name == Config::date_end_pr_id
                         || $name == Config::provider_note_id) {
-                    $mail->notify_to_user($array, $receiver, Config::PROVIDER_TYPE, Config::NOTIFY_MODIFY);
+                    $ret = $mail->notify_to_user($array, $receiver, Config::PROVIDER_TYPE, Config::NOTIFY_MODIFY);
                     /* For agency: provider_id, cost_buy, date_open_pr, date_end_pr, provider_note */
                 }
-                $mail->notify_to_admin($array, $receiver, Config::NOTIFY_MODIFY);
+                $ret = $mail->notify_to_admin($array, $receiver, Config::NOTIFY_MODIFY);
+                
+                if ($ret != NULL) {
+                    $result->setStatus(Xeditable::STATUS_ERROR);
+                    $result->setMsg(Xeditable::MSG_DATA_NOT_EMAIL);
+                }
             }
          }else{
              $result->setStatus(Xeditable::STATUS_ERROR);
@@ -369,7 +375,12 @@ class ManagerTasksController extends BaseController
             $pay->note = $request->getPost('note');
             $pay->type = $request->getPost('type');
             $pay->id = $request->getPost('id',0);
-            $id = $this->databaseService->insertMoneyHistory($pay);
+            /* viet add */
+            /* Get task (get custumer) */
+            $task = $this->databaseService->getInfoTask($pay->task_id)->current();
+            $pay->custumer = $task['custumer'];
+            $this->databaseService->payLog($this->auth->getIdentity()->id, $pay);
+            $id = $this->databaseService->insertMoneyHistory($pay->task_id);
         }
         return new JsonModel(array(
 

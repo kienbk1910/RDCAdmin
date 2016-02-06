@@ -16,7 +16,8 @@ namespace Application\Config;
     const EDIT_ACTION = 2;
     const ADD_ACTION = 3;
     const REMOVE_ACTION = 4;
-
+    const PAY_ACTION = 5;
+    
     // process id
     const PROCESS_REC = 1;
     // type pay
