@@ -509,8 +509,10 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $sortby  = $order[0]['dir'];
         $select->order(array('tasks.date_open '.$sortby));
         $select->order(array('tasks.last_update DESC'));
-        $select->offset($start)
-                ->limit($length);
+        if($start !=null && $length !=null){
+             $select->offset($start)
+                    ->limit($length);
+        }
         $selectString = $sql->getSqlStringForSqlObject($select);
 
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);

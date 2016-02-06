@@ -11,6 +11,7 @@
         "php": ">=5.5",
         "zendframework/zendframework": "~2.5",
         "webino/webino-image-thumb": "1.*",
-        "phpmailer/phpmailer": "~5.2"
+        "phpmailer/phpmailer": "~5.2",
+        "dino/dompdf-module": "dev-master"
     }
 }

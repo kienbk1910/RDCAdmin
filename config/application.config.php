@@ -11,6 +11,7 @@ return array(
         'Application',
         'Auth',
         'Utility',
+        'DOMPDFModule',
         'WebinoImageThumb'
     ),
 
@@ -23,7 +24,8 @@ return array(
         'module_paths' => array(
             './module',
             './vendor',
-            './vender/webino'
+            './vender/webino',
+        
         ),
 
         // An array of paths from which to glob configuration files after

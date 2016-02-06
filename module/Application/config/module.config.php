@@ -360,6 +360,18 @@ return array(
                          ),
 
                      ),
+                    'export-pdf' => array(
+                     'type' => 'segment',
+                     'options' => array(
+                         'route'    => '/export-pdf',
+                         'defaults' => array(
+                             'action' => 'exportPdf',
+                         ),
+                         'constraints' => array(
+                         )
+                     ),
+
+                     ),
                     'editfile' => array(
                          'type' => 'segment',
                          'options' => array(

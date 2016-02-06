@@ -7,7 +7,7 @@
 		    </div><!-- /.box-tools -->
 		  </div><!-- /.box-header -->
 		  <div class="box-body" style="display: none;">
-		  		<form class="form-horizontal">
+		  		<div class="form-horizontal">
                   <div class="box-body">
                     <div class="form-group">
                       <label for="inputEmail3" class="col-sm-1 control-label col-custum">Nhận Từ</label>
@@ -56,7 +56,7 @@
                     </div>
                     <div class="form-group">
 	                       
-	                        <label class="col-sm-3 control-label">Người Chịu Trách Nhiệm</label>
+	                        <label class="col-sm-2 control-label">Người Chịu Trách Nhiệm</label>
 	                         <div class="col-sm-3">
 	                        <select class="form-control js-example-basic-single" id="assign_id" >
 	                        <option  value="0">Tất Cả</option>
@@ -65,7 +65,7 @@
 	                            }?>
 	                          </select>
 	                         </div>
-	                          <label class="col-sm-3 control-label">Người Giám Sát</label>
+	                          <label class="col-sm-2 control-label">Người Giám Sát</label>
 	                         <div class="col-sm-3">
 	                        	<select class="form-control js-example-basic-single" id="reporter_id" >
 	                        	<option  value="0">Tất Cả</option>
@@ -74,10 +74,13 @@
 		                            }?>
 	                          	</select>
 	                         </div>
+	                         <div class="col-sm-2">
+	                         	<button class="btn btn-block btn-primary" onclick="export_pdf()"><span class="glyphicon glyphicon-print"></span></button>
+	                         </div>
                     </div>
                     <div>
                   </div><!-- /.box-body -->
-    </form>
+    </div>
 		  </div><!-- /.box-body -->
 	</div><!-- /.box -->
 	
@@ -218,6 +221,7 @@ var editor; // use a global for the submit and return data rendering in the exam
         // Toggle the visibility
         column.visible( ! column.visible() );
     } );
+
 	 $('#users-table tbody')
         .on( 'mouseenter', 'td', function () {
             var colIdx = table.cell(this).index().column;
@@ -275,4 +279,21 @@ var editor; // use a global for the submit and return data rendering in the exam
 	  }
 	});
     $("#cus-date-end_2").datepicker( "option", "dateFormat", "dd/mm/yy");
+     function export_pdf(){
+     	window.location ='/manager-tasks/export-pdf'
+   /*   var data = table.ajax.params(); 
+      for(var i = 0; i<data.columns.length ;i++){
+      	data.columns[i].visible = table.column( i ).visible();
+      }
+        $.ajax({
+            type:"POST",                          
+            url:"/manager-tasks/export-pdf",
+            data:data,
+            success: function(data){
+                     
+
+            }
+     	});*/
+      	
+     }
 </script>

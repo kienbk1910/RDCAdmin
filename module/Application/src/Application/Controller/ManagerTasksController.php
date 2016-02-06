@@ -24,6 +24,7 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\Input;
 use Zend\InputFilter\FileInput;
 use Application\Email\MailHelper;
+use DOMPDFModule\View\Model\PdfModel;
 class ManagerTasksController extends BaseController
 {
      public function __construct(IndexServiceInterface $databaseService,AuthenticationService $auth)
@@ -36,6 +37,7 @@ class ManagerTasksController extends BaseController
 
      public function indexAction()
      {
+       
          $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set("Danh Sách Hồ Sơ");
          $this->checkLevel2();
          $users = $this->databaseService->getListByRole(Config::ROLE_AGENCY);
@@ -100,6 +102,55 @@ class ManagerTasksController extends BaseController
             array_push($data->data,$item);
          }
         echo \Zend\Json\Json::encode($data, false);
+        exit;
+     }
+     public  function exportPdfAction(){
+        $pdf = new PdfModel();
+        $pdf->setOption('filename', 'monthly-report'); // Triggers PDF download, automatically appends ".pdf"
+        $pdf->setOption('paperSize', 'a4'); // Defaults to "8x11"
+        $pdf->setOption('paperOrientation', 'landscape'); // Defaults to "portrait"
+ 
+        $pdf->setVariables(array(
+          'message' => 'Hello'
+        ));
+ 
+        return $pdf;
+        $this->checkAuth();
+         $request = $this->getRequest();
+
+         $draw = $request->getPost('draw',1);
+         $start = $request->getPost('start',0);
+         $length = $request->getPost('length',10);
+         $search = $request->getPost('search','');
+         $columns = $request->getPost('columns','');
+         $orders = $request->getPost('order','');
+          $search = $search['value'];
+         $tasks =$this->databaseService->getListTask(null,null,$search,$columns,$orders ,null,null);
+         $data = new DataTablesObject();
+         $data->draw = $draw;
+         foreach ($tasks as $task) {
+            $item = new TaskListItem();
+            $item->DT_RowId =$task->id;
+            $item->custumer =$task->custumer;
+            $item->certificate =$task->certificate;
+            $item->process_name =$task->process_name;
+            $item->agency_name =$task->agency_name;
+            $item->cost_sell = number_format($task->cost_sell);
+            $item->custumer_pay = number_format($this->databaseService->getTotalPay($task->id,Config::PAY_CUSTUMER));
+            $item->date_open = Date::changeDateSQLtoVN($task->date_open);
+            $item->date_end = Date::changeDateSQLtoVN($task->date_end);
+            $item->process_name =$task->process_name;
+
+            $item->provider_name =$task->provider_name;
+            $item->cost_buy = number_format($task->cost_buy);
+            $item->provider_pay = number_format($this->databaseService->getTotalPay($task->id,Config::PAY_PROVIDER));
+            $item->date_open_pr = Date::changeDateSQLtoVN($task->date_open_pr);
+            $item->date_end_pr = Date::changeDateSQLtoVN($task->date_end_pr);
+            $item->assign_name =$task->assign_name;
+            $item->reporter_name =$task->reporter_name;
+            array_push($data->data,$item);
+         }
+          echo \Zend\Json\Json::encode($data, false);
         exit;
      }
      public function addAction()
