@@ -273,7 +273,6 @@ $admin_email)
         // Now tell the server we are done and close the socket...
         fputs($socket, "QUIT\r\n");
         fclose($socket);
-
         return TRUE;
     }
 
@@ -309,10 +308,11 @@ $admin_email)
         }
         $getcontent = str_replace('{|trang_thai|}', "Nhận hồ sơ", $getcontent);
         $getcontent = str_replace('{|ma_ho_so|}', $task['id'], $getcontent);
-        $getcontent = str_replace('{|link|}', MailHelper::REAL_SERVER_SITE. "/manager-tasks/detail/" .$task['id'], $getcontent);
         $getcontent = str_replace('{|thanh_toan|}', 0, $getcontent);
-
+        $getcontent = str_replace('{|custumer|}', $task['custumer'], $getcontent);
+        $getcontent = str_replace('{|certificate|}', $task['certificate'], $getcontent);
         if ($type == Config::AGENCY_TYPE) {
+            $getcontent = str_replace('{|link|}', MailHelper::REAL_SERVER_SITE. "/tasks/orderdetail/" .$task['id'], $getcontent);
             $getcontent = str_replace('{|name|}', $agency->username, $getcontent);
             $getcontent = str_replace('{|ten_khach_hang|}', $agency->username, $getcontent);
             $getcontent = str_replace('{|gia_thoa_thuan|}', number_format($task['cost_sell']), $getcontent);
@@ -322,6 +322,7 @@ $admin_email)
             $getcontent = str_replace('{|doi_tuong|}', "Nhà Cung Cấp", $getcontent);
             $email = $agency->email;
         } else if ($type == Config::PROVIDER_TYPE) {
+            $getcontent = str_replace('{|link|}', MailHelper::REAL_SERVER_SITE. "/tasks/taskdetail/" .$task['id'], $getcontent);
             $getcontent = str_replace('{|name|}', $provider->username, $getcontent);
             $getcontent = str_replace('{|ten_khach_hang|}', $provider->username, $getcontent);
             $getcontent = str_replace('{|gia_thoa_thuan|}', number_format($task['cost_buy']), $getcontent);

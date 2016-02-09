@@ -22,8 +22,8 @@ interface IndexServiceInterface
      public function insertTask(Task $task);
 
      public function showLog($user_id, Task $task);
-     public function insertLog($user_id, Task $task);
-     public function payLog($user_id, MoneyHistory $money);
+     public function insertLog($user_id, Task $task,$type);
+     public function payLog($user_id, MoneyHistory $money,$type);
      public function getListUserByBaseRole($role);
      public function getInfoTask($id);
 
@@ -48,8 +48,16 @@ interface IndexServiceInterface
      public function getListFileActtacment($task_id,$permission);
      public function getPermissionByTaskid($id_user,$task_id);
      public function getFileAttachment($id);
-     public function modifyLog(Log $log);
+     public function modifyLog(Log $log,$type);
      public function getUserNameByUserID($user_id);
      public function getProcessBaseID($get_base_id);
      public function getPermissionUser($task_id,$user_id);
+
+     public function getPayById($id);
+     public function modifyPayLog($user_id, MoneyHistory $old,MoneyHistory $new,$type);
+     public function deletePayLog($user_id, MoneyHistory $money,$type);
+     public function addFileLog($user_id,FileAttachment $file,$type);
+     public function changeFileLog($user_id,FileAttachment $old,FileAttachment $value,$type);
+     public function deleteFileLog($user_id,FileAttachment $file,$type);
+     public function addCommentLog($user_id,Comment $comment,$type);
  }

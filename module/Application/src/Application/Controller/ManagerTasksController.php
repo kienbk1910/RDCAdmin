@@ -202,7 +202,7 @@ class ManagerTasksController extends BaseController
             $task->provider_note = $request->getPost('provider_note');
             $result = $this->databaseService->insertTask($task);
             $task->id = $result->getGeneratedValue();
-            $this->databaseService->insertLog($this->auth->getIdentity()->id, $task);
+            $this->databaseService->insertLog($this->auth->getIdentity()->id, $task,Config::PAY_INFO_COMMON);
 
             /* Add send mail */
             $mail = new MailHelper();
@@ -314,9 +314,16 @@ class ManagerTasksController extends BaseController
                 $array = $task->current();
                 $log->old_id = $array[$name];
                 $log->custumer = $array['custumer'];
+                $type = Config::PAY_INFO_COMMON;
+                if($name == "date_open" || $name == "date_end" ||$name == "cost_sell" ||$name == "agency_note" ||$name == "agency_id" ){
+                   $type = Config::PAY_CUSTUMER;  
+                }
+                if($name == "date_open_pr" || $name == "date_end_pr" ||$name == "cost_buy" ||$name == "provider_note" ||$name == "provider_id"){
+                    $type = Config::PAY_PROVIDER; 
+                }
                 
                 /* Add log */
-                $this->databaseService->modifyLog($log);
+                $this->databaseService->modifyLog($log,$type);
                 $this->databaseService->changeInfoOfTask($id,$name,$value,$this->auth->getIdentity()->id);
                 
                 /* Add send mail */
@@ -375,12 +382,22 @@ class ManagerTasksController extends BaseController
             $pay->note = $request->getPost('note');
             $pay->type = $request->getPost('type');
             $pay->id = $request->getPost('id',0);
-            /* viet add */
-            /* Get task (get custumer) */
+
             $task = $this->databaseService->getInfoTask($pay->task_id)->current();
             $pay->custumer = $task['custumer'];
-            $this->databaseService->payLog($this->auth->getIdentity()->id, $pay);
-            $id = $this->databaseService->insertMoneyHistory($pay->task_id);
+            if($pay->id != 0){
+                $old_pay = $this->databaseService->getPayById($pay->id);
+                if($old_pay != null){
+                     $this->databaseService->modifyPayLog($this->auth->getIdentity()->id, $old_pay,$pay,$pay->type);
+                }
+            }else{
+               $this->databaseService->payLog($this->auth->getIdentity()->id, $pay,$pay->type); 
+            }
+            /* viet add */
+            /* Get task (get custumer) */
+       
+            
+            $id = $this->databaseService->insertMoneyHistory($pay);
         }
         return new JsonModel(array(
 
@@ -391,7 +408,14 @@ class ManagerTasksController extends BaseController
     $request = $this->getRequest();
     if ($request->isPost()) {
         $id = $request->getPost('id',0);
-        $id = $this->databaseService->deletePayById($id);
+         $old_pay = $this->databaseService->getPayById($id);
+         if($old_pay !=null){
+            $task = $this->databaseService->getInfoTask($old_pay->task_id)->current();
+            $old_pay->custumer = $task['custumer'];
+            $this->databaseService->deletePayLog($this->auth->getIdentity()->id, $old_pay,$pay->type); 
+            $id = $this->databaseService->deletePayById($id);
+         }
+       
     }
     return new JsonModel(array(
 
@@ -442,6 +466,7 @@ class ManagerTasksController extends BaseController
                    $type = Config::PAY_PROVIDER;
                 }
             }
+            $this->databaseService->addCommentLog($this->auth->getIdentity()->id,$comment,$comment->type );
             $comment = $this->databaseService->addComment($comment);
         }
         return new JsonModel(array(
@@ -522,7 +547,9 @@ class ManagerTasksController extends BaseController
 
               $file_attach->real_name = basename($data['file_name']['tmp_name']);
               $file_attach->file_name = basename($data['file_name']['name']);
-              $this->databaseService->addFileAttachment($file_attach);
+              $result = $this->databaseService->addFileAttachment($file_attach);
+              $file_attach->id  = $result->getGeneratedValue();
+              $this->databaseService->addFileLog($this->auth->getIdentity()->id,$file_attach,Config::PAY_INFO_COMMON);
             }
         }
           return new JsonModel(array());
@@ -569,6 +596,10 @@ class ManagerTasksController extends BaseController
             $files = $this->databaseService->deleteAttachment($id);
             if($attachment != null){
                 unlink('.'.Config::FILE_ATTACHMENT_PATH.$attachment->task_id.'/'.$attachment->real_name);
+                $file = new FileAttachment();
+                 $file->file_name = $attachment->file_name;
+                  $file->task_id = $attachment->task_id;
+                $this->databaseService->deleteFileLog($this->auth->getIdentity()->id,$file,Config::PAY_INFO_COMMON);
             }
             return new JsonModel();
         }

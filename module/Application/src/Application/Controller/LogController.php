@@ -57,9 +57,12 @@ class LogController extends BaseController {
         $task->id = $task_id;
         $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set($task_id.' - Lịch Sử Thay Đổi');
         $logs = $this->databaseService->showLog( $this->auth->getIdentity()->id, $task);
+         $logs->setCurrentPageNumber((int) $this->params()->fromQuery('page', 1));
+          // set the number of items per page to 10
+         $logs->setItemCountPerPage(Config::MAX_ITEM_OF_PAGE);
         return new ViewModel( array (
                 'logs' => $logs,
+                'task_id'=>$task_id
         ) );
-        break;
     }
 }

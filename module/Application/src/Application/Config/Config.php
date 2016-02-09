@@ -4,7 +4,7 @@ namespace Application\Config;
 
  class Config
  {
-    const MAX_ITEM_OF_PAGE = 40;
+    const MAX_ITEM_OF_PAGE = 20;
     const MAX_DAYS_COUNTER =30;
     const USER_ADMIN =1;
     const USER_LEAVE1 =2;
@@ -17,10 +17,16 @@ namespace Application\Config;
     const ADD_ACTION = 3;
     const REMOVE_ACTION = 4;
     const PAY_ACTION = 5;
-    
+    const EDIT_PAY_ACTION = 6;
+    const DELETE_PAY_ACTION =7;
+    const FILE_ACTION = 8;
+    const EDIT_FILE_ACTION = 9;
+    const DELETE_FILE_ACTION = 10;
+    const COMMENT_ACTION = 11;
     // process id
     const PROCESS_REC = 1;
     // type pay
+    const PAY_INFO_COMMON = 0;
     const PAY_CUSTUMER = 1;
     const PAY_PROVIDER = 2;
 

@@ -60,12 +60,12 @@ class IndexService implements IndexServiceInterface
        return $this->databaseMapper->showLog($user_id, $task);
    }
 
-   public function insertLog($user_id, Task $task) {
-       return $this->databaseMapper->insertLog($user_id, $task);
+   public function insertLog($user_id, Task $task,$type) {
+       return $this->databaseMapper->insertLog($user_id, $task,$type);
    }
    
-   public function payLog($user_id, MoneyHistory $money) {
-       return $this->databaseMapper->payLog($user_id, $money);
+   public function payLog($user_id, MoneyHistory $money,$type) {
+       return $this->databaseMapper->payLog($user_id, $money,$type);
    }
    
    public function getListUserByBaseRole($role){
@@ -128,8 +128,8 @@ class IndexService implements IndexServiceInterface
    public function getFileAttachment($id){
       return $this->databaseMapper->getFileAttachment($id);
    }
-   public function modifyLog(Log $log) {
-       return $this->databaseMapper->modifyLog($log);
+   public function modifyLog(Log $log,$type) {
+       return $this->databaseMapper->modifyLog($log,$type);
    }
    public function getUserNameByUserID($user_id) {
        return $this->databaseMapper->getUserNameByUserID($user_id);
@@ -140,4 +140,26 @@ class IndexService implements IndexServiceInterface
     public function getPermissionUser($task_id,$user_id){
        return $this->databaseMapper->getPermissionUser($task_id,$user_id);      
     }
+  public function getPayById($id){
+       return $this->databaseMapper->getPayById($id);      
+  }
+
+  public function deletePayLog($user_id, MoneyHistory $money,$type){
+        return $this->databaseMapper->deletePayLog($user_id ,  $money, $type);
+  }
+  public function modifyPayLog($user_id, MoneyHistory $old,MoneyHistory $new,$type){  
+    return $this->databaseMapper->modifyPayLog($user_id ,  $old ,  $new,$type);
+  }
+  public function addFileLog($user_id,FileAttachment $file,$type){
+    return $this->databaseMapper->addFileLog($user_id, $file,$type);
+  }
+  public function changeFileLog($user_id,FileAttachment $old,FileAttachment $value,$type){
+
+  }
+  public function deleteFileLog($user_id,FileAttachment $file,$type){
+    return $this->databaseMapper->deleteFileLog($user_id, $file,$type);
+  }
+  public function addCommentLog($user_id,Comment $comment,$type){
+       return $this->databaseMapper->addCommentLog($user_id, $comment,$type);
+  }
 }

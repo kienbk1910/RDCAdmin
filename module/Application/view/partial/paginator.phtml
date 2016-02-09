@@ -1,0 +1,66 @@
+<?php if ($this->pageCount):
+  $url ="";
+  if($this->data_route==NULL){
+    $url =$this->url($this->route);
+  }else{
+     $url =$this->url($this->route,$this->data_route);
+  }
+  ;
+     $query ="";
+  if($this->data_form != NULL){
+ 
+    foreach($this->data_form as $key => $value ){
+        $query.= $key.'='.$value.'&';
+    }
+  
+  }
+    $url.='?'.$query;
+ ?>
+  
+         <ul class="pagination pagination-sm inline">
+             <!-- Previous page link -->
+             <?php if (isset($this->previous)): ?>
+                 <li>
+                     <a href="<?php echo $url;?>&page=<?php echo $this->previous; ?>">
+                         <<
+                     </a>
+                 </li>
+             <?php else: ?>
+                 <li class="disabled">
+                     <a href="#">
+                        &laquo;
+                     </a>
+                 </li>
+             <?php endif; ?>
+
+             <!-- Numbered page links -->
+             <?php foreach ($this->pagesInRange as $page): ?>
+                 <?php if ($page != $this->current): ?>
+                     <li>
+                         <a href="<?php echo $url; ?>&page=<?php echo $page; ?>">
+                             <?php echo $page; ?>
+                         </a>
+                     </li>
+                 <?php else: ?>
+                     <li class="active">
+                         <a href="#"><?php echo $page; ?></a>
+                     </li>
+                 <?php endif; ?>
+             <?php endforeach; ?>
+
+             <!-- Next page link -->
+             <?php if (isset($this->next)): ?>
+                 <li>
+                     <a href="<?php $url; ?>?page=<?php echo $this->next; ?>">
+                         &raquo;
+                     </a>
+                 </li>
+             <?php else: ?>
+                 <li class="disabled">
+                     <a href="#">
+                         >>
+                     </a>
+                 </li>
+             <?php endif; ?>
+         </ul>
+ <?php endif; ?>

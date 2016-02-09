@@ -221,7 +221,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
 
-     public function insertLog($user_id, Task $task) {
+     public function insertLog($user_id, Task $task,$type) {
          /* No need to check exist */
 
          /* Always insert new value json to db */
@@ -231,6 +231,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
                  'action_id' => Config::ADD_ACTION,
                  //'value' => json_encode($task->toArray()),
                  'value' => json_encode($task),
+                 'type' =>$type,
                  'date'=> date("Y-m-d H:i:s"),
          );
 
@@ -241,7 +242,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
          return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
 
-     public function payLog($user_id, MoneyHistory $money) {
+     public function payLog($user_id, MoneyHistory $money,$type) {
          /* No need to check exist */
          /* Always insert new value json to db */
          $data = array(
@@ -250,6 +251,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
                  'action_id' => Config::PAY_ACTION,
                  'value' => json_encode($money),
                  'date'=> date("Y-m-d H:i:s"),
+                 'type'=>$type
          );
      
          $sql = new Sql($this->dbAdapter);
@@ -283,7 +285,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
          return $process['name'];
      }
      
-     public function modifyLog(Log $log) {
+     public function modifyLog(Log $log,$type) {
          $sql = new Sql($this->dbAdapter);
          /* Convert to readable value */
          if ($log->key == Config::process_id) {
@@ -318,6 +320,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
                          'custumer' => $log->custumer,
                  )),
                  'date'=> date("Y-m-d H:i:s"),
+                 'type'=>$type
          );
 
          $sql = new Sql($this->dbAdapter);
@@ -338,8 +341,16 @@ class ZendDbSqlMapper implements IndexMapperInterface
             $select->Where(array(
                     'task_id' => $task->id));
         }
-        $selectString = $sql->getSqlStringForSqlObject($select);
-        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $resultSetPrototype = new ResultSet();
+
+        // create a new pagination adapter object
+        $paginatorAdapter = new DbSelect( // our configured select object
+            $select, // the adapter to run it against
+            $this->dbAdapter, // the result set to hydrate
+            $resultSetPrototype);
+        $paginator = new Paginator($paginatorAdapter);
+         return $paginator;
+   
      }
 
      public function getListUserByBaseRole($role){
@@ -651,5 +662,108 @@ class ZendDbSqlMapper implements IndexMapperInterface
               return Config::FILE_PERMISSION_PROVIDER;
         }
           return Config::FILE_PERMISSION_ERROR;
+      }
+      public function getPayById($id){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('money_history');
+        $select->Where(array('money_history.id = ?' => $id));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $result = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+          if($result->count() == 0 ){
+            return null;
+        }
+         $pay = new MoneyHistory();
+         $result = $result->current();
+         $pay->id = $result->id;
+         $pay->task_id = $result->task_id;
+         $pay->date_pay = $result->date_pay;
+         $pay->money = $result->money;
+         $pay->money_option = $result->money_option;
+         $pay->note = $result->note;
+         $pay->type = $result->type;
+        return $pay;
+     }
+      public function modifyPayLog($user_id, MoneyHistory $old,MoneyHistory $new,$type){
+         $data = array(
+                 'user_id' => $user_id,
+                 'task_id' => $old->task_id,
+                 'action_id' => Config::EDIT_PAY_ACTION,
+                 'value' => json_encode( array('old_value' => $old, 'new_value' => $new)),
+                 'date'=> date("Y-m-d H:i:s"),
+                 'type'=>$type
+         );
+     
+         $sql = new Sql($this->dbAdapter);
+         $insert = $sql->insert('logs');
+         $insert->values($data);
+         $selectString = $sql->getSqlStringForSqlObject($insert);
+         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+      }
+      public function deletePayLog($user_id, MoneyHistory $money,$type){
+         $data = array(
+                 'user_id' => $user_id,
+                 'task_id' => $money->task_id,
+                 'action_id' => Config::DELETE_PAY_ACTION,
+                 'value' => json_encode( $money),
+                 'date'=> date("Y-m-d H:i:s"),
+                    'type'=>$type
+         );
+     
+         $sql = new Sql($this->dbAdapter);
+         $insert = $sql->insert('logs');
+         $insert->values($data);
+         $selectString = $sql->getSqlStringForSqlObject($insert);
+         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+      }
+      public function addFileLog($user_id,FileAttachment $file,$type){
+        $data = array(
+                 'user_id' => $user_id,
+                 'task_id' => $file->task_id,
+                 'action_id' => Config::FILE_ACTION,
+                 'value' => json_encode( $file),
+                 'date'=> date("Y-m-d H:i:s"),
+                      'type'=>$type
+         );
+     
+         $sql = new Sql($this->dbAdapter);
+         $insert = $sql->insert('logs');
+         $insert->values($data);
+         $selectString = $sql->getSqlStringForSqlObject($insert);
+         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+     }
+      public function changeFileLog($user_id,FileAttachment $old,FileAttachment $value,$type){
+
+      }
+      public function deleteFileLog($user_id,FileAttachment $file,$type){
+        $data = array(
+                 'user_id' => $user_id,
+                 'task_id' => $file->task_id,
+                 'action_id' => Config::DELETE_FILE_ACTION,
+                 'value' => json_encode( $file),
+                 'date'=> date("Y-m-d H:i:s"),
+                      'type'=>$type
+         );
+     
+         $sql = new Sql($this->dbAdapter);
+         $insert = $sql->insert('logs');
+         $insert->values($data);
+         $selectString = $sql->getSqlStringForSqlObject($insert);
+         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+      }
+      public function addCommentLog($user_id,Comment $comment,$type){
+          $data = array(
+                 'user_id' => $user_id,
+                 'task_id' => $comment->task_id,
+                 'action_id' => Config::COMMENT_ACTION,
+                 'value' => json_encode( $comment),
+                 'date'=> date("Y-m-d H:i:s"),
+                      'type'=>$type
+         );
+     
+         $sql = new Sql($this->dbAdapter);
+         $insert = $sql->insert('logs');
+         $insert->values($data);
+         $selectString = $sql->getSqlStringForSqlObject($insert);
+         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
       }
 }
