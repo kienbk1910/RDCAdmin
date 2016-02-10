@@ -337,9 +337,16 @@ class ZendDbSqlMapper implements IndexMapperInterface
                         ->join('tasks', 'logs.task_id = tasks.id', array(
                                 'join_task_name' => 'certificate'), 'left');
         $select->order(array('logs.date DESC'));
-        if ($task->id != NULL) {
+        if ($task!= NULL && $task->id != NULL) {
             $select->Where(array(
                     'task_id' => $task->id));
+        }
+        if($user_id != NULL){
+            $select->where ->nest
+                    ->nest->equalTo("tasks.agency_id",$user_id)->and->equalTo("logs.type",Config::PAY_CUSTUMER )->unnest
+                ->or->nest->equalTo("tasks.provider_id",$user_id)->and->equalTo("logs.type",Config::PAY_PROVIDER )->unnest
+                ->or->nest->equalTo("logs.type",Config::PAY_INFO_COMMON )->unnest
+                ->unnest;
         }
         $resultSetPrototype = new ResultSet();
 

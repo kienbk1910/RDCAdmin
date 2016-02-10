@@ -1,4 +1,6 @@
-<?php use Application\Config\Config; ?>
+<?php use Application\Config\Config;
+use Utility\Date\Date; ?>
+
 <!-- Main content -->
 <section class="content">
   <!-- Main row -->
@@ -86,68 +88,159 @@
 		<!-- The contextual class should match the box, so we are using direct-chat-danger -->
 		<div class="box box-danger direct-chat direct-chat-danger">
 		  <div class="box-header with-border">
-		    <h3 class="box-title"> Chat Room</h3>
+		    <h3 class="box-title"> Hoạt Động Mới</h3>
 		    <div class="box-tools pull-right">
-		      <span data-toggle="tooltip" title="3 New Messages" class="badge bg-red">3</span>
-		      <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-		      <!-- In box-tools add this button if you intend to use the contacts pane -->
-		      <button class="btn btn-box-tool" data-toggle="tooltip" title="Contacts" data-widget="chat-pane-toggle"><i class="fa fa-comments"></i></button>
-		      <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-		    </div>
+		      <span class="badge bg-red">Xem Tất Cả</span>
+		      
 		  </div><!-- /.box-header -->
 		  <div class="box-body">
-		    <!-- Conversations are loaded here -->
-		    <div class="direct-chat-messages">
-		      <!-- Message. Default to the left -->
-		      <div class="direct-chat-msg">
-		        <div class="direct-chat-info clearfix">
-		          <span class="direct-chat-name pull-left">Alexander Pierce</span>
-		          <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
-		        </div><!-- /.direct-chat-info -->
-		        <img class="direct-chat-img" src="/AdminLTE-2.3.0/dist/img/user1-128x128.jpg" alt="message user image"><!-- /.direct-chat-img -->
-		        <div class="direct-chat-text">
-		          Is this template really for free? That's unbelievable!
-		        </div><!-- /.direct-chat-text -->
-		      </div><!-- /.direct-chat-msg -->
+		    <ul class="todo-list">
+  <?php foreach ($logs as $log) {
+      /* Decode to array */
+      $task = json_decode($log->value, true);
+   ?>
+      <li>
+      <!-- drag handle -->
+      <!-- checkbox -->
+      <!-- todo text -->
+        <span class="text">
+            <!-- user link -->
+            <a class="foucus-value" href="/profile/user-info/<?php echo $log->user_id; ?>"><?php echo $log->join_user_name; ?></a>
 
-		      <!-- Message to the right -->
-		      <div class="direct-chat-msg right">
-		        <div class="direct-chat-info clearfix">
-		          <span class="direct-chat-name pull-right">Sarah Bullock</span>
-		          <span class="direct-chat-timestamp pull-left">23 Jan 2:05 pm</span>
-		        </div><!-- /.direct-chat-info -->
-		        <img class="direct-chat-img" src="/AdminLTE-2.3.0/dist/img/user3-128x128.jpg" alt="message user image"><!-- /.direct-chat-img -->
-		        <div class="direct-chat-text">
-		          You better believe it!
-		        </div><!-- /.direct-chat-text -->
-		      </div><!-- /.direct-chat-msg -->
-		    </div><!--/.direct-chat-messages-->
+            <!-- Action edit -->
+            <?php if ($log->action_id == (string)Config::EDIT_ACTION) {
+                echo " đã thay đổi " . "<span class='foucus-value'>".$task['key_name']."</span>"; ?>
+                <?php if (! empty($task['custumer'])) echo "của khách hàng <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ "; else echo " của chứng chỉ: "; ?>
 
-		    <!-- Contacts are loaded here -->
-		    <div class="direct-chat-contacts">
-		      <ul class="contacts-list">
-		        <li>
-		          <a href="#">
-		            <img class="contacts-list-img" src="../dist/img/user1-128x128.jpg" alt="Contact Avatar">
-		            <div class="contacts-list-info">
-		              <span class="contacts-list-name">
-		                Count Dracula
-		                <small class="contacts-list-date pull-right">2/28/2015</small>
-		              </span>
-		              <span class="contacts-list-msg">How have you been? I was...</span>
-		            </div><!-- /.contacts-list-info -->
-		          </a>
-		        </li><!-- End Contact Item -->
-		      </ul><!-- /.contatcts-list -->
-		    </div><!-- /.direct-chat-pane -->
+                <a class ="foucus-value" href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <!-- If field reporter_id, agency_id ... -->
+                <?php echo " từ "; ?>
+                <?php if ($task['key'] == Config::reporter_id
+                        || $task['key'] == Config::provider_id
+                        || $task['key'] == Config::agency_id
+                        || $task['key'] == Config::assign_id) {?>
+                    <!-- Org link -->
+                    <a class ="old-value foucus-value"href="/profile/user-info/<?php echo $task['old_id']; ?>"> <?php echo $task['old_value']; ?> </a>
+                    <?php echo " sang "; ?>
+                    <!-- new link -->
+                    <a class ="foucus-value" href="/profile/user-info/<?php echo $task['new_id']; ?>"> <?php echo $task['new_value']; ?> </a> <?php
+                } else if ($task['key'] == Config::process_id) {
+                    echo "<span class='old-value foucus-value'>".$task['old_value'] ."</span>". " sang " ."<span class='new-value foucus-value'>".$task['new_value']."</span>";
+                }  else if ($task['key'] == Config::date_open_id
+                        || $task['key'] == Config::date_end_id
+                        || $task['key'] == Config::date_open_pr_id
+                        || $task['key'] == Config::date_end_pr_id) {
+                    echo "<span class='old-value foucus-value'>". Date::changeDateSQLtoVN($task['old_id']) ."</span>". " sang " ."<span class='new-value foucus-value'>". Date::changeDateSQLtoVN($task['new_id']) ."</span>";
+                } else if ($task['key'] == Config::agency_note_id
+                        || $task['key'] == Config::provider_note_id) { ?>
+                    <a href="#" data-toggle="tooltip" title="<?php echo $task['old_id']?>"> <?php echo "<span class='old-value foucus-value'>". substr($task['old_id'], 0, 50) ."</span>" ?></a>
+                    <?php echo " sang "; ?>
+                    <a href="#" data-toggle="tooltip" title="<?php echo $task['new_id']?>"> <?php echo "<span class='new-value foucus-value'>". substr($task['new_id'], 0, 50) ."</span>"; ?></a>
+                <?php } else {
+                    echo "<span class='old-value foucus-value'>".$task['old_id'] ."</span>". " sang " ."<span class='new-value foucus-value'>".$task['new_id']."</span>";
+                }
+            } ?>
+
+            <!-- Action new -->
+            <?php if ($log->action_id == (string)Config::ADD_ACTION) {
+                echo " đã thêm hồ sơ "?>
+                <?php if (! empty($task['custumer'])) echo "của khách hàng <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ "; else echo " của chứng chỉ: "; ?>
+                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <?php
+            }?>
+             <?php if ($log->action_id == (string)Config::DELETE_PAY_ACTION) {
+                echo " đã xóa <span class='foucus-value'> Thanh Toán</span> ";
+                if ($task['type'] == 1) echo " (Bên Khách Hàng) ";
+                else echo "(Bên Nhà Cung Cấp) ";
+                echo "<span class='old-value foucus-value'>".number_format($task['money'])."</span>";
+                echo "cho hồ sơ "?>
+                <?php if (! empty($task['custumer']))
+                    echo "của <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ ";
+                else echo " của chứng chỉ: "; ?>
+                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <?php
+            }?>
+             <!-- Action pay -->
+            <?php if ($log->action_id == (string)Config::COMMENT_ACTION) {
+                echo " đã <span class='foucus-value'> Thêm bình luận</span> ";
+                echo "<span class='new-value  foucus-value'>".substr($task['comment'],0,10)."...</span>";
+                echo "cho hồ sơ "?>
+                <?php if (! empty($task['custumer']))
+                    echo "của <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ ";
+                else echo " của chứng chỉ: "; ?>
+                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <?php
+            }?>
+             <?php if ($log->action_id == (string)Config::FILE_ACTION) {
+                echo " đã <span class='foucus-value'> Thêm tài liệu</span> ";
+                echo "<span class='new-value  foucus-value'>".$task['file_name']."</span>";
+                echo "cho hồ sơ "?>
+                <?php if (! empty($task['custumer']))
+                    echo "của <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ ";
+                else echo " của chứng chỉ: "; ?>
+                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <?php
+            }?>
+            <?php if ($log->action_id == (string)Config::DELETE_FILE_ACTION) {
+                echo " đã <span class='foucus-value'> Xóa tài liệu</span> ";
+                echo "<span class='old-value  foucus-value'>".$task['file_name']."</span>";
+                echo "cho hồ sơ "?>
+                <?php if (! empty($task['custumer']))
+                    echo "của <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ ";
+                else echo " của chứng chỉ: "; ?>
+                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <?php
+            }?>
+            <!-- Action pay -->
+            <?php if ($log->action_id == (string)Config::PAY_ACTION) {
+                echo " đã <span class='foucus-value'> Thanh Toán</span> ";
+                if ($task['type'] == 1) echo " (Bên Khách Hàng) ";
+                else echo "(Bên Nhà Cung Cấp) ";
+                echo "<span class='foucus-value'>".number_format($task['money'])."</span>";
+                echo "cho hồ sơ "?>
+                <?php if (! empty($task['custumer']))
+                    echo "của <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ ";
+                else echo " của chứng chỉ: "; ?>
+                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <?php
+            }?>
+            <?php if ($log->action_id == (string)Config::EDIT_PAY_ACTION) {
+                echo " đã <span class='foucus-value'> Chỉnh sửa Thanh Toán</span> ";
+                if ($task['new_value']['type'] == 1) echo " (Bên Khách Hàng) ";
+                else echo "(Bên Nhà Cung Cấp) ";
+                if(trim($task['old_value']['money']) != trim($task['new_value']['money'])){
+                  echo "<span class='old-value foucus-value'>".number_format($task['old_value']['money'])."</span>";
+                  echo "<span class='new-value foucus-value'>".number_format($task['new_value']['money'])."</span>";
+                }
+                if(Date::changeDateSQLtoVN($task['old_value']['date_pay']) != Date::changeDateSQLtoVN($task['new_value']['date_pay'])){
+                  echo "<span class='old-value foucus-value'>".Date::changeDateSQLtoVN($task['old_value']['date_pay'])."</span>";
+                  echo "<span class='new-value foucus-value'>".Date::changeDateSQLtoVN($task['new_value']['date_pay'])."</span>";
+                }
+                if(trim($task['old_value']['money_option']) != trim($task['new_value']['money_option'])){
+                  echo "<span class='old-value foucus-value'>".($task['old_value']['money_option'] == '1'? "Tiền Mặt":"Chuyển Khoản")."</span>";
+                  echo "<span class='new-value foucus-value'>".($task['new_value']['money_option'] == '1'? "Tiền Mặt":"Chuyển Khoản")."</span>";
+                }
+                echo "cho hồ sơ "?>
+                <?php if (! empty($task['new_value']['custumer']))
+                    echo "của <span class=' foucus-value'>" . $task['new_value']['custumer']. "</span>, chứng chỉ ";
+                else echo " của chứng chỉ: "; ?>
+                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <?php
+            }?>
+            
+            <!-- date -->
+            <i><?php echo " vào ngày " ."<i class='foucus-value'>".Date::changeDateSQLtoVN($log->date);?></i></i>
+        </span>
+        <!-- General tools such as edit or delete-->
+      
+      </li>
+  <?php
+      }
+  ?>
+  </ul>
 		  </div><!-- /.box-body -->
 		  <div class="box-footer">
-		    <div class="input-group">
-		      <input type="text" name="message" placeholder="Type Message ..." class="form-control">
-		      <span class="input-group-btn">
-		        <button type="button" class="btn btn-danger btn-flat">Send</button>
-		      </span>
-		    </div>
+		   
 		  </div><!-- /.box-footer-->
 		</div><!--/.direct-chat -->
 

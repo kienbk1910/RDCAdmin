@@ -8,13 +8,23 @@ use Utility\Date\Date;
   <i class="ion ion-clipboard"></i>
   <h3 class="box-title">Lịch Sử Thay Đổi</h3>
   <div class="box-tools pull-right">
-    <ul class="pagination pagination-sm inline">
-      <li><a href="#">&laquo;</a></li>
-      <li><a href="#">1</a></li>
-      <li><a href="#">2</a></li>
-      <li><a href="#">3</a></li>
-      <li><a href="#">&raquo;</a></li>
-    </ul>
+  <?php
+ // add at the end of the file after the table
+ echo $this->paginationControl(
+     // the paginator object
+     $this->logs,
+     // the scrolling style
+     'sliding',
+     // the partial to use to render the control
+     'partial/paginator.phtml',
+     // the route to link to when a user clicks a control link
+     array(
+         'route' => 'log',
+         
+     )
+ );
+ ?>
+
   </div>
 </div><!-- /.box-header -->
 <div class="box-body">
@@ -72,15 +82,81 @@ use Utility\Date\Date;
                 <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
                 <?php
             }?>
-            
+             <?php if ($log->action_id == (string)Config::DELETE_PAY_ACTION) {
+                echo " đã xóa <span class='foucus-value'> Thanh Toán</span> ";
+                if ($task['type'] == 1) echo " (Bên Khách Hàng) ";
+                else echo "(Bên Nhà Cung Cấp) ";
+                echo "<span class='old-value foucus-value'>".number_format($task['money'])."</span>";
+                echo "cho hồ sơ "?>
+                <?php if (! empty($task['custumer']))
+                    echo "của <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ ";
+                else echo " của chứng chỉ: "; ?>
+                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <?php
+            }?>
+             <!-- Action pay -->
+            <?php if ($log->action_id == (string)Config::COMMENT_ACTION) {
+                echo " đã <span class='foucus-value'> Thêm bình luận</span> ";
+                echo "<span class='new-value  foucus-value'>".substr($task['comment'],0,10)."...</span>";
+                echo "cho hồ sơ "?>
+                <?php if (! empty($task['custumer']))
+                    echo "của <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ ";
+                else echo " của chứng chỉ: "; ?>
+                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <?php
+            }?>
+             <?php if ($log->action_id == (string)Config::FILE_ACTION) {
+                echo " đã <span class='foucus-value'> Thêm tài liệu</span> ";
+                echo "<span class='new-value  foucus-value'>".$task['file_name']."</span>";
+                echo "cho hồ sơ "?>
+                <?php if (! empty($task['custumer']))
+                    echo "của <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ ";
+                else echo " của chứng chỉ: "; ?>
+                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <?php
+            }?>
+            <?php if ($log->action_id == (string)Config::DELETE_FILE_ACTION) {
+                echo " đã <span class='foucus-value'> Xóa tài liệu</span> ";
+                echo "<span class='old-value  foucus-value'>".$task['file_name']."</span>";
+                echo "cho hồ sơ "?>
+                <?php if (! empty($task['custumer']))
+                    echo "của <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ ";
+                else echo " của chứng chỉ: "; ?>
+                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <?php
+            }?>
             <!-- Action pay -->
             <?php if ($log->action_id == (string)Config::PAY_ACTION) {
                 echo " đã <span class='foucus-value'> Thanh Toán</span> ";
                 if ($task['type'] == 1) echo " (Bên Khách Hàng) ";
                 else echo "(Bên Nhà Cung Cấp) ";
+                echo "<span class='foucus-value'>".number_format($task['money'])."</span>";
                 echo "cho hồ sơ "?>
                 <?php if (! empty($task['custumer']))
                     echo "của <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ ";
+                else echo " của chứng chỉ: "; ?>
+                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <?php
+            }?>
+            <?php if ($log->action_id == (string)Config::EDIT_PAY_ACTION) {
+                echo " đã <span class='foucus-value'> Chỉnh sửa Thanh Toán</span> ";
+                if ($task['new_value']['type'] == 1) echo " (Bên Khách Hàng) ";
+                else echo "(Bên Nhà Cung Cấp) ";
+                if(trim($task['old_value']['money']) != trim($task['new_value']['money'])){
+                  echo "<span class='old-value foucus-value'>".number_format($task['old_value']['money'])."</span>";
+                  echo "<span class='new-value foucus-value'>".number_format($task['new_value']['money'])."</span>";
+                }
+                if(Date::changeDateSQLtoVN($task['old_value']['date_pay']) != Date::changeDateSQLtoVN($task['new_value']['date_pay'])){
+                  echo "<span class='old-value foucus-value'>".Date::changeDateSQLtoVN($task['old_value']['date_pay'])."</span>";
+                  echo "<span class='new-value foucus-value'>".Date::changeDateSQLtoVN($task['new_value']['date_pay'])."</span>";
+                }
+                if(trim($task['old_value']['money_option']) != trim($task['new_value']['money_option'])){
+                  echo "<span class='old-value foucus-value'>".($task['old_value']['money_option'] == '1'? "Tiền Mặt":"Chuyển Khoản")."</span>";
+                  echo "<span class='new-value foucus-value'>".($task['new_value']['money_option'] == '1'? "Tiền Mặt":"Chuyển Khoản")."</span>";
+                }
+                echo "cho hồ sơ "?>
+                <?php if (! empty($task['new_value']['custumer']))
+                    echo "của <span class=' foucus-value'>" . $task['new_value']['custumer']. "</span>, chứng chỉ ";
                 else echo " của chứng chỉ: "; ?>
                 <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
                 <?php
@@ -90,10 +166,7 @@ use Utility\Date\Date;
             <i><?php echo " vào ngày " ."<i class='foucus-value'>".Date::changeDateSQLtoVN($log->date);?></i></i>
         </span>
         <!-- General tools such as edit or delete-->
-        <div class="tools">
-          <i class="fa fa-edit"></i>
-          <i class="fa fa-trash-o"></i>
-        </div>
+      
       </li>
   <?php
       }

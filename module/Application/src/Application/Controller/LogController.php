@@ -40,23 +40,29 @@ class LogController extends BaseController {
         $task = new Task();
         /* Get all logs */
         $task->id = NULL;
-        $log = new Log();
         $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set('Lịch Sử Thay Đổi');
-        $logs = $this->databaseService->showLog($this->auth->getIdentity()->id, $task, $log);
+        $logs = $this->databaseService->showLog( null, $task);
+         $logs->setCurrentPageNumber((int) $this->params()->fromQuery('page', 1));
+          // set the number of items per page to 10
+         $logs->setItemCountPerPage(Config::MAX_ITEM_OF_PAGE);
         return new ViewModel( array (
                 'logs' => $logs,
         ) );
     }
 
     public function showlogAction() {
-        $this->checkAdmin();
+        $this->checkAuth();
         $request = $this->getRequest();
-
         $task_id = $this->params()->fromRoute( 'id', 0 );
         $task = new Task();
         $task->id = $task_id;
+        $id_user =  $this->auth->getIdentity()->id;
+        if($this->isLevel2()){
+            $id_user =  null;
+        }
+        
         $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set($task_id.' - Lịch Sử Thay Đổi');
-        $logs = $this->databaseService->showLog( $this->auth->getIdentity()->id, $task);
+        $logs = $this->databaseService->showLog( $id_user, $task);
          $logs->setCurrentPageNumber((int) $this->params()->fromQuery('page', 1));
           // set the number of items per page to 10
          $logs->setItemCountPerPage(Config::MAX_ITEM_OF_PAGE);
