@@ -49,7 +49,7 @@ class MailHelper
 				// on our contact us page. We set this variable at
 				// the top of this page with:
 				// $email = $_REQUEST['email'] ;
-				$mail->From = "rdc@kienbk1910.com";
+				$mail->From = MailHelper::EMAIL_SYSTEM_NAME;
 				$mail->FromName="RDC";
 				$mail->IsHTML(true);
 				$mail->AddAddress("kienbk1910@gmail.com", "Ngọc Vinh");
@@ -335,7 +335,7 @@ $admin_email)
 
         if ($validator->isValid($email)) {
             // email appears to be valid
-            $this->SendMail("rdc@kienbk1910.com", $email, $subject, $getcontent);
+            $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $email, $subject, $getcontent);
         } else {
             // email is invalid; print the reasons
             foreach ($validator->getMessages() as $message) {
@@ -383,14 +383,201 @@ $admin_email)
         $getcontent = str_replace('{|thanh_toan_cc|}', 0, $getcontent);
         if ($validator->isValid($reporter->email) && $validator->isValid($assign->email)) {
             // email appears to be valid
-            $this->SendMail("rdc@kienbk1910.com", $reporter->email, $subject, $getcontent);
-            $this->SendMail("rdc@kienbk1910.com", $assign->email, $subject, $getcontent);
+            $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $reporter->email, $subject, $getcontent);
+            $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $assign->email, $subject, $getcontent);
         } else {
             // email is invalid; print the reasons
             foreach ($validator->getMessages() as $message) {
                 return "$message";
             }
         }
+        //echo $getcontent;
+        return NULL;
+    }
+     function notify_add_comment($task,$user_comment, $comment,$type) {
+        $validator = new \Zend\Validator\EmailAddress();
+        $email = NULL;
+        $getcontent = file_get_contents(MailHelper::EMAIL_TEMPLETE_PATH.'add_comment.html');
+        $subject = sprintf(MailHelper::EMAIL_SUBJECT_FILTER_TEMPLATE, $task['id'], $task['certificate'], "Thêm Bình Luận");
+       // $getcontent = str_replace('{|link|}', "Nhận hồ sơ", $getcontent);
+        $getcontent = str_replace('{|task_info|}', $task['id']." - ".$task['custumer']." - ".$task['certificate'], $getcontent);
+        $getcontent = str_replace('{|comment|}', $comment, $getcontent);
+        $getcontent = str_replace('{|user|}', $user_comment, $getcontent);
+        $getcontent_tmp = str_replace('{|name|}', $task['reporter_name'], $getcontent);
+        $getcontent_tmp = str_replace('{|link|}', MailHelper::REAL_SERVER_SITE. "/manager-tasks/detail/" .$task['id'], $getcontent_tmp);
+        if ($validator->isValid($task['reporter_email'])) {
+            $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $task['reporter_email'], $subject, $getcontent_tmp);
+        }
+        $getcontent_tmp = str_replace('{|name|}', $task['assign_name'], $getcontent);
+        $getcontent_tmp = str_replace('{|link|}', MailHelper::REAL_SERVER_SITE. "/manager-tasks/detail/" .$task['id'], $getcontent_tmp);
+
+        if($validator->isValid($task['assign_email'])){
+               $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $task['assign_email'], $subject, $getcontent_tmp);
+        }
+        if($type == Config::PAY_CUSTUMER){
+             $getcontent_tmp = str_replace('{|name|}', $task['agency_name'], $getcontent);
+             $getcontent_tmp = str_replace('{|link|}',MailHelper::REAL_SERVER_SITE. "/tasks/orderdetail/" .$task['id'], $getcontent_tmp);
+             if ($validator->isValid($task['agency_email'])) {
+                    $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $task['agency_email'], $subject, $getcontent_tmp);
+             }
+        }
+        if($type == Config::PAY_PROVIDER){
+             $getcontent_tmp = str_replace('{|name|}', $task['provider_name'], $getcontent);
+             $getcontent_tmp = str_replace('{|link|}',MailHelper::REAL_SERVER_SITE. "/tasks/taskdetail/" .$task['id'], $getcontent_tmp);
+             if ($validator->isValid($task['provider_email'])) {
+                    $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $task['provider_email'], $subject, $getcontent_tmp);
+             }
+        }
+        
+        //echo $getcontent;
+        return NULL;
+    }
+    function notify_add_pay($task,$user_action, $pay,$type) {
+        $validator = new \Zend\Validator\EmailAddress();
+        $email = NULL;
+        $getcontent = file_get_contents(MailHelper::EMAIL_TEMPLETE_PATH.'add_pay.html');
+        $subject = sprintf(MailHelper::EMAIL_SUBJECT_FILTER_TEMPLATE, $task['id'], $task['certificate'], "Thêm Thanh Toán");
+       // $getcontent = str_replace('{|link|}', "Nhận hồ sơ", $getcontent);
+        $getcontent = str_replace('{|task_info|}', $task['id']." - ".$task['custumer']." - ".$task['certificate'], $getcontent);
+      
+        $getcontent = str_replace('{|user|}', $user_action, $getcontent);
+        $getcontent = str_replace('{|money|}',number_format($pay->money), $getcontent);
+        $getcontent = str_replace('{|money_option|}', ($pay->money_option == 1)? "Tiền Mặt":"Chuyển Khoản", $getcontent);
+        $getcontent = str_replace('{|date_pay|}',Date::changeDateSQLtoVN($pay->date_pay), $getcontent);
+        $getcontent = str_replace('{|note|}', $pay->note,$getcontent);
+        
+        $getcontent_tmp = str_replace('{|name|}', $task['reporter_name'], $getcontent);
+        $getcontent_tmp = str_replace('{|link|}', MailHelper::REAL_SERVER_SITE. "/manager-tasks/detail/" .$task['id'], $getcontent_tmp);
+        if ($validator->isValid($task['reporter_email'])) {
+            $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $task['reporter_email'], $subject, $getcontent_tmp);
+        }
+        $getcontent_tmp = str_replace('{|name|}', $task['assign_name'], $getcontent);
+        $getcontent_tmp = str_replace('{|link|}', MailHelper::REAL_SERVER_SITE. "/manager-tasks/detail/" .$task['id'], $getcontent_tmp);
+
+        if($validator->isValid($task['assign_email'])){
+               $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $task['assign_email'], $subject, $getcontent_tmp);
+        }
+        if($type == Config::PAY_CUSTUMER){
+             $getcontent_tmp = str_replace('{|name|}', $task['agency_name'], $getcontent);
+             $getcontent_tmp = str_replace('{|link|}',MailHelper::REAL_SERVER_SITE. "/tasks/orderdetail/" .$task['id'], $getcontent_tmp);
+             if ($validator->isValid($task['agency_email'])) {
+                    $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $task['agency_email'], $subject, $getcontent_tmp);
+             }
+        }
+        if($type == Config::PAY_PROVIDER){
+             $getcontent_tmp = str_replace('{|name|}', $task['provider_name'], $getcontent);
+             $getcontent_tmp = str_replace('{|link|}',MailHelper::REAL_SERVER_SITE. "/tasks/taskdetail/" .$task['id'], $getcontent_tmp);
+             if ($validator->isValid($task['provider_email'])) {
+                    $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $task['provider_email'], $subject, $getcontent_tmp);
+             }
+        }
+        
+        //echo $getcontent;
+        return NULL;
+    }
+   
+    function notify_delete_pay($task,$user_action, $pay,$type) {
+        $validator = new \Zend\Validator\EmailAddress();
+        $email = NULL;
+        $getcontent = file_get_contents(MailHelper::EMAIL_TEMPLETE_PATH.'add_pay.html');
+        $subject = sprintf(MailHelper::EMAIL_SUBJECT_FILTER_TEMPLATE, $task['id'], $task['certificate'], "Xóa Thanh Toán");
+       // $getcontent = str_replace('{|link|}', "Nhận hồ sơ", $getcontent);
+        $getcontent = str_replace('{|task_info|}', $task['id']." - ".$task['custumer']." - ".$task['certificate'], $getcontent);
+      
+        $getcontent = str_replace('{|user|}', $user_action, $getcontent);
+        $getcontent = str_replace('{|money|}',"<span style='text-decoration:line-through;color: red'>".number_format($pay->money)."</span>", $getcontent);
+        $getcontent = str_replace('{|date_pay|}',"<span style='text-decoration:line-through;color: red'>".Date::changeDateSQLtoVN($pay->date_pay)."</span>", $getcontent);
+        $getcontent = str_replace('{|note|}',"<span style='text-decoration:line-through;color: red'>".$pay->note."</span>", $getcontent);
+        $getcontent = str_replace('{|money_option|}',"<span style='text-decoration:line-through;color: red'>". (($pay->money_option == 1)? "Tiền Mặt":"Chuyển Khoản")."</span>", $getcontent);
+        
+        
+
+        $getcontent_tmp = str_replace('{|name|}', $task['reporter_name'], $getcontent);
+        $getcontent_tmp = str_replace('{|link|}', MailHelper::REAL_SERVER_SITE. "/manager-tasks/detail/" .$task['id'], $getcontent_tmp);
+        if ($validator->isValid($task['reporter_email'])) {
+            $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $task['reporter_email'], $subject, $getcontent_tmp);
+        }
+        $getcontent_tmp = str_replace('{|name|}', $task['assign_name'], $getcontent);
+        $getcontent_tmp = str_replace('{|link|}', MailHelper::REAL_SERVER_SITE. "/manager-tasks/detail/" .$task['id'], $getcontent_tmp);
+
+        if($validator->isValid($task['assign_email'])){
+               $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $task['assign_email'], $subject, $getcontent_tmp);
+        }
+        if($type == Config::PAY_CUSTUMER){
+             $getcontent_tmp = str_replace('{|name|}', $task['agency_name'], $getcontent);
+             $getcontent_tmp = str_replace('{|link|}',MailHelper::REAL_SERVER_SITE. "/tasks/orderdetail/" .$task['id'], $getcontent_tmp);
+             if ($validator->isValid($task['agency_email'])) {
+                    $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $task['agency_email'], $subject, $getcontent_tmp);
+             }
+        }
+        if($type == Config::PAY_PROVIDER){
+             $getcontent_tmp = str_replace('{|name|}', $task['provider_name'], $getcontent);
+             $getcontent_tmp = str_replace('{|link|}',MailHelper::REAL_SERVER_SITE. "/tasks/taskdetail/" .$task['id'], $getcontent_tmp);
+             if ($validator->isValid($task['provider_email'])) {
+                    $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $task['provider_email'], $subject, $getcontent_tmp);
+             }
+        }
+        
+        //echo $getcontent;
+        return NULL;
+    }
+      function notify_edit_pay($task,$user_action, $pay,$pay_new,$type) {
+        $validator = new \Zend\Validator\EmailAddress();
+        $email = NULL;
+        $getcontent = file_get_contents(MailHelper::EMAIL_TEMPLETE_PATH.'add_pay.html');
+        $subject = sprintf(MailHelper::EMAIL_SUBJECT_FILTER_TEMPLATE, $task['id'], $task['certificate'], "Chỉnh Sửa Thanh Toán");
+       // $getcontent = str_replace('{|link|}', "Nhận hồ sơ", $getcontent);
+        $getcontent = str_replace('{|task_info|}', $task['id']." - ".$task['custumer']." - ".$task['certificate'], $getcontent);
+      
+        $getcontent = str_replace('{|user|}', $user_action, $getcontent);
+        if($pay->money != $pay_new->money){
+              $getcontent = str_replace('{|money|}',"<span style='text-decoration:line-through;color: red'>".number_format($pay->money)."</span>"."<span style='color: #3c8dbc;'>".number_format($pay_new->money)."</span>", $getcontent);
+        }else{
+              $getcontent = str_replace('{|money|}',number_format($pay->money), $getcontent);
+        }
+        if(Date::changeDateSQLtoVN($pay->date_pay) != Date::changeDateSQLtoVN($pay_new->date_pay)){
+             $getcontent = str_replace('{|date_pay|}',"<span style='text-decoration:line-through;color: red'>".Date::changeDateSQLtoVN($pay->date_pay)."</span>"."<span style='color: #3c8dbc;'>".Date::changeDateSQLtoVN($pay_new->date_pay)."</span>", $getcontent);
+        }else{
+           $getcontent = str_replace('{|date_pay|}',Date::changeDateSQLtoVN($pay->date_pay), $getcontent);
+        }
+        if($pay->note != $pay_new->note){
+              $getcontent = str_replace('{|note|}',"<span style='text-decoration:line-through;color: red'>".$pay->note."</span>"."<span style='color: #3c8dbc;'>".$pay_new->note."</span>", $getcontent);
+        }else{
+              $getcontent = str_replace('{|note|}',$pay->note, $getcontent);
+        }
+        if($pay->money_option != $pay_new->money_option){
+              $getcontent = str_replace('{|money_option|}',"<span style='text-decoration:line-through;color: red'>". (($pay->money_option == 1)? "Tiền Mặt":"Chuyển Khoản")."</span>"."<span style='color: #3c8dbc;'>".(($pay_new->money_option == 1)? "Tiền Mặt":"Chuyển Khoản")."</span>", $getcontent);
+        }else{
+              $getcontent = str_replace('{|money_option|}', ($pay->money_option == 1)? "Tiền Mặt":"Chuyển Khoản", $getcontent);
+        }
+        
+
+        $getcontent_tmp = str_replace('{|name|}', $task['reporter_name'], $getcontent);
+        $getcontent_tmp = str_replace('{|link|}', MailHelper::REAL_SERVER_SITE. "/manager-tasks/detail/" .$task['id'], $getcontent_tmp);
+        if ($validator->isValid($task['reporter_email'])) {
+            $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $task['reporter_email'], $subject, $getcontent_tmp);
+        }
+        $getcontent_tmp = str_replace('{|name|}', $task['assign_name'], $getcontent);
+        $getcontent_tmp = str_replace('{|link|}', MailHelper::REAL_SERVER_SITE. "/manager-tasks/detail/" .$task['id'], $getcontent_tmp);
+
+        if($validator->isValid($task['assign_email'])){
+               $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $task['assign_email'], $subject, $getcontent_tmp);
+        }
+        if($type == Config::PAY_CUSTUMER){
+             $getcontent_tmp = str_replace('{|name|}', $task['agency_name'], $getcontent);
+             $getcontent_tmp = str_replace('{|link|}',MailHelper::REAL_SERVER_SITE. "/tasks/orderdetail/" .$task['id'], $getcontent_tmp);
+             if ($validator->isValid($task['agency_email'])) {
+                    $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $task['agency_email'], $subject, $getcontent_tmp);
+             }
+        }
+        if($type == Config::PAY_PROVIDER){
+             $getcontent_tmp = str_replace('{|name|}', $task['provider_name'], $getcontent);
+             $getcontent_tmp = str_replace('{|link|}',MailHelper::REAL_SERVER_SITE. "/tasks/taskdetail/" .$task['id'], $getcontent_tmp);
+             if ($validator->isValid($task['provider_email'])) {
+                    $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $task['provider_email'], $subject, $getcontent_tmp);
+             }
+        }
+        
         //echo $getcontent;
         return NULL;
     }

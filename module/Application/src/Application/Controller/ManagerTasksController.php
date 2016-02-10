@@ -384,14 +384,17 @@ class ManagerTasksController extends BaseController
             $pay->id = $request->getPost('id',0);
 
             $task = $this->databaseService->getInfoTask($pay->task_id)->current();
+             $email = new MailHelper();
             $pay->custumer = $task['custumer'];
             if($pay->id != 0){
                 $old_pay = $this->databaseService->getPayById($pay->id);
                 if($old_pay != null){
                      $this->databaseService->modifyPayLog($this->auth->getIdentity()->id, $old_pay,$pay,$pay->type);
+                     $email->notify_edit_pay($task,$this->auth->getIdentity()->username,$old_pay,$pay,$pay->type); 
                 }
             }else{
-               $this->databaseService->payLog($this->auth->getIdentity()->id, $pay,$pay->type); 
+               $this->databaseService->payLog($this->auth->getIdentity()->id, $pay,$pay->type);
+               $email->notify_add_pay($task,$this->auth->getIdentity()->username, $pay,$pay->type); 
             }
             /* viet add */
             /* Get task (get custumer) */
@@ -404,22 +407,24 @@ class ManagerTasksController extends BaseController
         ));
      }
     public function deletepayAction(){
-    $this->checkLevel2();
-    $request = $this->getRequest();
-    if ($request->isPost()) {
-        $id = $request->getPost('id',0);
-         $old_pay = $this->databaseService->getPayById($id);
-         if($old_pay !=null){
-            $task = $this->databaseService->getInfoTask($old_pay->task_id)->current();
-            $old_pay->custumer = $task['custumer'];
-            $this->databaseService->deletePayLog($this->auth->getIdentity()->id, $old_pay,$pay->type); 
-            $id = $this->databaseService->deletePayById($id);
-         }
-       
-    }
-    return new JsonModel(array(
+        $this->checkLevel2();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $id = $request->getPost('id',0);
+             $old_pay = $this->databaseService->getPayById($id);
+             if($old_pay !=null){
+                $task = $this->databaseService->getInfoTask($old_pay->task_id)->current();
+                $old_pay->custumer = $task['custumer'];
+                $this->databaseService->deletePayLog($this->auth->getIdentity()->id, $old_pay,$old_pay->type); 
+                $id = $this->databaseService->deletePayById($id);
+                $mail = new MailHelper();
+                $mail->notify_delete_pay($task,$this->auth->getIdentity()->username, $old_pay,$old_pay->type); 
+             }
+           
+        }
+        return new JsonModel(array(
 
-    ));
+        ));
      }
     public function payhistoryAction(){
         $this->checkLevel2();
@@ -460,14 +465,17 @@ class ManagerTasksController extends BaseController
                       return new JsonModel(array());
                 }
                 if($permission == Config::FILE_PERMISSION_CUSTUMER){
-                   $type = Config::PAY_CUSTUMER;
+                   $comment->type = Config::PAY_CUSTUMER;
                 }
                 if($permission == Config::FILE_PERMISSION_PROVIDER){
-                   $type = Config::PAY_PROVIDER;
+                    $comment->type  = Config::PAY_PROVIDER;
                 }
             }
             $this->databaseService->addCommentLog($this->auth->getIdentity()->id,$comment,$comment->type );
-            $comment = $this->databaseService->addComment($comment);
+            $this->databaseService->addComment($comment);
+            $task = $this->databaseService->getInfoTask($comment->task_id)->current();
+            $email = new MailHelper();
+            $email->notify_add_comment($task,$this->auth->getIdentity()->username, $comment->comment,$comment->type); 
         }
         return new JsonModel(array(
 

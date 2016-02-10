@@ -366,8 +366,10 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $select = $sql->select('tasks');
         $select->join('users', 'tasks.user_id = users.id', array('user_name'=>'username'), 'left');
         $select->join('process', 'tasks.process_id = process.id', array('process_name'=>'name'), 'left');
-        $select->join(array('reporter' => 'users'), 'tasks.reporter_id = reporter.id', array('reporter_name'=>'username'), 'left');
-        $select->join(array('assign' => 'users'), 'tasks.assign_id = assign.id', array('assign_name'=>'username'), 'left');
+        $select->join(array('reporter' => 'users'), 'tasks.reporter_id = reporter.id', array('reporter_name'=>'username','reporter_email'=>'email'), 'left');
+        $select->join(array('assign' => 'users'), 'tasks.assign_id = assign.id', array('assign_name'=>'username','assign_email'=>'email'), 'left');
+        $select->join(array('agency' => 'users'), 'tasks.agency_id = agency.id', array( 'agency_name'=>'username','agency_email'=>'email'), 'left');
+        $select->join(array('provider' => 'users'), 'tasks.provider_id = provider.id', array('provider_name'=>'username','provider_email'=>'email'), 'left');
         $select->join(array('2users' => 'users'), 'tasks.last_user_id = 2users.id', array('last_user_name'=>'username'), 'left');
         $select->Where(array('tasks.id = ?' => $id));
         $selectString = $sql->getSqlStringForSqlObject($select);
