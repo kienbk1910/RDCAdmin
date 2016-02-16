@@ -8,6 +8,8 @@ use Application\Model\Comment;
 use Application\Model\MoneyHistory;
 use Application\Model\FileAttachment;
 use Application\Model\Log;
+ use Application\Model\Notification;
+
 class IndexService implements IndexServiceInterface
 {
     protected $databaseMapper;
@@ -161,5 +163,14 @@ class IndexService implements IndexServiceInterface
   }
   public function addCommentLog($user_id,Comment $comment,$type){
        return $this->databaseMapper->addCommentLog($user_id, $comment,$type);
+  }
+  public function addNotification(Notification $notification){
+    return $this->databaseMapper->addNotification($notification);
+  }
+  public function deteteNotification($id){
+    return $this->databaseMapper->deteteNotification($id);
+  }
+  public function getNotifications($limit){
+    return $this->databaseMapper->getNotifications($limit);
   }
 }

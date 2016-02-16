@@ -49,7 +49,7 @@ class LogController extends BaseController {
                 'logs' => $logs,
         ) );
     }
-
+  
     public function showlogAction() {
         $this->checkAuth();
         $request = $this->getRequest();

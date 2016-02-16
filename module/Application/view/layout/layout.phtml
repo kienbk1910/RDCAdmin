@@ -12,6 +12,7 @@ echo $this->doctype(); ?>
             ->appendName('viewport', 'width=device-width, initial-scale=1.0')
             ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
         ?>
+        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'));?>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -123,7 +124,7 @@ echo $this->doctype(); ?>
 
       <header class="main-header">
         <!-- Logo -->
-        <a href="index2.html" class="logo">
+        <a href="/" class="logo">
           <!-- mini logo for sidebar mini 50x50 pixels -->
           <span class="logo-mini"><b>R</b>DC</span>
           <!-- logo for regular state and mobile devices -->
@@ -151,7 +152,7 @@ echo $this->doctype(); ?>
                       <li><!-- start message -->
                         <a href="#">
                           <div class="pull-left">
-                            <img src="AdminLTE-2.3.0/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                            <img src="/AdminLTE-2.3.0/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                           </div>
                           <h4>
                             Support Team
@@ -163,7 +164,7 @@ echo $this->doctype(); ?>
                       <li>
                         <a href="#">
                           <div class="pull-left">
-                            <img src="AdminLTE-2.3.0/dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
+                            <img src="/AdminLTE-2.3.0/dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
                           </div>
                           <h4>
                             AdminLTE Design Team
@@ -175,7 +176,7 @@ echo $this->doctype(); ?>
                       <li>
                         <a href="#">
                           <div class="pull-left">
-                            <img src="dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
+                            <img src="/AdminLTE-2.3.0/dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
                           </div>
                           <h4>
                             Developers
@@ -187,7 +188,7 @@ echo $this->doctype(); ?>
                       <li>
                         <a href="#">
                           <div class="pull-left">
-                            <img src="dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
+                            <img src="/AdminLTE-2.3.0/dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
                           </div>
                           <h4>
                             Sales Department
@@ -199,7 +200,7 @@ echo $this->doctype(); ?>
                       <li>
                         <a href="#">
                           <div class="pull-left">
-                            <img src="/dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
+                            <img src="/AdminLTE-2.3.0/dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
                           </div>
                           <h4>
                             Reviewers

@@ -26,6 +26,8 @@ use Application\Utility\DataTableUtility;
 use Utility\Date\Date;
 use Application\Model\FileAttachment;
 use Application\Model\Log;
+ use Application\Model\Notification;
+
 class ZendDbSqlMapper implements IndexMapperInterface
 {
     protected $dbAdapter;
@@ -775,4 +777,24 @@ class ZendDbSqlMapper implements IndexMapperInterface
          $selectString = $sql->getSqlStringForSqlObject($insert);
          return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
       }
+     public function addNotification(Notification $notification){
+        $sql = new Sql($this->dbAdapter);
+        $insert = $sql->insert('notifications');
+        $newData = $notification->toArray();
+        $insert->values($newData);
+        $selectString = $sql->getSqlStringForSqlObject($insert);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+     }
+     public function deteteNotification($id){
+
+     }
+     public function getNotifications($limit){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('notifications')
+                ->join('users', 'notifications.user_id = users.id', array('username'=>'username','avatar'=>'avatar'), 'left')
+                ->order(array('notifications.date DESC'))
+                ->limit($limit);
+         $selectString = $sql->getSqlStringForSqlObject($select);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+     }
 }

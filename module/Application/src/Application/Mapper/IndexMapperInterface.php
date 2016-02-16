@@ -7,6 +7,8 @@ use Application\Model\MoneyHistory;
 use Application\Model\FileAttachment;
 use Application\Model\User;
 use Application\Model\Log;
+ use Application\Model\Notification;
+
 interface IndexMapperInterface
 {
       public function getListRoles();
@@ -54,4 +56,8 @@ interface IndexMapperInterface
       public function changeFileLog($user_id,FileAttachment $old,FileAttachment $value,$type);
       public function deleteFileLog($user_id,FileAttachment $file,$type);
       public function addCommentLog($user_id,Comment $comment,$type);
+
+     public function addNotification(Notification $notification);
+     public function deteteNotification($id);
+     public function getNotifications($limit);
 }

@@ -50,12 +50,24 @@ return array(
                          ),
 
                      ),
-                    'test' => array(
+                    'add-notification' => array(
                          'type' => 'segment',
                          'options' => array(
-                             'route'    => '/test',
+                             'route'    => '/add-notification',
                              'defaults' => array(
-                                 'action' => 'test',
+                                 'action' => 'addNotification',
+                             ),
+                             'constraints' => array(
+                             )
+                         ),
+
+                     ),
+                     'list-notification' => array(
+                         'type' => 'segment',
+                         'options' => array(
+                             'route'    => '/list-notification',
+                             'defaults' => array(
+                                 'action' => 'listNotification',
                              ),
                              'constraints' => array(
                              )
@@ -654,7 +666,7 @@ return array(
                 ),
             )
         ),
-         array(
+        /* array(
             'label' => 'Quản Lý Học Viên',
             'uri' => '#',
             'icon' => 'laptop',
@@ -687,7 +699,7 @@ return array(
                     'icon' => 'circle-o'
                 ),
             )
-        ),
+        ),*/
     ),
  // agency navigation
         'agency' => array(
