@@ -359,7 +359,11 @@ $admin_email)
         $getcontent = str_replace('{|name|}', $agency->username, $getcontent);
         /* add hightlight base on key,old value, new value */
         $getcontent = str_replace("{|". $key ."|}", "<span style=\"text-decoration: line-through;\"> ". $old_value ." </span> <strong> <font color=red>". $new_value. "</font></strong>", $getcontent);
-        
+        if ($key == Config::cost_sell_id) {
+            $getcontent = str_replace("{|du_no_kh|}", "<strong> <font color=red>{|du_no_kh|}</font></strong>", $getcontent);
+        } else if ($key == Config::cost_buy_id) {
+            $getcontent = str_replace("{|du_no_cc|}", "<strong> <font color=red>{|du_no_cc|} </font></strong>", $getcontent);
+        }
         /* add other values */
         $getcontent = str_replace('{|message|}', MailHelper::MESSAGE_MODIFY_CONTENT, $getcontent);
         $getcontent = str_replace('{|process_id|}', "Nhận hồ sơ", $getcontent);
@@ -379,11 +383,11 @@ $admin_email)
         $getcontent = str_replace('{|date_end_pr|}', Date::changeDateSQLtoVN($task['date_end_pr']), $getcontent);
         $getcontent = str_replace('{|provider_note|}', $task['provider_note'], $getcontent);
         
-        $getcontent = str_replace('{|du_no_kh|}', number_format($task['cost_sell']), $getcontent);
-        $getcontent = str_replace('{|du_no_cc|}', number_format($task['cost_buy']), $getcontent);
+        $getcontent = str_replace('{|du_no_kh|}', $task['custumer_debt'], $getcontent);
+        $getcontent = str_replace('{|du_no_cc|}', $task['provider_debt'], $getcontent);
     
-        $getcontent = str_replace('{|thanh_toan_kh|}', 0, $getcontent);
-        $getcontent = str_replace('{|thanh_toan_cc|}', 0, $getcontent);
+        $getcontent = str_replace('{|thanh_toan_kh|}', $task['pay_custumer'], $getcontent);
+        $getcontent = str_replace('{|thanh_toan_cc|}', $task['pay_provider'], $getcontent);
         /* viet add */
         $getcontent = str_replace('{|custumer|}', $task['custumer'], $getcontent);
         $getcontent = str_replace('{|certificate|}', $task['certificate'], $getcontent);
@@ -418,7 +422,11 @@ $admin_email)
         $getcontent = str_replace('{|name|}', $provider->username, $getcontent);
         /* add hightlight base on key,old value, new value */
         $getcontent = str_replace("{|". $key ."|}", "<span style=\"text-decoration: line-through;\"> ". $old_value ." </span> <strong> <font color=red>". $new_value. "</font></strong>", $getcontent);
-    
+        if ($key == Config::cost_sell_id) {
+            $getcontent = str_replace("{|du_no_kh|}", "<strong> <font color=red>{|du_no_kh|}</font></strong>", $getcontent);
+        } else if ($key == Config::cost_buy_id) {
+            $getcontent = str_replace("{|du_no_cc|}", "<strong> <font color=red>{|du_no_cc|} </font></strong>", $getcontent);
+        }
         /* add other values */
         $getcontent = str_replace('{|message|}', MailHelper::MESSAGE_MODIFY_CONTENT, $getcontent);
         $getcontent = str_replace('{|process_id|}', "Nhận hồ sơ", $getcontent);
@@ -438,11 +446,11 @@ $admin_email)
         $getcontent = str_replace('{|date_end_pr|}', Date::changeDateSQLtoVN($task['date_end_pr']), $getcontent);
         $getcontent = str_replace('{|provider_note|}',$task['provider_note'], $getcontent);
     
-        $getcontent = str_replace('{|du_no_kh|}', number_format($task['cost_sell']), $getcontent);
-        $getcontent = str_replace('{|du_no_cc|}', number_format($task['cost_buy']), $getcontent);
+        $getcontent = str_replace('{|du_no_kh|}', $task['custumer_debt'], $getcontent);
+        $getcontent = str_replace('{|du_no_cc|}', $task['provider_debt'], $getcontent);
     
-        $getcontent = str_replace('{|thanh_toan_kh|}', 0, $getcontent);
-        $getcontent = str_replace('{|thanh_toan_cc|}', 0, $getcontent);
+        $getcontent = str_replace('{|thanh_toan_kh|}', $task['pay_custumer'], $getcontent);
+        $getcontent = str_replace('{|thanh_toan_cc|}', $task['pay_provider'], $getcontent);
         /* viet add */
         $getcontent = str_replace('{|custumer|}', $task['custumer'], $getcontent);
         $getcontent = str_replace('{|certificate|}', $task['certificate'], $getcontent);
@@ -460,10 +468,9 @@ $admin_email)
             // email is invalid; print the reasons
             foreach ($validator->getMessages() as $message) return "$message";
         }
-        //echo $getcontent;
+        //secho $getcontent;
         return NULL;
     }
-    
 
     function notify_modify_to_admin($task, $user, $key, $old_value, $new_value) {
         $reporter = $user['reporter'];
@@ -478,7 +485,11 @@ $admin_email)
     
         /* add hightlight base on key,old value, new value */
         $getcontent = str_replace("{|". $key ."|}", "<span style=\"text-decoration: line-through;\"> ". $old_value ." </span> <strong> <font color=red>". $new_value. "</font></strong>", $getcontent);
-    
+        if ($key == Config::cost_sell_id) {
+            $getcontent = str_replace("{|du_no_kh|}", "<strong> <font color=red>{|du_no_kh|}</font></strong>", $getcontent);
+        } else if ($key == Config::cost_buy_id) {
+            $getcontent = str_replace("{|du_no_cc|}", "<strong> <font color=red>{|du_no_cc|} </font></strong>", $getcontent);
+        }
         /* add other values */
         $getcontent = str_replace('{|message|}', MailHelper::MESSAGE_MODIFY_CONTENT, $getcontent);
         $getcontent = str_replace('{|process_id|}', "Nhận hồ sơ", $getcontent);
@@ -497,12 +508,12 @@ $admin_email)
         $getcontent = str_replace('{|date_open_pr|}', Date::changeDateSQLtoVN($task['date_open_pr']), $getcontent);
         $getcontent = str_replace('{|date_end_pr|}', Date::changeDateSQLtoVN($task['date_end_pr']), $getcontent);
         $getcontent = str_replace('{|provider_note|}', $task['provider_note'], $getcontent);
-    
-        $getcontent = str_replace('{|du_no_kh|}', number_format($task['cost_sell']), $getcontent);
-        $getcontent = str_replace('{|du_no_cc|}', number_format($task['cost_buy']), $getcontent);
-    
-        $getcontent = str_replace('{|thanh_toan_kh|}', 0, $getcontent);
-        $getcontent = str_replace('{|thanh_toan_cc|}', 0, $getcontent);
+
+        $getcontent = str_replace('{|du_no_kh|}', $task['custumer_debt'], $getcontent);
+        $getcontent = str_replace('{|du_no_cc|}', $task['provider_debt'], $getcontent);
+
+        $getcontent = str_replace('{|thanh_toan_kh|}', $task['pay_custumer'], $getcontent);
+        $getcontent = str_replace('{|thanh_toan_cc|}', $task['pay_provider'], $getcontent);
         /* viet add */
         $getcontent = str_replace('{|custumer|}', $task['custumer'], $getcontent);
         $getcontent = str_replace('{|certificate|}', $task['certificate'], $getcontent);
@@ -523,8 +534,7 @@ $admin_email)
         //echo $getcontent;
         return NULL;
     }
-    
-    
+
     function notify_to_admin($task, $user, $action) {
         $reporter = $user['reporter'];
         $assign = $user['assign'];
