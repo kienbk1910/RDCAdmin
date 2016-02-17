@@ -295,25 +295,28 @@ class ManagerTasksController extends BaseController
          $valid = new \Zend\Validator\NotEmpty();
          $result = new Xeditable();
          if ($valid->isValid($value)) {
+            $log = new Log();
+            $log->action_id = Config::EDIT_ACTION;
+            $log->user_id = $this->auth->getIdentity()->id;
+            $log->task_id = $id;
+            $log->key = $name;
+            $log->new_id = $value;
+            /* Get old value of task */
+            $detail_task = $this->databaseService->getInfoTask($id)->current();
+            $log->old_id = $detail_task[$name];
+            $log->custumer = $detail_task['custumer'];
+            /* Backup value */
+            $new_value = $value;
+            $old_value = $log->old_id;
              if($name == "date_open" || $name == "date_end" || $name == "date_open_pr" || $name == "date_end_pr"){
                 $value = Date::changeVNtoDateSQL($value);
+                $old_value = Date::changeDateSQLtoVN($log->old_id);
              }
              $validator = new \Zend\Validator\Digits();
              if (($name == "cost_sell" || $name == "cost_buy") && !$validator->isValid($value)) {
                  $result->setStatus(Xeditable::STATUS_ERROR);
                  $result->setMsg(Xeditable::MSG_DATA_NOT_NUMBER);
              } else {
-                $log = new Log();
-                $log->action_id = Config::EDIT_ACTION;
-                $log->user_id = $this->auth->getIdentity()->id;
-                $log->task_id = $id;
-                $log->key = $name;
-                $log->new_id = $value;
-                /* Get old value of task */
-                $task = $this->databaseService->getInfoTask($id);
-                $array = $task->current();
-                $log->old_id = $array[$name];
-                $log->custumer = $array['custumer'];
                 $type = Config::PAY_INFO_COMMON;
                 if($name == "date_open" || $name == "date_end" ||$name == "cost_sell" ||$name == "agency_note" ||$name == "agency_id" ){
                    $type = Config::PAY_CUSTUMER;  
@@ -321,26 +324,27 @@ class ManagerTasksController extends BaseController
                 if($name == "date_open_pr" || $name == "date_end_pr" ||$name == "cost_buy" ||$name == "provider_note" ||$name == "provider_id"){
                     $type = Config::PAY_PROVIDER; 
                 }
-                
+
                 /* Add log */
                 $this->databaseService->modifyLog($log,$type);
                 $this->databaseService->changeInfoOfTask($id,$name,$value,$this->auth->getIdentity()->id);
                 
                 /* Add send mail */
                 $mail = new MailHelper();
-                $receiver['reporter'] = $this->databaseService->getUserById($array['reporter_id'])->current();
-                $receiver['assign'] = $this->databaseService->getUserById($array['assign_id'])->current();
-                $receiver['agency'] = $this->databaseService->getUserById($array['agency_id'])->current();
-                $receiver['provider'] = $this->databaseService->getUserById($array['provider_id'])->current();
-                /* Convert id to name */
-                if ($name == Config::reporter_id) {
-                    $value = $receiver['reporter']->username;
-                } else if ($name == Config::assign_id) {
-                    $value = $receiver['assign']->username;
-                } else if ($name == Config::agency_id) {
-                    $value = $receiver['agency']->username;
-                } else if ($name == Config::provider_id) {
-                    $value = $receiver['provider']->username;
+                $receiver['reporter'] = $this->databaseService->getUserById($detail_task['reporter_id'])->current();
+                $receiver['assign'] = $this->databaseService->getUserById($detail_task['assign_id'])->current();
+                $receiver['agency'] = $this->databaseService->getUserById($detail_task['agency_id'])->current();
+                $receiver['provider'] = $this->databaseService->getUserById($detail_task['provider_id'])->current();
+
+                /* Convert new user_id to user_name */
+                if ($name == Config::reporter_id || $name == Config::assign_id || $name == Config::agency_id || $name == Config::provider_id) {
+                    $new_value = $this->databaseService->getUserById($value)->current()->username;
+                    $old_value = $this->databaseService->getUserById($log->old_id)->current()->username;
+                }
+                /* Convert number to readable value */
+                if ($name == Config::cost_sell_id || $name == Config::cost_buy_id) {
+                    $old_value = number_format($old_value);
+                    $new_value = number_format($new_value);
                 }
                 $ret = NULL;
                 if ($name == Config::agency_id
@@ -349,16 +353,16 @@ class ManagerTasksController extends BaseController
                         || $name == Config::date_end_id
                         || $name == Config::agency_note_id) {
                     /* For agency: agency_id, cost_sell, date_open, date_end, agency_note */
-                    $ret = $mail->notify_modify_to_user($array, $receiver, Config::AGENCY_TYPE, $name, $value);
+                    $ret = $mail->notify_modify_to_agency($detail_task, $receiver, $name, $old_value, $new_value);
                 } else if ($name == Config::provider_id
                         || $name == Config::cost_buy_id
                         || $name == Config::date_open_pr_id
                         || $name == Config::date_end_pr_id
                         || $name == Config::provider_note_id) {
-                    $ret = $mail->notify_modify_to_user($array, $receiver, Config::PROVIDER_TYPE, $name, $value);
-                    /* For agency: provider_id, cost_buy, date_open_pr, date_end_pr, provider_note */
+                    /* For provider: provider_id, cost_buy, date_open_pr, date_end_pr, provider_note */
+                    $ret = $mail->notify_modify_to_provider($detail_task, $receiver, $name, $old_value, $new_value);
                 }
-                $ret = $mail->notify_modify_to_admin($array, $receiver, $name, $value);
+                $ret = $mail->notify_modify_to_admin($detail_task, $receiver, $name, $old_value, $new_value);
                 
                 if ($ret != NULL) {
                     $result->setStatus(Xeditable::STATUS_ERROR);
