@@ -13,6 +13,7 @@ use Zend\Db\Sql\Where;
 use Zend\Db\Sql\Predicate\Like;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 use Application\Mapper\IndexMapperInterface;
+use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Select;
 use Zend\Paginator\Adapter\DbSelect;
 use Zend\Paginator\Paginator;
@@ -797,4 +798,20 @@ class ZendDbSqlMapper implements IndexMapperInterface
          $selectString = $sql->getSqlStringForSqlObject($select);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
+    public function getReportTasks($user_id){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('process')
+                        ->columns(array('name','count' => new Expression('COUNT(process.id)')
+                    ))
+                    ->join('tasks', 'process.id = tasks.process_id', array(), 'right');
+         if($user_id != NULL){
+            $select->where
+                ->nest->equalTo("tasks.agency_id",$user_id)
+                ->or->equalTo("tasks.provider_id",$user_id)
+                ->unnest;
+        }
+                   $select->group('process.id');
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE); 
+    }
 }

@@ -31,6 +31,7 @@ namespace Application\Controller;
          $logs->setCurrentPageNumber((int) $this->params()->fromQuery('page', 1));
           // set the number of items per page to 10
          $logs->setItemCountPerPage(20);
+         
         return new ViewModel( array (
                 'logs' => $logs,
         ) );
@@ -58,6 +59,15 @@ namespace Application\Controller;
         $this->checkAuth();
         $data = $this->databaseService->getNotifications(5);
          return new JsonModel($data);
+    }
+    public function getReportTasksAction(){
+        $this->checkAuth();
+        $id_user =  $this->auth->getIdentity()->id;
+        if($this->isLevel2()){
+            $id_user =  null;
+        }
+        $tasks = $this->databaseService->getReportTasks($id_user);
+        return new JsonModel($tasks);
     }
 
 }

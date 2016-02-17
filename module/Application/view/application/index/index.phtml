@@ -45,6 +45,7 @@ use Utility\Date\Date; ?>
          
         </div><!-- /.chat -->
         <div class="box-footer">
+        <?php if($this->identity()->role_id <=2){?>
           <div class="input-group">
 
             <input class="form-control" id="input-notification" placeholder="Type message...">
@@ -52,9 +53,39 @@ use Utility\Date\Date; ?>
               <button class="btn btn-success" onclick="addNotification()"><i class="fa fa-plus"></i></button>
             </div>
           </div>
+          <?php }?>
         </div>
       </div><!-- /.box (chat box) -->
-
+       <div class="box box-default">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Thống Kê Hồ Sơ</h3>
+                  <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                  </div>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <div class="row">
+                    <div class="col-md-8">
+                      <div class="chart-responsive">
+                        <canvas id="pieChart" height="150"></canvas>
+                      </div><!-- ./chart-responsive -->
+                    </div><!-- /.col -->
+                    <div class="col-md-4">
+                      <ul id ="pieLegend"class="chart-legend clearfix">
+                        
+                      </ul>
+                    </div><!-- /.col -->
+                  </div><!-- /.row -->
+                </div><!-- /.box-body -->
+                <div class="box-footer no-padding">
+                  <ul class="nav nav-pills nav-stacked">
+                    <li><a href="#">United States of America <span class="pull-right text-red"><i class="fa fa-angle-down"></i> 12%</span></a></li>
+                    <li><a href="#">India <span class="pull-right text-green"><i class="fa fa-angle-up"></i> 4%</span></a></li>
+                    <li><a href="#">China <span class="pull-right text-yellow"><i class="fa fa-angle-left"></i> 0%</span></a></li>
+                  </ul>
+                </div><!-- /.footer -->
+              </div><!-- /.box -->
 
     </section><!-- /.Left col -->
     <!-- right col (We are only adding the ID to make the widgets sortable)-->
@@ -259,15 +290,83 @@ loadNotification();
                     chat +='<img src="<?php echo Config::IMAGE_PATH ;?>'+data[i].avatar+'" alt="user image" class="offline">';
                     chat +='<p class="message">';
                     chat +='  <a href="#" class="name">';
-                    chat += '<small class="text-muted pull-right"><i class="fa fa-clock-o">'+changedateSQLtoVN(data[i].date)+'</i> </small>';
-                    chat +=    data[i].username;
+                    chat += '<small class="text-muted pull-right"><i class="fa fa-clock-o">'+changedateSQLtoVN(data[i].date)+'</i></small>';
+                    chat +=  data[i].username;
                     chat +=  '</a>';
-                    chat +=    data[i].notification;
-                    chat +='</p><div class="pull-right"><button class="btn btn-primary btn-sm btn-flat">Xoá</button></div></div>';
+                    chat +=  data[i].notification;
+                    chat +='</p>';
+                    <?php if($this->identity()->role_id <=2){?>
+                    chat +='<div class="pull-right"><button class="btn btn-primary btn-sm btn-flat">Xoá</button></div>';
+                    <?php }?>
+                    chat +='</div>';
              }
               $('#list-notifications').html(chat);
           
           }
        });
    }
+  getReportTask();
+  var color =["#f56954","#00a65a","#f39c12","#00c0ef","#3c8dbc","#d2d6de","#111111"];
+  var color_class=["text-red","text-green","text-yellow","text-aqua","text-light-blue","text-gray","text-text-black"];
+  function getReportTask(){
+       $.ajax({
+          type:"POST",                          
+          url:"/application/get-report-tasks",
+          data:{
+                 },
+          success: function(data){
+              var pieChartCanvas = $("#pieChart").get(0).getContext("2d");
+              var pieChart = new Chart(pieChartCanvas);
+               var pieOptions = {
+                //Boolean - Whether we should show a stroke on each segment
+                segmentShowStroke: true,
+                //String - The colour of each segment stroke
+                segmentStrokeColor: "#fff",
+                //Number - The width of each segment stroke
+                segmentStrokeWidth: 1,
+                //Number - The percentage of the chart that we cut out of the middle
+                percentageInnerCutout: 50, // This is 0 for Pie charts
+                //Number - Amount of animation steps
+                animationSteps: 100,
+                //String - Animation easing effect
+                animationEasing: "easeOutBounce",
+                //Boolean - Whether we animate the rotation of the Doughnut
+                animateRotate: true,
+                //Boolean - Whether we animate scaling the Doughnut from the centre
+                animateScale: false,
+                //Boolean - whether to make the chart responsive to window resizing
+                responsive: true,
+                // Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
+                maintainAspectRatio: false,
+                //String - A legend template
+                legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>",
+                //String - A tooltip template
+                tooltipTemplate: "<%=value %> <%=label%> "
+              };
+                var PieData = [];
+                var total = 0;
+             for(var i = 0 ; i < data.length ;i++){
+                  var person = {
+                         value: data[i].count,
+                        color: color[i],
+                        highlight: color[i],
+                        label: data[i].name
+                      };
+                      total+= parseInt(data[i].count);
+                      PieData.push(person);
+             }
+           
+            //Create pie or douhnut chart
+            // You can switch between pie and douhnut using the method below.
+            pieChart.Doughnut(PieData, pieOptions);
+            var legend="";
+            for(var i = 0 ; i < PieData.length ;i++){
+                  legend+= "<li><i class='fa fa-circle-o "+color_class[i]+"'></i> "+PieData[i].label+" ("+PieData[i].value+"/"+total+")"+"</li>";
+             }
+           $('#pieLegend').html(legend);
+          }
+       });
+  }
+ 
+  
 </script>

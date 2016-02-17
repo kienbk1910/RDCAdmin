@@ -66,4 +66,6 @@ interface IndexServiceInterface
      public function addNotification(Notification $notification);
      public function deteteNotification($id);
      public function getNotifications($limit);
+
+     public function getReportTasks($id_user);
  }

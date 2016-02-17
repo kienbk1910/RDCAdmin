@@ -173,4 +173,7 @@ class IndexService implements IndexServiceInterface
   public function getNotifications($limit){
     return $this->databaseMapper->getNotifications($limit);
   }
+  public function getReportTasks($id_user){
+    return $this->databaseMapper->getReportTasks($id_user); 
+  }
 }

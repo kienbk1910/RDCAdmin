@@ -62,6 +62,18 @@ return array(
                          ),
 
                      ),
+                     'get-report-tasks' => array(
+                         'type' => 'segment',
+                         'options' => array(
+                             'route'    => '/get-report-tasks',
+                             'defaults' => array(
+                                 'action' => 'getReportTasks',
+                             ),
+                             'constraints' => array(
+                             )
+                         ),
+
+                     ),
                      'list-notification' => array(
                          'type' => 'segment',
                          'options' => array(
