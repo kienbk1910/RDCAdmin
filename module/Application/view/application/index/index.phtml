@@ -7,6 +7,42 @@ use Utility\Date\Date; ?>
   <div class="row">
     <!-- Left col -->
     <section class="col-lg-7 connectedSortable">
+      <div class="box box-default">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Thống Kê Hồ Sơ</h3>
+                  <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                  </div>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <div class="row">
+                    <div class="col-md-8">
+                      <div class="chart-responsive">
+                        <canvas id="pieChart" height="150"></canvas>
+                      </div><!-- ./chart-responsive -->
+                    </div><!-- /.col -->
+                    <div class="col-md-4">
+                      <ul id ="pieLegend"class="chart-legend clearfix">
+                        
+                      </ul>
+                    </div><!-- /.col -->
+                  </div><!-- /.row -->
+                </div><!-- /.box-body -->
+                <div class="box-footer no-padding">
+                  <ul class="nav nav-pills nav-stacked">
+                    <li><a >Tổng Hóa Đơn Đại Lý<span id="total-agency" class="pull-right text-green"></span></a></li>
+                    <li><a >Đại Lý Đã Thanh Toán<span id="pay-agency" class="pull-right text-aqua"></span></a></li>
+                    <li><a >Số Nợ Của Đại Lý<span id="det-agency" class="pull-right text-red"></span></a></li>
+                     <li><a ></a></li>
+                     <li><a >Tổng Hóa Đơn Nhà Cung Cấp<span id="total-provider" class="pull-right text-green"></span></a></li>
+                    <li><a >Đã Thanh Toán Cho Nhà Cung Cấp<span id="pay-provider" class="pull-right text-aqua"></span></a></li>
+                    <li><a >Số Nợ Chưa Thành Toán<span id="det-provider" class="pull-right text-red"></span></a></li>
+                    <li><a ></a></li>
+                    <li><a >Số Nợ Trên Hệ Thống<span id="det-money" class="pull-right text-red"></span></a></li>
+                  </ul>
+                </div><!-- /.footer -->
+              </div><!-- /.box -->
       <!-- Chat box -->
       <div class="box box-success">
         <div class="box-header">
@@ -56,36 +92,7 @@ use Utility\Date\Date; ?>
           <?php }?>
         </div>
       </div><!-- /.box (chat box) -->
-       <div class="box box-default">
-                <div class="box-header with-border">
-                  <h3 class="box-title">Thống Kê Hồ Sơ</h3>
-                  <div class="box-tools pull-right">
-                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                  </div>
-                </div><!-- /.box-header -->
-                <div class="box-body">
-                  <div class="row">
-                    <div class="col-md-8">
-                      <div class="chart-responsive">
-                        <canvas id="pieChart" height="150"></canvas>
-                      </div><!-- ./chart-responsive -->
-                    </div><!-- /.col -->
-                    <div class="col-md-4">
-                      <ul id ="pieLegend"class="chart-legend clearfix">
-                        
-                      </ul>
-                    </div><!-- /.col -->
-                  </div><!-- /.row -->
-                </div><!-- /.box-body -->
-                <div class="box-footer no-padding">
-                  <ul class="nav nav-pills nav-stacked">
-                    <li><a href="#">United States of America <span class="pull-right text-red"><i class="fa fa-angle-down"></i> 12%</span></a></li>
-                    <li><a href="#">India <span class="pull-right text-green"><i class="fa fa-angle-up"></i> 4%</span></a></li>
-                    <li><a href="#">China <span class="pull-right text-yellow"><i class="fa fa-angle-left"></i> 0%</span></a></li>
-                  </ul>
-                </div><!-- /.footer -->
-              </div><!-- /.box -->
+     
 
     </section><!-- /.Left col -->
     <!-- right col (We are only adding the ID to make the widgets sortable)-->
@@ -367,6 +374,22 @@ loadNotification();
           }
        });
   }
- 
+ $.ajax({
+            type:"POST",                          
+            url:"/application/get-report-money",
+            data:{
+                   },
+            success: function(data){
+              $('#total-agency').html(accounting.formatNumber(data['agency']));
+              $('#pay-agency').html(accounting.formatNumber(data['agency_pay']));
+              $('#det-agency').html(accounting.formatNumber(data['agency'] - data['agency_pay']));
+
+              $('#total-provider').html(accounting.formatNumber(data['provider']));
+              $('#pay-provider').html(accounting.formatNumber(data['provider_pay']));
+              $('#det-provider').html(accounting.formatNumber(data['provider'] - data['provider_pay']));
+
+              $('#det-money').html(accounting.formatNumber((data['agency'] - data['agency_pay'])-(data['provider'] - data['provider_pay'])));
+            }
+  });
   
 </script>

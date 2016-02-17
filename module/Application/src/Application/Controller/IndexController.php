@@ -69,5 +69,23 @@ namespace Application\Controller;
         $tasks = $this->databaseService->getReportTasks($id_user);
         return new JsonModel($tasks);
     }
-
+     public function getReportMoneyAction(){
+        $this->checkAuth();
+        $money = $this->databaseService->getTotalAgency();
+        $agency = 0;
+        $provider = 0;
+        foreach ($money as $row) {
+            $agency = $row->agency;
+            $provider = $row->provider;
+            break;
+        }
+        $agency_pay = $this->databaseService->getTotalCurrentMoney(Config::PAY_CUSTUMER);
+        $provider_pay = $this->databaseService->getTotalCurrentMoney(Config::PAY_PROVIDER);
+        return new JsonModel( array(
+                    'agency' => $agency,
+                    'provider' => $provider,
+                    'agency_pay' => $agency_pay,
+                    'provider_pay' => $provider_pay,
+                     ));
+    }
 }

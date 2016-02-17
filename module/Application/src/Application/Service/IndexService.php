@@ -176,4 +176,10 @@ class IndexService implements IndexServiceInterface
   public function getReportTasks($id_user){
     return $this->databaseMapper->getReportTasks($id_user); 
   }
+   public function getTotalAgency(){
+    return $this->databaseMapper->getTotalAgency(); 
+   }
+  public function getTotalCurrentMoney($type){
+    return $this->databaseMapper->getTotalCurrentMoney($type); 
+  }
 }

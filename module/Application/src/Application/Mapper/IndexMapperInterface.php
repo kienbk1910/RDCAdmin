@@ -62,4 +62,6 @@ interface IndexMapperInterface
      public function getNotifications($limit);
 
      public function getReportTasks($id_user);
+     public function getTotalAgency();
+     public function getTotalCurrentMoney($type);
 }

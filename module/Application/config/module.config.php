@@ -74,6 +74,18 @@ return array(
                          ),
 
                      ),
+                      'get-report-money' => array(
+                         'type' => 'segment',
+                         'options' => array(
+                             'route'    => '/get-report-money',
+                             'defaults' => array(
+                                 'action' => 'getReportMoney',
+                             ),
+                             'constraints' => array(
+                             )
+                         ),
+
+                     ),
                      'list-notification' => array(
                          'type' => 'segment',
                          'options' => array(

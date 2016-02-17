@@ -814,4 +814,26 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $selectString = $sql->getSqlStringForSqlObject($select);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE); 
     }
+     public function getTotalAgency(){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('tasks')
+                        ->columns(array('agency' => new Expression('SUM(tasks.cost_sell)'),'provider' => new Expression('SUM(tasks.cost_buy)')
+                    ));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE); 
+     }
+    public function getTotalCurrentMoney($type){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('money_history')
+                        ->columns(array('money' => new Expression('SUM(money_history.money)')));
+        $select->Where(array('money_history.type = ?' => $type));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $count = 0;
+        $resultSet = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE); 
+        foreach ($resultSet as $row) {
+            $count = $row->money;
+            break;
+        }
+        return $count;
+    }
 }
