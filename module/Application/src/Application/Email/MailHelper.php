@@ -13,12 +13,12 @@ defined('APPLICATION_ENV') || define('APPLICATION_ENV', (getenv('APPLICATION_ENV
 */
 class MailHelper 
 {
-	const EMAIL_SYSTEM_NAME = "rdc@kienbk1910.com";
-	const EMAIL_SYSTEM_PASS  = "123456789";
+	const EMAIL_SYSTEM_NAME = "quanly@rdc.vn";
+	const EMAIL_SYSTEM_PASS  = "0UWE]#28&MgT";
     const EMAIL_TEMPLETE_PATH = "./data/email/";
-    const EMAIL_SUBJECT_FILTER_TEMPLATE = "[rdc.com.vn] [Hồ Sơ Số %d - %s] %s";
+    const EMAIL_SUBJECT_FILTER_TEMPLATE = "[quanly.rdc.vn] [Hồ Sơ Số %d - %s] %s";
     const FROMFULLNAME = "RDC supporter";
-    const REAL_SERVER_SITE = "http://rdc.kienbk1910.com";
+    const REAL_SERVER_SITE = "http://quanly.rdc.vn";
     const MESSAGE_CREATE_SUBJECT = " Thông Báo Tạo Hồ Sơ";
     const MESSAGE_MODIFY_SUBJECT = " Thông Báo Thay Đổi Thông Tin Hồ Sơ";
     
@@ -283,7 +283,7 @@ $admin_email)
           $headers.="From: $from\nX-Mailer: ".$fromfullname."\r\n";
           $headers .="Mime-Version: 1.0\r\n";
           $headers .="Content-type: text/html; charset=utf-8\r\n";
-          $smtp_host ='mail.kienbk1910.com';//Dia chi mail server
+          $smtp_host ='mail.rdc.vn';//Dia chi mail server
           $admin_email = MailHelper::EMAIL_SYSTEM_NAME;//User duoc khai bao tren mail server
           $smtp_username = MailHelper::EMAIL_SYSTEM_NAME;//User duoc khai bao tren mail server
           $smtp_password = MailHelper::EMAIL_SYSTEM_PASS;//Pass cua email nay
