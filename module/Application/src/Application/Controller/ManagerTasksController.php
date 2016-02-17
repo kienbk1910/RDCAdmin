@@ -332,6 +332,16 @@ class ManagerTasksController extends BaseController
                 $receiver['assign'] = $this->databaseService->getUserById($array['assign_id'])->current();
                 $receiver['agency'] = $this->databaseService->getUserById($array['agency_id'])->current();
                 $receiver['provider'] = $this->databaseService->getUserById($array['provider_id'])->current();
+                /* Convert id to name */
+                if ($name == Config::reporter_id) {
+                    $value = $receiver['reporter']->username;
+                } else if ($name == Config::assign_id) {
+                    $value = $receiver['assign']->username;
+                } else if ($name == Config::agency_id) {
+                    $value = $receiver['agency']->username;
+                } else if ($name == Config::provider_id) {
+                    $value = $receiver['provider']->username;
+                }
                 $ret = NULL;
                 if ($name == Config::agency_id
                         || $name == Config::cost_sell_id
@@ -339,16 +349,16 @@ class ManagerTasksController extends BaseController
                         || $name == Config::date_end_id
                         || $name == Config::agency_note_id) {
                     /* For agency: agency_id, cost_sell, date_open, date_end, agency_note */
-                    $ret = $mail->notify_to_user($array, $receiver, Config::AGENCY_TYPE, Config::NOTIFY_MODIFY);
+                    $ret = $mail->notify_modify_to_user($array, $receiver, Config::AGENCY_TYPE, $name, $value);
                 } else if ($name == Config::provider_id
                         || $name == Config::cost_buy_id
                         || $name == Config::date_open_pr_id
                         || $name == Config::date_end_pr_id
                         || $name == Config::provider_note_id) {
-                    $ret = $mail->notify_to_user($array, $receiver, Config::PROVIDER_TYPE, Config::NOTIFY_MODIFY);
+                    $ret = $mail->notify_modify_to_user($array, $receiver, Config::PROVIDER_TYPE, $name, $value);
                     /* For agency: provider_id, cost_buy, date_open_pr, date_end_pr, provider_note */
                 }
-                $ret = $mail->notify_to_admin($array, $receiver, Config::NOTIFY_MODIFY);
+                $ret = $mail->notify_modify_to_admin($array, $receiver, $name, $value);
                 
                 if ($ret != NULL) {
                     $result->setStatus(Xeditable::STATUS_ERROR);
