@@ -305,9 +305,40 @@ class ManagerTasksController extends BaseController
             $detail_task = $this->databaseService->getInfoTask($id)->current();
             $log->old_id = $detail_task[$name];
             $log->custumer = $detail_task['custumer'];
+            
             /* Backup value */
             $new_value = $value;
             $old_value = $log->old_id;
+            /* Get pay history */
+            $tmp_pay_custumer = $this->databaseService->getTotalPay($id,Config::PAY_CUSTUMER);
+            $pay_custumer = number_format($tmp_pay_custumer);
+            $detail_task['pay_custumer'] = $pay_custumer;
+            /* Convert new pay history */
+            if ($name == Config::cost_sell_id) {
+                $custumer_debt = number_format($new_value - $tmp_pay_custumer);
+                $detail_task['custumer_debt'] = $custumer_debt;
+            } else {
+                $custumer_debt = number_format($detail_task->cost_sell - $tmp_pay_custumer);
+                $detail_task['custumer_debt'] = $custumer_debt;
+            }
+
+            $tmp_pay_provider = $this->databaseService->getTotalPay($id,Config::PAY_PROVIDER);
+            $pay_provider = number_format($tmp_pay_provider);
+            $detail_task['pay_provider'] = $pay_provider;
+            /* Convert new pay history */
+            if ($name == Config::cost_buy_id) {
+                $provider_debt = number_format($new_value - $tmp_pay_provider);
+                $detail_task['provider_debt'] = $provider_debt;
+            } else {
+                $provider_debt = number_format($detail_task->cost_buy - $tmp_pay_provider);
+                $detail_task['provider_debt'] = $provider_debt;
+            }
+            /* Convert number to readable value */
+            if ($name == Config::cost_sell_id || $name == Config::cost_buy_id) {
+                $old_value = number_format($old_value);
+                $new_value = number_format($new_value);
+            }
+            
              if($name == "date_open" || $name == "date_end" || $name == "date_open_pr" || $name == "date_end_pr"){
                 $value = Date::changeVNtoDateSQL($value);
                 $old_value = Date::changeDateSQLtoVN($log->old_id);
@@ -341,11 +372,7 @@ class ManagerTasksController extends BaseController
                     $new_value = $this->databaseService->getUserById($value)->current()->username;
                     $old_value = $this->databaseService->getUserById($log->old_id)->current()->username;
                 }
-                /* Convert number to readable value */
-                if ($name == Config::cost_sell_id || $name == Config::cost_buy_id) {
-                    $old_value = number_format($old_value);
-                    $new_value = number_format($new_value);
-                }
+
                 $ret = NULL;
                 if ($name == Config::agency_id
                         || $name == Config::cost_sell_id
