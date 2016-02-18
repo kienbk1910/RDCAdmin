@@ -13,12 +13,16 @@ defined('APPLICATION_ENV') || define('APPLICATION_ENV', (getenv('APPLICATION_ENV
 */
 class MailHelper 
 {
-	const EMAIL_SYSTEM_NAME = "quanly@rdc.vn";
-	const EMAIL_SYSTEM_PASS  = "0UWE]#28&MgT";
+    const EMAIL_SYSTEM_NAME = "quanly@rdc.vn";
+    const EMAIL_SYSTEM_PASS  = "0UWE]#28&MgT";
+    const REAL_SERVER_SITE = "http://quanly.rdc.vn";
+//     const EMAIL_SYSTEM_NAME = "rdc@kienbk1910.com";
+//     const EMAIL_SYSTEM_PASS  = "123456789";
+//     const REAL_SERVER_SITE = "http://rdc.kienbk1910.com";
+    
     const EMAIL_TEMPLETE_PATH = "./data/email/";
     const EMAIL_SUBJECT_FILTER_TEMPLATE = "[quanly.rdc.vn] [Hồ Sơ Số %d - %s] %s";
     const FROMFULLNAME = "RDC supporter";
-    const REAL_SERVER_SITE = "http://quanly.rdc.vn";
     const MESSAGE_CREATE_SUBJECT = " Thông Báo Tạo Hồ Sơ";
     const MESSAGE_MODIFY_SUBJECT = " Thông Báo Thay Đổi Thông Tin Hồ Sơ";
     
@@ -286,6 +290,7 @@ $admin_email)
           $headers .="Mime-Version: 1.0\r\n";
           $headers .="Content-type: text/html; charset=utf-8\r\n";
           $smtp_host ='mail.rdc.vn';//Dia chi mail server
+          //$smtp_host ='mail.kienbk1910.com';//Dia chi mail server
           $admin_email = MailHelper::EMAIL_SYSTEM_NAME;//User duoc khai bao tren mail server
           $smtp_username = MailHelper::EMAIL_SYSTEM_NAME;//User duoc khai bao tren mail server
           $smtp_password = MailHelper::EMAIL_SYSTEM_PASS;//Pass cua email nay
@@ -386,19 +391,24 @@ $admin_email)
         /* viet add */
         $getcontent = str_replace('{|custumer|}', $task['custumer'], $getcontent);
         $getcontent = str_replace('{|certificate|}', $task['certificate'], $getcontent);
-    
-        if ($validator->isValid($reporter->email) && $validator->isValid($assign->email)) {
-            // email appears to be valid
-            $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $reporter->email, $subject, $getcontent);
-            $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $assign->email, $subject, $getcontent);
+
+        if ($validator->isValid($reporter->email)) {
+            $getcontent1 = str_replace('{|name|}', $reporter->username, $getcontent);
+            $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $reporter->email, $subject, $getcontent1);
         } else {
             // email is invalid; print the reasons
-            foreach ($validator->getMessages() as $message) {
-                return "$message";
-            }
-            }
-            //echo $getcontent;
-            return NULL;
+            foreach ($validator->getMessages() as $message) return "$message";
+        }
+
+        if ($validator->isValid($assign->email)) {
+            $getcontent2 = str_replace('{|name|}', $assign->username, $getcontent);
+            $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $assign->email, $subject, $getcontent2);
+        } else {
+            // email is invalid; print the reasons
+            foreach ($validator->getMessages() as $message) return "$message";
+        }
+        //echo $getcontent;
+        return NULL;
     }
 
     function notify_modify_to_agency($task, $user, $key, $old_value, $new_value) {
@@ -452,10 +462,9 @@ $admin_email)
         $getcontent = str_replace('{|agency_id|}', $agency->username, $getcontent);
         $getcontent = str_replace('{|provider_id|}', $provider->username, $getcontent);
         
-        if ($validator->isValid($reporter->email) && $validator->isValid($assign->email)) {
+        if ($validator->isValid($agency->email)) {
             // email appears to be valid
-            $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $reporter->email, $subject, $getcontent);
-            $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $assign->email, $subject, $getcontent);
+            $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $agency->email, $subject, $getcontent);
         } else {
             // email is invalid; print the reasons
             foreach ($validator->getMessages() as $message) return "$message";
@@ -515,10 +524,9 @@ $admin_email)
         $getcontent = str_replace('{|agency_id|}', $agency->username, $getcontent);
         $getcontent = str_replace('{|provider_id|}', $provider->username, $getcontent);
     
-        if ($validator->isValid($reporter->email) && $validator->isValid($assign->email)) {
+        if ($validator->isValid($provider->email)) {
             // email appears to be valid
-            $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $reporter->email, $subject, $getcontent);
-            $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $assign->email, $subject, $getcontent);
+            $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $provider->email, $subject, $getcontent);
         } else {
             // email is invalid; print the reasons
             foreach ($validator->getMessages() as $message) return "$message";
@@ -577,15 +585,23 @@ $admin_email)
         $getcontent = str_replace('{|assign_id|}', $assign->username, $getcontent);
         $getcontent = str_replace('{|agency_id|}', $agency->username, $getcontent);
         $getcontent = str_replace('{|provider_id|}', $provider->username, $getcontent);
-    
-        if ($validator->isValid($reporter->email) && $validator->isValid($assign->email)) {
-            // email appears to be valid
-            $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $reporter->email, $subject, $getcontent);
-            $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $assign->email, $subject, $getcontent);
+
+        if ($validator->isValid($reporter->email)) {
+            $getcontent1 = str_replace('{|name|}', $reporter->username, $getcontent);
+            $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $reporter->email, $subject, $getcontent1);
         } else {
             // email is invalid; print the reasons
             foreach ($validator->getMessages() as $message) return "$message";
         }
+        
+        if ($validator->isValid($assign->email)) {
+            $getcontent2 = str_replace('{|name|}', $assign->username, $getcontent);
+            $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $assign->email, $subject, $getcontent2);
+        } else {
+            // email is invalid; print the reasons
+            foreach ($validator->getMessages() as $message) return "$message";
+        }
+        
         //echo $getcontent;
         return NULL;
     }
@@ -627,6 +643,7 @@ $admin_email)
         //echo $getcontent;
         return NULL;
     }
+    
     function notify_add_pay($task,$user_action, $pay,$type) {
         $validator = new \Zend\Validator\EmailAddress();
         $email = NULL;
@@ -684,8 +701,6 @@ $admin_email)
         $getcontent = str_replace('{|date_pay|}',"<span style='text-decoration:line-through;color: red'>".Date::changeDateSQLtoVN($pay->date_pay)."</span>", $getcontent);
         $getcontent = str_replace('{|note|}',"<span style='text-decoration:line-through;color: red'>".$pay->note."</span>", $getcontent);
         $getcontent = str_replace('{|money_option|}',"<span style='text-decoration:line-through;color: red'>". (($pay->money_option == 1)? "Tiền Mặt":"Chuyển Khoản")."</span>", $getcontent);
-        
-        
 
         $getcontent_tmp = str_replace('{|name|}', $task['reporter_name'], $getcontent);
         $getcontent_tmp = str_replace('{|link|}', MailHelper::REAL_SERVER_SITE. "/manager-tasks/detail/" .$task['id'], $getcontent_tmp);
@@ -745,7 +760,6 @@ $admin_email)
         }else{
               $getcontent = str_replace('{|money_option|}', ($pay->money_option == 1)? "Tiền Mặt":"Chuyển Khoản", $getcontent);
         }
-        
 
         $getcontent_tmp = str_replace('{|name|}', $task['reporter_name'], $getcontent);
         $getcontent_tmp = str_replace('{|link|}', MailHelper::REAL_SERVER_SITE. "/manager-tasks/detail/" .$task['id'], $getcontent_tmp);
@@ -772,7 +786,7 @@ $admin_email)
                     $this->SendMail(MailHelper::EMAIL_SYSTEM_NAME, $task['provider_email'], $subject, $getcontent_tmp);
              }
         }
-        
+
         //echo $getcontent;
         return NULL;
     }

@@ -383,14 +383,25 @@ class ManagerTasksController extends BaseController
                         || $name == Config::cost_sell_id
                         || $name == Config::date_open_id
                         || $name == Config::date_end_id
-                        || $name == Config::agency_note_id) {
+                        || $name == Config::agency_note_id
+                        || $name == Config::custumer_id
+                        || $name == Config::certificate_id
+                        || $name == Config::process_id
+                        || $name == Config::reporter_id
+                        || $name == Config::assign_id) {
                     /* For agency: agency_id, cost_sell, date_open, date_end, agency_note */
                     $mail->notify_modify_to_agency($detail_task, $receiver, $name, $old_value, $new_value);
-                } else if ($name == Config::provider_id
+                } 
+                if ($name == Config::provider_id
                         || $name == Config::cost_buy_id
                         || $name == Config::date_open_pr_id
                         || $name == Config::date_end_pr_id
-                        || $name == Config::provider_note_id) {
+                        || $name == Config::provider_note_id
+                        || $name == Config::custumer_id
+                        || $name == Config::certificate_id
+                        || $name == Config::process_id
+                        || $name == Config::reporter_id
+                        || $name == Config::assign_id) {
                     /* For provider: provider_id, cost_buy, date_open_pr, date_end_pr, provider_note */
                     $mail->notify_modify_to_provider($detail_task, $receiver, $name, $old_value, $new_value);
                 }
