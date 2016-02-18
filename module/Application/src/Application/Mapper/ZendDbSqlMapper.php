@@ -338,7 +338,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $select = $sql->select('logs')->join('users', 'logs.user_id = users.id', array(
                                 'join_user_name' => 'username'), 'left')
                         ->join('tasks', 'logs.task_id = tasks.id', array(
-                                'join_task_name' => 'certificate'), 'left');
+                                'join_task_name' => 'certificate',"agency_id" => "agency_id","provider_id" => "provider_id"), 'left');
         $select->order(array('logs.date DESC'));
         if ($task!= NULL && $task->id != NULL) {
             $select->Where(array(
@@ -346,9 +346,8 @@ class ZendDbSqlMapper implements IndexMapperInterface
         }
         if($user_id != NULL){
             $select->where ->nest
-                    ->nest->equalTo("tasks.agency_id",$user_id)->and->equalTo("logs.type",Config::PAY_CUSTUMER )->unnest
-                ->or->nest->equalTo("tasks.provider_id",$user_id)->and->equalTo("logs.type",Config::PAY_PROVIDER )->unnest
-                ->or->nest->equalTo("logs.type",Config::PAY_INFO_COMMON )->unnest
+                ->nest->equalTo("tasks.agency_id",$user_id)->and->nest->equalTo("logs.type",Config::PAY_CUSTUMER )->or->equalTo("logs.type",Config::PAY_INFO_COMMON )->unnest->unnest
+                ->or->nest->equalTo("tasks.provider_id",$user_id)->and->nest->equalTo("logs.type",Config::PAY_PROVIDER )->or->equalTo("logs.type",Config::PAY_INFO_COMMON )->unnest->unnest
                 ->unnest;
         }
         $resultSetPrototype = new ResultSet();
@@ -827,6 +826,43 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $select = $sql->select('money_history')
                         ->columns(array('money' => new Expression('SUM(money_history.money)')));
         $select->Where(array('money_history.type = ?' => $type));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $count = 0;
+        $resultSet = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE); 
+        foreach ($resultSet as $row) {
+            $count = $row->money;
+            break;
+        }
+        return $count;
+    }
+    public function getTotalAgencyById($id_user,$type){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('tasks');
+        if($type == Config::PAY_CUSTUMER){
+            $select->columns(array('count' => new Expression('SUM(tasks.cost_sell)')));
+            $select->Where(array('tasks.agency_id = ?' => $id_user));
+        }else{
+            $select->columns(array('count' => new Expression('SUM(tasks.cost_buy)')));
+            $select->Where(array('tasks.provider_id = ?' => $id_user));
+        }
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $resultSet = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE); 
+        foreach ($resultSet as $row) {
+            $count = $row->count;
+            break;
+        }
+        return $count;
+    }
+    public function getTotalCurrentMoneyById($id_user,$type){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('money_history')
+                     ->columns(array('money' => new Expression('SUM(money_history.money)')))
+                     ->join('tasks', 'money_history.task_id = tasks.id', array(), 'left');
+        if($type == Config::PAY_CUSTUMER){
+             $select->Where(array('money_history.type = ?' => $type,'tasks.agency_id = ?' => $id_user));
+        }else{
+            $select->Where(array('money_history.type = ?' => $type,'tasks.provider_id = ?' => $id_user));
+        }
         $selectString = $sql->getSqlStringForSqlObject($select);
         $count = 0;
         $resultSet = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE); 

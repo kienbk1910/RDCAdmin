@@ -70,4 +70,7 @@ interface IndexServiceInterface
      public function getReportTasks($id_user);
      public function getTotalAgency();
      public function getTotalCurrentMoney($type);
+
+     public function getTotalAgencyById($id_user,$type);
+     public function getTotalCurrentMoneyById($id_user,$type);
  }

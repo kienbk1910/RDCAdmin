@@ -34,19 +34,28 @@ class LogController extends BaseController {
     }
 
     public function indexAction() {
-        $this->checkAdmin();
+        $this->checkAuth();
         $request = $this->getRequest();
 
         $task = new Task();
         /* Get all logs */
         $task->id = NULL;
+        $id_user =  $this->auth->getIdentity()->id;
+        if($this->isLevel2()){
+            $id_user =  null;
+        }
+        
         $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set('Lịch Sử Thay Đổi');
-        $logs = $this->databaseService->showLog( null, $task);
+        $logs = $this->databaseService->showLog( $id_user, $task);
          $logs->setCurrentPageNumber((int) $this->params()->fromQuery('page', 1));
           // set the number of items per page to 10
          $logs->setItemCountPerPage(Config::MAX_ITEM_OF_PAGE);
+         $id_user =  $this->auth->getIdentity()->id;
+        $role =  $this->auth->getIdentity()->id;
         return new ViewModel( array (
                 'logs' => $logs,
+                   'user_id'=>$id_user,
+                'role' =>$role
         ) );
     }
   
@@ -66,9 +75,13 @@ class LogController extends BaseController {
          $logs->setCurrentPageNumber((int) $this->params()->fromQuery('page', 1));
           // set the number of items per page to 10
          $logs->setItemCountPerPage(Config::MAX_ITEM_OF_PAGE);
+        $role =  $this->auth->getIdentity()->id;
+         $id_user =  $this->auth->getIdentity()->id;
         return new ViewModel( array (
                 'logs' => $logs,
-                'task_id'=>$task_id
+                'task_id'=>$task_id,
+                'user_id'=>$id_user,
+                'role' =>$role
         ) );
     }
 }

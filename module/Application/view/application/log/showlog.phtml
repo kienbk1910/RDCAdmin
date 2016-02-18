@@ -1,6 +1,7 @@
 <?php
 use Application\Config\Config;
 use Utility\Date\Date;
+use Application\Utility\URLUtilily; 
 ?>
 <!-- TO DO List -->
 <div class="box box-primary">
@@ -31,9 +32,10 @@ use Utility\Date\Date;
 </div><!-- /.box-header -->
 <div class="box-body">
   <ul class="todo-list">
-  <?php foreach ($logs as $log) {
+   <?php foreach ($logs as $log) {
       /* Decode to array */
       $task = json_decode($log->value, true);
+      $url = URLUtilily::getUrl($user_id,$role,$log->task_id,$log->agency_id,$log->provider_id);
    ?>
       <li>
       <!-- drag handle -->
@@ -48,7 +50,7 @@ use Utility\Date\Date;
                 echo " đã thay đổi " . "<span class='foucus-value'>".$task['key_name']."</span>"; ?>
                 <?php if (! empty($task['custumer'])) echo "của khách hàng <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ "; else echo " của chứng chỉ: "; ?>
 
-                <a class ="foucus-value" href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <a class ="foucus-value" href="<?php echo  $url; ?>"> <?php echo $log->join_task_name; ?> </a>
                 <!-- If field reporter_id, agency_id ... -->
                 <?php echo " từ "; ?>
                 <?php if ($task['key'] == Config::reporter_id
@@ -81,7 +83,7 @@ use Utility\Date\Date;
             <?php if ($log->action_id == (string)Config::ADD_ACTION) {
                 echo " đã thêm hồ sơ "?>
                 <?php if (! empty($task['custumer'])) echo "của khách hàng <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ "; else echo " của chứng chỉ: "; ?>
-                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <a href="<?php echo  $url ?>"> <?php echo $log->join_task_name; ?> </a>
                 <?php
             }?>
              <?php if ($log->action_id == (string)Config::DELETE_PAY_ACTION) {
@@ -93,7 +95,7 @@ use Utility\Date\Date;
                 <?php if (! empty($task['custumer']))
                     echo "của <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ ";
                 else echo " của chứng chỉ: "; ?>
-                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <a href="<?php echo  $url ?>"> <?php echo $log->join_task_name; ?> </a>
                 <?php
             }?>
              <!-- Action pay -->
@@ -104,7 +106,7 @@ use Utility\Date\Date;
                 <?php if (! empty($task['custumer']))
                     echo "của <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ ";
                 else echo " của chứng chỉ: "; ?>
-                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <a href="<?php echo  $url ?>"> <?php echo $log->join_task_name; ?> </a>
                 <?php
             }?>
              <?php if ($log->action_id == (string)Config::FILE_ACTION) {
@@ -114,7 +116,7 @@ use Utility\Date\Date;
                 <?php if (! empty($task['custumer']))
                     echo "của <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ ";
                 else echo " của chứng chỉ: "; ?>
-                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <a href="<?php echo  $url ?>"> <?php echo $log->join_task_name; ?> </a>
                 <?php
             }?>
             <?php if ($log->action_id == (string)Config::DELETE_FILE_ACTION) {
@@ -124,7 +126,7 @@ use Utility\Date\Date;
                 <?php if (! empty($task['custumer']))
                     echo "của <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ ";
                 else echo " của chứng chỉ: "; ?>
-                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <a href="<?php echo  $url ?>"> <?php echo $log->join_task_name; ?> </a>
                 <?php
             }?>
             <!-- Action pay -->
@@ -137,7 +139,7 @@ use Utility\Date\Date;
                 <?php if (! empty($task['custumer']))
                     echo "của <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ ";
                 else echo " của chứng chỉ: "; ?>
-                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <a href="<?php echo  $url ?>"> <?php echo $log->join_task_name; ?> </a>
                 <?php
             }?>
             <?php if ($log->action_id == (string)Config::EDIT_PAY_ACTION) {
@@ -160,7 +162,7 @@ use Utility\Date\Date;
                 <?php if (! empty($task['new_value']['custumer']))
                     echo "của <span class=' foucus-value'>" . $task['new_value']['custumer']. "</span>, chứng chỉ ";
                 else echo " của chứng chỉ: "; ?>
-                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <a href="<?php echo  $url ?>"> <?php echo $log->join_task_name; ?> </a>
                 <?php
             }?>
             
@@ -173,6 +175,5 @@ use Utility\Date\Date;
   <?php
       }
   ?>
-  </ul>
 </div><!-- /.box-body -->
 </div><!-- /.box -->

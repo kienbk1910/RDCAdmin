@@ -182,4 +182,10 @@ class IndexService implements IndexServiceInterface
   public function getTotalCurrentMoney($type){
     return $this->databaseMapper->getTotalCurrentMoney($type); 
   }
+  public function getTotalAgencyById($id_user,$type){
+    return $this->databaseMapper->getTotalAgencyById($id_user,$type); 
+  }
+  public function getTotalCurrentMoneyById($id_user,$type){
+    return $this->databaseMapper->getTotalCurrentMoneyById($id_user,$type); 
+  }
 }

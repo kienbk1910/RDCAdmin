@@ -24,6 +24,7 @@ namespace Application\Controller;
         $task = new Task();
         $task->id = NULL;
         $id_user =  $this->auth->getIdentity()->id;
+        $role =  $this->auth->getIdentity()->id;
         if($this->isLevel2()){
             $id_user =  null;
         }
@@ -34,6 +35,8 @@ namespace Application\Controller;
          
         return new ViewModel( array (
                 'logs' => $logs,
+                'user_id'=>$id_user,
+                'role' =>$role
         ) );
      }
      public function statisticAction(){
@@ -71,16 +74,29 @@ namespace Application\Controller;
     }
      public function getReportMoneyAction(){
         $this->checkAuth();
-        $money = $this->databaseService->getTotalAgency();
+        $id_user =  $this->auth->getIdentity()->id;
         $agency = 0;
         $provider = 0;
-        foreach ($money as $row) {
-            $agency = $row->agency;
-            $provider = $row->provider;
-            break;
+        $agency_pay = 0;
+        $provider_pay = 0;
+        if($this->isLevel2()){
+            $id_user =  null;
         }
-        $agency_pay = $this->databaseService->getTotalCurrentMoney(Config::PAY_CUSTUMER);
-        $provider_pay = $this->databaseService->getTotalCurrentMoney(Config::PAY_PROVIDER);
+        if($id_user == null){
+          $money = $this->databaseService->getTotalAgency();
+          foreach ($money as $row) {
+              $agency = $row->agency;
+              $provider = $row->provider;
+              break;
+          }
+          $agency_pay = $this->databaseService->getTotalCurrentMoney(Config::PAY_CUSTUMER);
+          $provider_pay = $this->databaseService->getTotalCurrentMoney(Config::PAY_PROVIDER);
+        }else{
+            $agency = $this->databaseService->getTotalAgencyById($id_user,Config::PAY_CUSTUMER);
+            $provider = $this->databaseService->getTotalAgencyById($id_user,Config::PAY_PROVIDER);
+            $agency_pay = $this->databaseService->getTotalCurrentMoneyById($id_user,Config::PAY_CUSTUMER);
+            $provider_pay = $this->databaseService->getTotalCurrentMoneyById($id_user,Config::PAY_PROVIDER);
+        }
         return new JsonModel( array(
                     'agency' => $agency,
                     'provider' => $provider,

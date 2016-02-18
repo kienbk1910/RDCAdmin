@@ -1,10 +1,13 @@
 <?php use Application\Config\Config;
-use Utility\Date\Date; ?>
+use Utility\Date\Date; 
+use Application\Utility\URLUtilily; 
+?>
 
 <!-- Main content -->
 <section class="content">
   <!-- Main row -->
   <div class="row">
+
     <!-- Left col -->
     <section class="col-lg-7 connectedSortable">
       <div class="box box-default">
@@ -31,15 +34,27 @@ use Utility\Date\Date; ?>
                 </div><!-- /.box-body -->
                 <div class="box-footer no-padding">
                   <ul class="nav nav-pills nav-stacked">
-                    <li><a >Tổng Hóa Đơn Đại Lý<span id="total-agency" class="pull-right text-green"></span></a></li>
-                    <li><a >Đại Lý Đã Thanh Toán<span id="pay-agency" class="pull-right text-aqua"></span></a></li>
-                    <li><a >Số Nợ Của Đại Lý<span id="det-agency" class="pull-right text-red"></span></a></li>
-                     <li><a ></a></li>
-                     <li><a >Tổng Hóa Đơn Nhà Cung Cấp<span id="total-provider" class="pull-right text-green"></span></a></li>
-                    <li><a >Đã Thanh Toán Cho Nhà Cung Cấp<span id="pay-provider" class="pull-right text-aqua"></span></a></li>
-                    <li><a >Số Nợ Chưa Thành Toán<span id="det-provider" class="pull-right text-red"></span></a></li>
-                    <li><a ></a></li>
-                    <li><a >Số Nợ Trên Hệ Thống<span id="det-money" class="pull-right text-red"></span></a></li>
+                   <?php if($this->identity()->role_id <=3){?>
+                      <li><a >Tổng Hóa Đơn Đại Lý<span id="total-agency" class="pull-right text-green"></span></a></li>
+                      <li><a >Đại Lý Đã Thanh Toán<span id="pay-agency" class="pull-right text-aqua"></span></a></li>
+                      <li><a >Số Nợ Của Đại Lý<span id="det-agency" class="pull-right text-red"></span></a></li>
+                       <li><a ></a></li>
+                       <li><a >Tổng Hóa Đơn Nhà Cung Cấp<span id="total-provider" class="pull-right text-green"></span></a></li>
+                      <li><a >Đã Thanh Toán Cho Nhà Cung Cấp<span id="pay-provider" class="pull-right text-aqua"></span></a></li>
+                      <li><a >Số Nợ Chưa Thành Toán<span id="det-provider" class="pull-right text-red"></span></a></li>
+                      <li><a ></a></li>
+                      <li><a >Số Nợ Trên Hệ Thống<span id="det-money" class="pull-right text-red"></span></a></li>
+                    <?php }else{?>
+                         <li><a >Tổng Hóa Đơn Vai Trò Đại Lý<span id="total-agency" class="pull-right text-green"></span></a></li>
+                      <li><a >Đã Thanh Toán Cho RDC<span id="pay-agency" class="pull-right text-aqua"></span></a></li>
+                      <li><a >Số Dư Nợ<span id="det-agency" class="pull-right text-red"></span></a></li>
+                       <li><a ></a></li>
+                       <li><a >Tổng Hóa Đơn Vai Trò  Nhà Cung Cấp<span id="total-provider" class="pull-right text-green"></span></a></li>
+                      <li><a >RDC Đã Thanh Toán<span id="pay-provider" class="pull-right text-aqua"></span></a></li>
+                      <li><a >Số Nợ RDC Chưa Thành Toán<span id="det-provider" class="pull-right text-red"></span></a></li>
+                      <li><a ></a></li>
+                      <li><a >Số Nợ Trên Hệ Thống<span id="det-money" class="pull-right text-red"></span></a></li>
+                    <?php }?>
                   </ul>
                 </div><!-- /.footer -->
               </div><!-- /.box -->
@@ -48,36 +63,13 @@ use Utility\Date\Date; ?>
         <div class="box-header">
           <i class="fa fa-comments-o"></i>
           <h3 class="box-title">Thông Báo</h3>
-          <div class="box-tools pull-right" data-toggle="tooltip" title="Status">
-            <div class="btn-group" data-toggle="btn-toggle" >
-              <button type="button" class="btn btn-default btn-sm active"><i class="fa fa-square text-green"></i></button>
-              <button type="button" class="btn btn-default btn-sm"><i class="fa fa-square text-red"></i></button>
+          <div class="box-tools pull-right">
+              <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+              <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
             </div>
-          </div>
         </div>
         <div class="box-body chat" id="list-notifications">
-          <!-- chat item -->
-          <div class="item">
-            <img src="/AdminLTE-2.3.0/dist/img/user4-128x128.jpg" alt="user image" class="online">
-            <p class="message">
-              <a href="#" class="name">
-                <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 2:15</small>
-                Mike Doe
-              </a>
-              I would like to meet you to discuss the latest news about
-              the arrival of the new theme. They say it is going to be one the
-              best themes on the market
-            </p>
-            <div class="attachment">
-              <h4>Attachments:</h4>
-              <p class="filename">
-                Theme-thumbnail-image.jpg
-              </p>
-              <div class="pull-right">
-                <button class="btn btn-primary btn-sm btn-flat">Open</button>
-              </div>
-            </div><!-- /.attachment -->
-          </div><!-- /.item -->
+         
          
         </div><!-- /.chat -->
         <div class="box-footer">
@@ -112,6 +104,7 @@ use Utility\Date\Date; ?>
   <?php foreach ($logs as $log) {
       /* Decode to array */
       $task = json_decode($log->value, true);
+      $url = URLUtilily::getUrl($user_id,$role,$log->task_id,$log->agency_id,$log->provider_id);
    ?>
       <li>
       <!-- drag handle -->
@@ -126,7 +119,7 @@ use Utility\Date\Date; ?>
                 echo " đã thay đổi " . "<span class='foucus-value'>".$task['key_name']."</span>"; ?>
                 <?php if (! empty($task['custumer'])) echo "của khách hàng <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ "; else echo " của chứng chỉ: "; ?>
 
-                <a class ="foucus-value" href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <a class ="foucus-value" href="<?php echo  $url; ?>"> <?php echo $log->join_task_name; ?> </a>
                 <!-- If field reporter_id, agency_id ... -->
                 <?php echo " từ "; ?>
                 <?php if ($task['key'] == Config::reporter_id
@@ -159,7 +152,7 @@ use Utility\Date\Date; ?>
             <?php if ($log->action_id == (string)Config::ADD_ACTION) {
                 echo " đã thêm hồ sơ "?>
                 <?php if (! empty($task['custumer'])) echo "của khách hàng <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ "; else echo " của chứng chỉ: "; ?>
-                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <a href="<?php echo  $url ?>"> <?php echo $log->join_task_name; ?> </a>
                 <?php
             }?>
              <?php if ($log->action_id == (string)Config::DELETE_PAY_ACTION) {
@@ -171,7 +164,7 @@ use Utility\Date\Date; ?>
                 <?php if (! empty($task['custumer']))
                     echo "của <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ ";
                 else echo " của chứng chỉ: "; ?>
-                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <a href="<?php echo  $url ?>"> <?php echo $log->join_task_name; ?> </a>
                 <?php
             }?>
              <!-- Action pay -->
@@ -182,7 +175,7 @@ use Utility\Date\Date; ?>
                 <?php if (! empty($task['custumer']))
                     echo "của <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ ";
                 else echo " của chứng chỉ: "; ?>
-                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <a href="<?php echo  $url ?>"> <?php echo $log->join_task_name; ?> </a>
                 <?php
             }?>
              <?php if ($log->action_id == (string)Config::FILE_ACTION) {
@@ -192,7 +185,7 @@ use Utility\Date\Date; ?>
                 <?php if (! empty($task['custumer']))
                     echo "của <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ ";
                 else echo " của chứng chỉ: "; ?>
-                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <a href="<?php echo  $url ?>"> <?php echo $log->join_task_name; ?> </a>
                 <?php
             }?>
             <?php if ($log->action_id == (string)Config::DELETE_FILE_ACTION) {
@@ -202,7 +195,7 @@ use Utility\Date\Date; ?>
                 <?php if (! empty($task['custumer']))
                     echo "của <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ ";
                 else echo " của chứng chỉ: "; ?>
-                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <a href="<?php echo  $url ?>"> <?php echo $log->join_task_name; ?> </a>
                 <?php
             }?>
             <!-- Action pay -->
@@ -215,7 +208,7 @@ use Utility\Date\Date; ?>
                 <?php if (! empty($task['custumer']))
                     echo "của <span class='foucus-value'>" . $task['custumer']. "</span>, chứng chỉ ";
                 else echo " của chứng chỉ: "; ?>
-                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <a href="<?php echo  $url ?>"> <?php echo $log->join_task_name; ?> </a>
                 <?php
             }?>
             <?php if ($log->action_id == (string)Config::EDIT_PAY_ACTION) {
@@ -238,7 +231,7 @@ use Utility\Date\Date; ?>
                 <?php if (! empty($task['new_value']['custumer']))
                     echo "của <span class=' foucus-value'>" . $task['new_value']['custumer']. "</span>, chứng chỉ ";
                 else echo " của chứng chỉ: "; ?>
-                <a href="/manager-tasks/detail/<?php echo $log->task_id; ?>"> <?php echo $log->join_task_name; ?> </a>
+                <a href="<?php echo  $url ?>"> <?php echo $log->join_task_name; ?> </a>
                 <?php
             }?>
             
@@ -387,8 +380,11 @@ loadNotification();
               $('#total-provider').html(accounting.formatNumber(data['provider']));
               $('#pay-provider').html(accounting.formatNumber(data['provider_pay']));
               $('#det-provider').html(accounting.formatNumber(data['provider'] - data['provider_pay']));
-
+              <?php if($this->identity()->role_id <=3){?>
               $('#det-money').html(accounting.formatNumber((data['agency'] - data['agency_pay'])-(data['provider'] - data['provider_pay'])));
+              <?php }else{ ?>
+                              $('#det-money').html(accounting.formatNumber((data['provider'] - data['provider_pay']) - (data['agency'] - data['agency_pay'])));
+              <?php } ?>
             }
   });
   
