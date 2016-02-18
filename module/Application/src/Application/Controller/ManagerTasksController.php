@@ -338,11 +338,16 @@ class ManagerTasksController extends BaseController
                 $old_value = number_format($old_value);
                 $new_value = number_format($new_value);
             }
-            
+            /* Convert process_id */
+            if ($name == Config::process_id) {
+                $old_value= $this->databaseService->getProcessBaseID($old_value)->current()['name'];
+                $new_value= $this->databaseService->getProcessBaseID($new_value)->current()['name'];
+            }
              if($name == "date_open" || $name == "date_end" || $name == "date_open_pr" || $name == "date_end_pr"){
                 $value = Date::changeVNtoDateSQL($value);
                 $old_value = Date::changeDateSQLtoVN($log->old_id);
              }
+
              $validator = new \Zend\Validator\Digits();
              if (($name == "cost_sell" || $name == "cost_buy") && !$validator->isValid($value)) {
                  $result->setStatus(Xeditable::STATUS_ERROR);
@@ -380,21 +385,16 @@ class ManagerTasksController extends BaseController
                         || $name == Config::date_end_id
                         || $name == Config::agency_note_id) {
                     /* For agency: agency_id, cost_sell, date_open, date_end, agency_note */
-                    $ret = $mail->notify_modify_to_agency($detail_task, $receiver, $name, $old_value, $new_value);
+                    $mail->notify_modify_to_agency($detail_task, $receiver, $name, $old_value, $new_value);
                 } else if ($name == Config::provider_id
                         || $name == Config::cost_buy_id
                         || $name == Config::date_open_pr_id
                         || $name == Config::date_end_pr_id
                         || $name == Config::provider_note_id) {
                     /* For provider: provider_id, cost_buy, date_open_pr, date_end_pr, provider_note */
-                    $ret = $mail->notify_modify_to_provider($detail_task, $receiver, $name, $old_value, $new_value);
+                    $mail->notify_modify_to_provider($detail_task, $receiver, $name, $old_value, $new_value);
                 }
-                $ret = $mail->notify_modify_to_admin($detail_task, $receiver, $name, $old_value, $new_value);
-                
-                if ($ret != NULL) {
-                    $result->setStatus(Xeditable::STATUS_ERROR);
-                    $result->setMsg(Xeditable::MSG_DATA_NOT_EMAIL);
-                }
+                $mail->notify_modify_to_admin($detail_task, $receiver, $name, $old_value, $new_value);
             }
          }else{
              $result->setStatus(Xeditable::STATUS_ERROR);
