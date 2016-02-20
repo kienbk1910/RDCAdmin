@@ -21,6 +21,7 @@
               $this->checkRole(Config::USER_LEAVE1);
       }
       protected function checkLevel2(){
+        $this->checkAuth();
         if($this->isLevel2() != true)
               $this->checkRole(Config::USER_LEAVE2);
       }
