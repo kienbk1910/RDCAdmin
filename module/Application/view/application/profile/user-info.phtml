@@ -67,7 +67,7 @@
 
                       <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                        <?php if ($this->identity()->role_id == Config::USER_ADMIN) {?>
+                        <?php if ($this->identity()->role_id == Config::USER_ADMIN && $this->identity()->id != $user->id) {?>
                             <button type="submit" class="btn btn-danger" id="block-user"><?php if($user->block == 0) { echo "Unblock"; } else { echo "Block" ;} ?></button>
                         <?php } ?>
                         </div>
