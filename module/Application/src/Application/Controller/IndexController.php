@@ -24,7 +24,7 @@ namespace Application\Controller;
         $task = new Task();
         $task->id = NULL;
         $id_user =  $this->auth->getIdentity()->id;
-        $role =  $this->auth->getIdentity()->id;
+        $role =  $this->auth->getIdentity()->role_id;
         if($this->isLevel2()){
             $id_user =  null;
         }

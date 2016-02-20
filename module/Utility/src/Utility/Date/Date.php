@@ -4,6 +4,9 @@ namespace Utility\Date;
 class Date {
     public static function changeDateSQLtoVN($number)
     {
+        if($number == null || $number == ''){
+            return '';
+        }
        return date_format(date_create($number),"d/m/Y");
     }
 

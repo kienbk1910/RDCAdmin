@@ -178,7 +178,10 @@ class ManagerTasksController extends BaseController
             $task->agency_id = $request->getPost('agency_id');
             $task->cost_sell = str_replace(',','',$request->getPost('cost_sell',0));
             $task->date_open = Date::changeVNtoDateSQL($request->getPost('date_open'));
-            $task->date_end  = Date::changeVNtoDateSQL($request->getPost('date_end'));
+            if($task->date_end != ''){
+                $task->date_end  = Date::changeVNtoDateSQL($request->getPost('date_end'));
+            }
+        
             $task->agency_note = $request->getPost('agency_note');
 
             // provider
@@ -186,15 +189,11 @@ class ManagerTasksController extends BaseController
             $task->cost_buy = str_replace(',','',$request->getPost('cost_buy',0));
             /* Viet change */
             $date_open_pr = $request->getPost('date_open_pr','');
-            if($date_open_pr == ''){
-                $task->date_open_pr = $task->date_open;
-            }else{
+            if($date_open_pr != ''){
                 $task->date_open_pr = Date::changeVNtoDateSQL($date_open_pr);
             }
             $date_end_pr = $request->getPost('date_end_pr','');
-            if($date_end_pr == ''){
-                $task->date_end_pr = $task->date_end;
-            }else{
+            if($date_end_pr != ''){
                 $task->date_end_pr = Date::changeVNtoDateSQL($date_end_pr);
             }
             /* Viet End change */

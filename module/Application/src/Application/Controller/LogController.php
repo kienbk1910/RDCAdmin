@@ -51,7 +51,7 @@ class LogController extends BaseController {
           // set the number of items per page to 10
          $logs->setItemCountPerPage(Config::MAX_ITEM_OF_PAGE);
          $id_user =  $this->auth->getIdentity()->id;
-        $role =  $this->auth->getIdentity()->id;
+        $role =  $this->auth->getIdentity()->role_id;
         return new ViewModel( array (
                 'logs' => $logs,
                    'user_id'=>$id_user,
@@ -76,7 +76,7 @@ class LogController extends BaseController {
           // set the number of items per page to 10
          $logs->setItemCountPerPage(Config::MAX_ITEM_OF_PAGE);
         $role =  $this->auth->getIdentity()->id;
-         $id_user =  $this->auth->getIdentity()->id;
+         $id_user =  $this->auth->getIdentity()->role_id;
         return new ViewModel( array (
                 'logs' => $logs,
                 'task_id'=>$task_id,

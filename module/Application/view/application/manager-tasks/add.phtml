@@ -168,15 +168,7 @@
        return false;
     }
     $( "input[name='date_open']" ).parent().removeClass("has-error");
-    $( "input[name='date_open']" ).parent().addClass("has-success");
-
-    if($( "input[name='date_end']" ).val().length == 0 ){
-       $( "input[name='date_end']" ).parent().addClass("has-error");
-       return false;
-    }
-    $( "input[name='date_end']" ).parent().removeClass("has-error");
-    $( "input[name='date_end']" ).parent().addClass("has-success");    
-    
+    $( "input[name='date_open']" ).parent().addClass("has-success");  
     return true;
   }
   
