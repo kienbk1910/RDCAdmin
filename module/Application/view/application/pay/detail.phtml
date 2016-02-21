@@ -14,6 +14,7 @@ use Application\Utility\URLUtilily;
 		    			echo "Hóa Đơn Thanh Toán Cho Nhà Cung Cấp";
 		    		}
 		    	?>
+		    	 <span class="label label-default"><?php echo $pay->id;?>
 		    </h3>
 		    <div class="box-tools pull-right">
 		     <!--  <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button> -->
@@ -122,28 +123,67 @@ use Application\Utility\URLUtilily;
 		  			<tr>
 		  				<th scope="row"></th>
 		  				<td></td>
+		  	
 		  				<td></td>
 		  				<td></td>
 		  				<td></td>
-		  				<td>	<button class="btn btn-block btn-primary price_match_no_print" onclick="print_bill()"><span class="glyphicon glyphicon-print"></span></button></td>
+		  				<td></td>
 		  				<td> Tổng </button></td>
 		  				<td id="total_pay"><?php echo number_format($total); ?></td>
 		  			</tr>
 		  		</tbody>
 		  	</table>
+
+		  </div> 
+		  <div class="row">
+		   <div class="col-xs-2 col-xs-offset-8 connectedSortable">
+		  	<button class="btn btn-block btn-primary price_match_no_print" onclick="print_bill()"><span class="glyphicon glyphicon-print"> In</span></button>
+		  </div>
+		   <div class="col-xs-1 connectedSortable">
+		   	 <button class="btn btn-block btn-danger price_match_no_print" onclick="show_alert(<?php echo $pay->id;?>)"><span class="glyphicon glyphicon-trash"></span> Xóa</button>
+		   </div>
+		  		 
 		  </div>
 		</div>
 	</div>
 
 </section><!-- /.content -->
+<!-- Modal -->
+<div class="modal fade" id="modal-confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Cảnh Báo</h4>
+      </div>
+      <div class="modal-body">
+            Dữ Liệu sẽ bị xóa!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-danger" id="delete-pay" >Xóa</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
-	function print_bill(){
-		/*var restorepage = document.body.innerHTML;
-		var printcontent = document.getElementById('content').innerHTML;
-		document.body.innerHTML = printcontent;
-		window.print();
-		document.body.innerHTML = restorepage;
-*/	
-$('#content').printThis();
-}
+	function print_bill(){	
+		$('#content').printThis();
+	}
+	function show_alert(id){
+ 		$("#delete-pay").attr('onclick','delete_pay_action('+id+')');
+     	$("#modal-confirm").modal('show');
+     }
+     function delete_pay_action(id){
+     	$.ajax({
+            type:"POST",                          
+            url:"/pay/delete",
+            data:{
+                   id:id
+                   },
+            success: function(data){
+            	window.location.href ="/pay";
+            }
+     });
+     }
 </script>

@@ -201,4 +201,25 @@ class IndexService implements IndexServiceInterface
    public function getPayActionDetail($id){
     return $this->databaseMapper->getPayActionDetail($id);  
    }
+  public function getTotalPayAction($user_id){
+    return $this->databaseMapper->getTotalPayAction($user_id); 
+  }
+  public function getListPay($start,$length,$search,$columns,$orders,$user_id){
+    return $this->databaseMapper->getListPay($start,$length,$search,$columns,$orders,$user_id); 
+  }
+  public function getListPayFiltered($start,$length,$search,$columns,$orders,$user_id){
+    return $this->databaseMapper->getListPayFiltered($start,$length,$search,$columns,$orders,$user_id); 
+  }
+  public function getMoneyPayAction($id){
+     return $this->databaseMapper->getMoneyPayAction($id); 
+  }
+  public function getListMoneyHistoryByPayId($id){
+      return $this->databaseMapper->getListMoneyHistoryByPayId($id); 
+  }
+  public function deletePayAction($id){
+    return $this->databaseMapper->deletePayAction($id); 
+  }
+  public function deleteMoneyHistoryByPayId($id){
+    return $this->databaseMapper->deleteMoneyHistoryByPayId($id); 
+  }
 }

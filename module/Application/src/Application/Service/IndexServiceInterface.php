@@ -79,4 +79,14 @@ interface IndexServiceInterface
      public function addPayAction(PayAction $pay);
      public function getPayActionById($id);
      public function getPayActionDetail($id);
+
+     public function getTotalPayAction($user_id);
+     public function getListPay($start,$length,$search,$columns,$orders,$user_id);
+     public function getListPayFiltered($start,$length,$search,$columns,$orders,$user_id);
+
+     public function getMoneyPayAction($id);
+
+     public function getListMoneyHistoryByPayId($id);
+     public function deletePayAction($id);
+     public function deleteMoneyHistoryByPayId($id);
  }

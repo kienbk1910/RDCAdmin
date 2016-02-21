@@ -233,9 +233,35 @@ return array(
                             ),
 
                      ),
-                   
+                      'list' => array(
+                         'type' => 'segment',
+                           'options' => array(
+                             'route'    => '/list',
+                               'defaults' => array(
+                                 'action' => 'list',
+                                  
+                             ),
+                             'constraints' => array(
+                                
+                             )
+                            ),
 
-                ),
+                        ),
+                    'delete' => array(
+                         'type' => 'segment',
+                           'options' => array(
+                             'route'    => '/delete',
+                               'defaults' => array(
+                                 'action' => 'delete',
+                                  
+                             ),
+                             'constraints' => array(
+                                
+                             )
+                            ),
+
+                        ),
+                    ),
             ),
 // end pay
             'manager-users' => array (
@@ -718,6 +744,20 @@ return array(
             )
         ),
          array(
+            'label' => 'Tài Chính',
+            'uri' => '#',
+            'icon' => 'laptop',
+            'pages' => array(
+                array(
+                    'label' => 'Lịch Sử Thu Chi',
+                    'uri' => '#',
+                      'route' => 'pay',
+                    'icon' => 'circle-o'
+                ),
+                
+            )
+        ),
+         array(
             'label' => 'Quản lý Users',
             'icon' => 'pie-chart',
             'route' => 'manager-users',
@@ -735,24 +775,8 @@ return array(
                 ),
             )
         ),
-        /* array(
-            'label' => 'Quản Lý Học Viên',
-            'uri' => '#',
-            'icon' => 'laptop',
-            'pages' => array(
-                array(
-                    'label' => 'Dánh Sách Học Viên',
-                    'uri' => '#',
-                    'icon' => 'circle-o'
-                ),
-                array(
-                    'label' => ' Thêm Học Viên',
-                    'uri' => '#',
-                    'icon' => 'circle-o'
-                ),
-            )
-        ),
-         array(
+       
+         /*array(
             'label' => 'Quản Lý Chứng Chỉ',
             'uri' => '#',
             'icon' => 'edit',

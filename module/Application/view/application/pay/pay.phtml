@@ -141,7 +141,7 @@ use Application\Utility\URLUtilily;
 	$('.number-money').autoNumeric('init');
 	  $("#date_pay").datepicker();
    $("#date_pay").datepicker( "option", "dateFormat", "dd/mm/yy");
-	$('.input-money').change( function(){
+	$('.input-money').keydown( function(){
 		var total = 0;
 		$( ".input-money" ).each(function( index ) {
 		    var money = $( this ).val();

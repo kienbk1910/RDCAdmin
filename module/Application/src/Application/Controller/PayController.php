@@ -8,10 +8,13 @@ namespace Application\Controller;
  use Application\Config\Config;
  use Zend\Authentication\AuthenticationService;
  use Application\Model\Notification;
- use Application\Model\TaskListItem;
+ use Application\Model\PayListItem;
+  use Application\Model\TaskListItem;
  use Application\Model\PayAction;
  use Application\Model\MoneyHistory;
  use Utility\Date\Date;
+use Application\Model\User;
+use Application\Model\DataTablesObject;
  class PayController extends BaseController
  {
      public function __construct(IndexServiceInterface $databaseService,AuthenticationService $auth)
@@ -23,28 +26,65 @@ namespace Application\Controller;
 
      public function indexAction()
      {
-         $this->checkAuth();
-        $request = $this->getRequest();
-        $task = new Task();
-        $task->id = NULL;
-        $id_user =  $this->auth->getIdentity()->id;
-        $role =  $this->auth->getIdentity()->role_id;
-        if($this->isLevel2()){
-            $id_user =  null;
+        $this->checkAuth();
+        $this->checkLevel2();
+        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set("Lịch Sử Thu Chi");
+        $users = $this->databaseService->getListByRole(Config::ROLE_AGENCY);
+         $agencys = array();
+        array_push($agencys,new User(0,"Tất Cả","",""));
+        foreach ($users as $user) {
+             array_push($agencys,new User($user->id,$user->username,"",""));
+
         }
-        $logs = $this->databaseService->showLog( $id_user, $task);
-         $logs->setCurrentPageNumber((int) $this->params()->fromQuery('page', 1));
-          // set the number of items per page to 10
-         $logs->setItemCountPerPage(20);
+        return new ViewModel(
+             array('agencys'=>$agencys,
+              )
+            );
          
         return new ViewModel( array (
-                'logs' => $logs,
-                'user_id'=>$id_user,
-                'role' =>$role
+       
         ) );
+     }
+     public function listAction(){
+           $this->checkAuth();
+           $this->checkLevel2();
+         $request = $this->getRequest();
+
+         $draw = $request->getPost('draw',1);
+         $start = $request->getPost('start',0);
+         $length = $request->getPost('length',10);
+         $search = $request->getPost('search','');
+         $columns = $request->getPost('columns','');
+         $orders = $request->getPost('order','');
+
+         $search = $search['value'];
+         $total = $this->databaseService->getTotalPayAction(null);
+
+         $tasks =$this->databaseService->getListPay($start,$length,$search,$columns,$orders ,null);
+         $data = new DataTablesObject();
+         $data->recordsTotal = $total;
+         $data->recordsFiltered = $this->databaseService->getListPayFiltered($start,$length,$search,$columns,$orders ,null);
+         $data->draw = $draw;
+         foreach ($tasks as $task) {
+            $item = new PayListItem();
+            $item->DT_RowId =$task->id;
+            $item->username =$task->username;
+            $item->date_pay = Date::changeDateSQLtoVN($task->date_pay);
+            if($task->type == Config::PAY_CUSTUMER)
+             $item->type = "Thu";
+             else{
+               $item->type = "Chi"; 
+             }
+            $item->money =  number_format($this->databaseService->getMoneyPayAction($task->id)) ;
+            $item->user_create =$task->user_create;
+            array_push($data->data,$item);
+         }
+        echo \Zend\Json\Json::encode($data, false);
+        exit;
      }
      public function payAction(){
         $this->checkAuth();
+        $this->checkLevel2();
        $type = $this->params()->fromQuery('type', 1);
        $user_id = $this->params()->fromQuery('user_id', 1);
        $task_list =  $this->params()->fromQuery('id', '');
@@ -126,12 +166,41 @@ namespace Application\Controller;
              'type' => $type,
         ));
      }
+     public function deleteAction(){
+        $this->checkAuth();
+        $this->checkLevel2();
+          $request = $this->getRequest();
+        $id = $request->getPost('id',0);
+        $old_pays = $this->databaseService->getListMoneyHistoryByPayId($id);
+        foreach ($old_pays as $old_pay) {
+             $pay = new MoneyHistory();
+             $pay->id = $old_pay->id;
+             $pay->task_id = $old_pay->task_id;
+             $pay->date_pay = $old_pay->date_pay;
+             $pay->money = $old_pay->money;
+             $pay->money_option = $old_pay->money_option;
+             $pay->note = $old_pay->note;
+             $pay->type = $old_pay->type;
+             $pay->custumer = $old_pay->custumer;
+             $this->databaseService->deletePayLog($this->auth->getIdentity()->id, $pay,$pay->type); 
+        }
+        $this->databaseService->deletePayAction($id);
+        $this->databaseService->deleteMoneyHistoryByPayId($id);
+        return new JsonModel(array(
+
+        ));
+     }
      public function detailAction(){
         $this->checkAuth();
         $request = $this->getRequest();
         $id = $this->params()->fromRoute( 'id', 0 );
-        $moneys = $this->databaseService->getPayActionDetail($id);
+         $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set($id."- Chi Tiết Hóa Đơn");
         $pay = $this->databaseService->getPayActionById($id);
+        if($pay == NULL){
+            return $this->redirect()->toRoute('pay',array());
+        }
+        $moneys = $this->databaseService->getPayActionDetail($id);
+     
         $data = array();
         foreach ($moneys as $money) {
             $item = new TaskListItem();

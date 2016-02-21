@@ -691,7 +691,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
          $pay->money = $result->money;
          $pay->money_option = $result->money_option;
          $pay->note = $result->note;
-         $pay->type = $result->type;
+         $pay->custumer = $result->custumer;
         return $pay;
      }
       public function modifyPayLog($user_id, MoneyHistory $old,MoneyHistory $new,$type){
@@ -898,7 +898,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('pay_action')
                 ->join('users', 'pay_action.user_id = users.id', array("username"=>"username"), 'left')
-                ->join(array('create' => 'users'), 'pay_action.create_user = create.id', array("create_user"=>"username"), 'left')
+                ->join(array('create' => 'users'), 'pay_action.create_user = create.id', array("user_create"=>"username"), 'left')
                 ->join('money_option', 'pay_action.pay_option = money_option.id', array("pay_name"=>"name"), 'left');
         $select->Where(array('pay_action.id = ?' => $id));
         $selectString = $sql->getSqlStringForSqlObject($select);
@@ -913,5 +913,116 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $selectString = $sql->getSqlStringForSqlObject($select);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
    }
+     public function getTotalPayAction($user_id){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('pay_action');
+        if($user_id != null){
+            $select->Where(array('pay_action.user_id' => $user_id));
+        }
+         $select->columns(array('COUNT'=>new \Zend\Db\Sql\Expression('COUNT(*)')));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $resultSet =  $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $count = 0;
+        foreach ($resultSet as $row) {
+            $count = $row->COUNT;
+            break;
+        }
+        return $count;  
+     }
+     public function getListPay($start,$length,$search,$columns,$orders,$user_id){
+        $sql = new Sql($this->dbAdapter);
+       $select = $this->getSelectListPay($start,$length,$search,$columns,$orders,$user_id);
+        $select->order(array('pay_action.date_pay DESC'));
+        if($start !=null && $length !=null){
+             $select->offset($start)
+                    ->limit($length);
+        }
+        $selectString = $sql->getSqlStringForSqlObject($select);
 
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+
+     }
+     public function getListPayFiltered($start,$length,$search,$columns,$orders,$user_id){
+          
+        $sql = new Sql($this->dbAdapter);
+        $select = $this->getSelectListPay($start,$length,$search,$columns,$orders,$user_id);
+        $select->columns(array('COUNT'=>new \Zend\Db\Sql\Expression('COUNT(*)')));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $resultSet =  $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $count = 0;
+        foreach ($resultSet as $row) {
+            $count = $row->COUNT;
+            break;
+        }
+        return $count;
+     }
+    protected function getSelectListPay($start,$length,$search,$columns,$order,$user_id){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('pay_action');
+        $select->join('users', 'pay_action.user_id = users.id', array('username'=>'username'), 'left');
+        $select->join(array('create' => 'users'), 'pay_action.create_user = create.id', array('user_create'=>'username'), 'left');
+        $select->where->like('users.username', '%' . $search .'%');
+        $username = DataTableUtility::getSearchValue($columns,"username");
+        if($username != "" && $username != 0){
+           $select->Where(array('users.id' => $username));
+        }
+        $type = DataTableUtility::getSearchValue($columns,"type");
+        if($type != "" && $type != 0){
+           $select->Where(array('pay_action.type' => $type));
+        }
+        $date_open = DataTableUtility::getSearchValue($columns,"date_pay");
+        $date_open = explode("-", $date_open);
+        $date_open_1 ="";
+        $date_open_2 ="";
+        if( count($date_open) == 2){
+            $date_open_1 =$date_open[0];
+            $date_open_2 =$date_open[1];
+        }
+        if ($date_open_1 != "" && $date_open_2 != "") {
+            $select->where->lessThanOrEqualTo("pay_action.date_pay", Date::changeVNtoDateSQL($date_open_2))
+                ->and->greaterThanOrEqualTo("pay_action.date_pay", Date::changeVNtoDateSQL($date_open_1));
+        } elseif ($date_open_1 == "" && $date_open_2 != "") {
+            $select->where->lessThanOrEqualTo("pay_action.date_pay", Date::changeVNtoDateSQL($date_open_2));
+        } else if ($date_open_1 != "" && $date_open_2 == "") {
+             $select->where->greaterThanOrEqualTo("pay_action.date_pay", Date::changeVNtoDateSQL($date_open_1));
+        }
+        return $select;
+      }
+    public function getMoneyPayAction($id){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('money_history');
+        $select->columns(array('count' => new Expression('SUM(money_history.money)')));
+        $select->Where(array('money_history.pay_action_id = ?' => $id));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $resultSet = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE); 
+        foreach ($resultSet as $row) {
+            $count = $row->count;
+            break;
+        }
+        return $count;        
+    } 
+    public function getListMoneyHistoryByPayId($id){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('money_history')
+                ->join('tasks', 'money_history.task_id = tasks.id', array("custumer"=>"custumer"), 'left');
+        $select->Where(array('money_history.pay_action_id = ?' => $id));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE); 
+    }
+    public function deletePayAction($id){
+        $sql = new Sql($this->dbAdapter);
+        $insert = $sql->delete('pay_action');
+        $insert->where(array('id =?' => $id));
+        $selectString = $sql->getSqlStringForSqlObject($insert);
+           
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+    }
+    public function deleteMoneyHistoryByPayId($id){
+        $sql = new Sql($this->dbAdapter);
+        $insert = $sql->delete('money_history');
+        $insert->where(array('pay_action_id =?' => $id));
+        $selectString = $sql->getSqlStringForSqlObject($insert);
+     
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+    }
 }
