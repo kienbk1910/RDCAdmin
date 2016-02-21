@@ -27,8 +27,8 @@ use Application\Utility\DataTableUtility;
 use Utility\Date\Date;
 use Application\Model\FileAttachment;
 use Application\Model\Log;
- use Application\Model\Notification;
-
+use Application\Model\Notification;
+use Application\Model\PayAction;
 class ZendDbSqlMapper implements IndexMapperInterface
 {
     protected $dbAdapter;
@@ -365,7 +365,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
      public function getListUserByBaseRole($role){
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('users');
-        $select->Where(array('users.role_id < ?' => $role));
+        $select->Where(array('users.role_id <= ?' => $role));
         $selectString = $sql->getSqlStringForSqlObject($select);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
      }
@@ -872,4 +872,46 @@ class ZendDbSqlMapper implements IndexMapperInterface
         }
         return $count;
     }
+    public function getTaskListForPay($type,$user_id,$task_list){
+         $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('tasks');
+        if($type == Config::PAY_CUSTUMER){
+             $select->Where(array('tasks.agency_id = ?' => $user_id));
+        }else{
+            $select->Where(array('tasks.provider_id = ?' => $user_id));
+        }
+        $select->where->in("tasks.id", $task_list);
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE); 
+    }
+    public function addPayAction(PayAction $pay){
+        $sql = new Sql($this->dbAdapter);
+        $insert = $sql->insert('pay_action');
+        $newData = $pay->toArray();
+        $insert->values($newData);
+        $selectString = $sql->getSqlStringForSqlObject($insert);
+        $result  = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        return  $result->getGeneratedValue();
+
+    }
+    public function getPayActionById($id){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('pay_action')
+                ->join('users', 'pay_action.user_id = users.id', array("username"=>"username"), 'left')
+                ->join(array('create' => 'users'), 'pay_action.create_user = create.id', array("create_user"=>"username"), 'left')
+                ->join('money_option', 'pay_action.pay_option = money_option.id', array("pay_name"=>"name"), 'left');
+        $select->Where(array('pay_action.id = ?' => $id));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $result = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        return $result->current();
+    }
+   public function getPayActionDetail($id){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('money_history')
+                ->join('tasks', 'money_history.task_id = tasks.id', array("task_id"=>"id","custumer"=>"custumer","certificate"=>"certificate","cost_sell"=>"cost_sell","cost_buy"=>"cost_buy"), 'left');
+        $select->Where(array('money_history.pay_action_id = ?' => $id));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+   }
+
 }

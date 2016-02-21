@@ -194,6 +194,50 @@ return array(
                 ),
             ),
 // end tasks
+//  begin pay
+            'pay' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/pay',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller'    => 'Pay',
+                        'action'        => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'pay' => array(
+                         'type' => 'segment',
+                         'options' => array(
+                             'route'    => '/pay',
+                             'defaults' => array(
+                                 'action' => 'pay',
+                             ),
+                             'constraints' => array(
+                             )
+                         ),
+
+                     ),
+                     'detail' => array(
+                         'type' => 'segment',
+                           'options' => array(
+                             'route'    => '/detail/:id',
+                               'defaults' => array(
+                                 'action' => 'detail',
+                                  'id'=>'0',
+                             ),
+                             'constraints' => array(
+                                 'id'   => '[1-9]\d*',
+                             )
+                            ),
+
+                     ),
+                   
+
+                ),
+            ),
+// end pay
             'manager-users' => array (
 				'type' => 'Literal',
 				'options' => array (
@@ -593,6 +637,7 @@ return array(
              'Application\Controller\ManagerTasks' => 'Application\Factory\ManagerTasksControllerFactory',
              'Application\Controller\Tasks' => 'Application\Factory\TasksControllerFactory',
              'Application\Controller\Log' => 'Application\Factory\LogControllerFactory',
+             'Application\Controller\Pay' => 'Application\Factory\PayControllerFactory',
          )
     ),
     'navigation_helpers' => array (

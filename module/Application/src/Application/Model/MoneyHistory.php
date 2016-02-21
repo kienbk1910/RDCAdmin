@@ -18,6 +18,7 @@ class MoneyHistory
 	public $note;
 	public $type;
 	public $username;
+	public $pay_action_id;
 	/* Viet add */
 	public $custumer;
 	public function toArray(){
@@ -28,7 +29,7 @@ class MoneyHistory
 			'money_option'=> $this->money_option,
 			'note'=> $this->note,
 			'type'=> $this->type,
-
+			'pay_action_id'=> $this->pay_action_id,
 			'user_id'=> $this->user_id,
 			'create_date'=> $this->create_date,
 			'last_update'=> $this->last_update,

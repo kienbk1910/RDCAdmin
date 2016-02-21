@@ -8,8 +8,8 @@ use Application\Model\Comment;
 use Application\Model\MoneyHistory;
 use Application\Model\FileAttachment;
 use Application\Model\Log;
- use Application\Model\Notification;
-
+use Application\Model\Notification;
+use Application\Model\PayAction;
 class IndexService implements IndexServiceInterface
 {
     protected $databaseMapper;
@@ -188,4 +188,17 @@ class IndexService implements IndexServiceInterface
   public function getTotalCurrentMoneyById($id_user,$type){
     return $this->databaseMapper->getTotalCurrentMoneyById($id_user,$type); 
   }
+  public function getTaskListForPay($type,$user_id,$task_list){
+    return $this->databaseMapper->getTaskListForPay($type,$user_id,$task_list);
+  }
+  public function addPayAction(PayAction $pay){
+      return $this->databaseMapper->addPayAction($pay);
+
+  }
+  public function getPayActionById($id){
+    return $this->databaseMapper->getPayActionById($id);   
+  }
+   public function getPayActionDetail($id){
+    return $this->databaseMapper->getPayActionDetail($id);  
+   }
 }

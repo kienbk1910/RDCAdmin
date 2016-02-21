@@ -17,9 +17,7 @@ div.dataTables_wrapper {
 .toggle-vis-hide{
 	color: red;
 }
-td.highlight {
-    background-color: whitesmoke !important;
-}
+
 .col-custum{
 	padding-left: 5px;
 	padding-right: 5px;
@@ -40,4 +38,14 @@ td.highlight {
 }
 .foucus-value{
 	font-size: 18px;
+}
+@media print {
+  a[href]:after {
+    content: none !important;
+  }
+}
+@media print {
+    .price_match_no_print {
+        display:none !important;
+    }
 }

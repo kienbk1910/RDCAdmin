@@ -1,0 +1,190 @@
+<?php
+use Application\Config\Config;
+use Utility\Date\Date;
+use Application\Utility\URLUtilily; 
+?>
+<section class="content">
+	<div class="box box-default">
+		  <div class="box-header with-border">
+		    <h3 class="box-title">
+		    	<?php if($type == Config::PAY_CUSTUMER){
+		    				echo "Đại Lý Thanh Toán";
+		    			}else{
+		    				echo "Thanh Toán Cho Nhà Cung Cấp";
+		    			}
+		    		 ?>
+		    </h3>
+		    <div class="box-tools pull-right">
+		     <!--  <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button> -->
+		    </div><!-- /.box-tools -->
+		  </div><!-- /.box-header -->
+		  <div class="box-body" >
+		 <form role="form" method="post" onsubmit="return validateFormPay()">
+		  	<div class="form-horizontal">
+		  	 <label for="inputName" class="col-sm-2 control-label">
+		  	 <?php if($type == Config::PAY_CUSTUMER){
+		    				echo "Đại Lý";
+		    			}else{
+		    				echo "Nhà Cung Cấp";
+		    			}
+		    		 ?><span style='color:red'> <?php echo $user->username?></span></label>
+		  	 <label for="inputName" class="col-sm-1 control-label">Số Tiền</label>
+                  <div class="col-sm-2">
+                    <input id="total_money"type="text" class="form-control number-money" name="total_money" >
+                  </div>
+		  	</div>
+		  	<div class="form-horizontal">
+		  	 <label for="inputName" class="col-sm-2 control-label">Ngày Thanh Toán</label>
+                  <div class="col-sm-2">
+                    <input id="date_pay"type="text" class="form-control" name="date_pay" >
+                  </div>
+		  	</div>
+		  	<div class="form-horizontal">
+		  	 <label for="inputName" class="col-sm-1 control-label">Phương Thức</label>
+              	<div class="col-sm-2">
+                   <select name="money_option" class="form-control">
+                      <option value="1">Tiền Mặt</option>
+                      <option value="2">Chuyển Khoản</option>
+                      
+                   </select>
+                </div>
+		  	</div>
+		  </div>
+		  <div class="table-responsive"> 
+		  		<table class="table table-bordered">
+			  		<thead>
+			  			<tr> 
+			  			<th>#</th>
+			  			<th>Mã HS</th>
+			  			<th>Tên</th>
+			  			<th>Hồ Sơ</th>
+			  			<th>Thỏa Thuận</th>
+			  			<th>
+			  				<?php if($type == Config::PAY_CUSTUMER){
+		    				echo "Đã Nhận";
+		    			}else{
+		    				echo "Đã Thanh Toán";
+		    			}
+		    		 ?>
+			  			</th>
+			  			<th>Dư Nợ</th>
+			  			<th>Thanh Toán</th> 
+			  			</tr> 
+			  		</thead>
+		  		<tbody>
+		  			<?php 
+		  			  $index = 1;
+		  			foreach ($tasks as $task) {?>
+			  			<tr>
+			  			  
+				  				<th scope="row"><?php echo $index?></th>
+				  				<td><?php echo $task->DT_RowId ?></td>
+				  				<td><?php echo $task->custumer ?></td>
+				  				<td><?php echo $task->certificate ?></td>
+				  				<td>
+					  				<?php if($type == Config::PAY_CUSTUMER){
+						    				echo number_format($task->cost_sell);
+						    			}else{
+						    				echo number_format($task->cost_buy);
+						    			}
+						    		 ?>
+				  		        </td>
+				  				<td>
+				  					<?php if($type == Config::PAY_CUSTUMER){
+					    				echo number_format($task->custumer_pay);
+					    			}else{
+					    				echo number_format($task->provider_pay);
+					    			}
+					    		 	?>
+								</td>
+				  				<td>
+				  					<?php
+				  						$tmp = 0;
+				  					 if($type == Config::PAY_CUSTUMER){
+					    				$tmp =$task->cost_sell - $task->custumer_pay; 
+					    			}else{
+					    				$tmp = $task->cost_buy - $task->provider_pay; 
+					    			}
+					    			echo number_format($tmp);
+					    		 	?>
+				  				</td>
+				  				<td><div> <input  data-v-min="0"data-v-max="<?php echo $tmp;?>"type="text" class="form-control number-money input-money" name="money_<?php echo $index;?>">
+				  				</div>
+				  				<input type="hidden" value="<?php echo $task->DT_RowId ?>"name="id_<?php echo $index;?>">	
+				  				</td>
+				  			
+			  			</tr>
+			  			
+		  			<?php $index++;}?>
+		  			<input type="hidden" value="<?php echo $index-1 ;?>"name="count">
+		  			<input type="hidden" value="<?php echo $user->id ;?>"name="user_id">
+		  				<input type="hidden" value="<?php echo $type ;?>"name="type">
+		  			<tr>
+		  				<th scope="row"></th>
+		  				<td></td>
+		  				<td></td>
+		  				<td></td>
+		  				<td></td>
+		  				<td></td>
+		  				<td><button type="submit" class="btn btn-danger" data-dismiss="modal">Thanh Toán</button></td>
+		  				<td id="total_pay">0</td>
+		  			</tr>
+		  		</tbody>
+		  	</table>
+		  </div>
+		  </form>
+		</div>
+	</div>
+
+</section><!-- /.content -->
+<script type="text/javascript">
+	$('.number-money').autoNumeric('init');
+	  $("#date_pay").datepicker();
+   $("#date_pay").datepicker( "option", "dateFormat", "dd/mm/yy");
+	$('.input-money').change( function(){
+		var total = 0;
+		$( ".input-money" ).each(function( index ) {
+		    var money = $( this ).val();
+		    console.log(money);
+		    if(money != ""){
+ 	 	  	 total += accounting.unformat(money);
+ 	 	  	 console.log(total);
+ 	 	  	}
+		});
+		console.log(total);
+		$( "#total_pay").html(accounting.formatNumber(total));
+	});
+	function validateFormPay(){
+		if($( "input[name='total_money']" ).val().length == 0 ){
+       		$( "input[name='total_money']" ).parent().addClass("has-error");
+      	 	return false;
+   		 }
+   		$( "input[name='total_money']" ).parent().removeClass("has-error");
+    	$( "input[name='total_money']" ).parent().addClass("has-success");
+    	if($( "input[name='date_pay']" ).val().length == 0 ){
+       		$( "input[name='date_pay']" ).parent().addClass("has-error");
+      	 	return false;
+   		 }
+   		$( "input[name='date_pay']" ).parent().removeClass("has-error");
+    	$( "input[name='date_pay']" ).parent().addClass("has-success");
+    	var count = $("input[name='count']").val();
+    	var total = 0;
+    	for(var i = 1 ;i<=count;i++){
+    		var money = $("input[name='money_"+i+"']").val();
+    		if(money.length == 0 ){
+       			$("input[name='money_"+i+"']").parent().addClass("has-error");
+      	 		return false;
+	   		 }
+	   		 total += accounting.unformat(money);
+	   		$("input[name='money_"+i+"']").parent().removeClass("has-error");
+	    	$("input[name='money_"+i+"']").parent().addClass("has-success");
+    	}
+    	var current = $( "input[name='total_money']").val();
+    	if(total != accounting.unformat(current)){
+    		$( "input[name='total_money']" ).parent().addClass("has-error");
+    		return false;
+    	}
+    //	alert("Chức Năng Chưa Hoàn Thành!");
+		return true;
+	}
+</script>
