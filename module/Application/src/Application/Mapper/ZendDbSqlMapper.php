@@ -19,6 +19,7 @@ use Zend\Paginator\Adapter\DbSelect;
 use Zend\Paginator\Paginator;
 use Zend\Db\ResultSet\ResultSet;
 use Application\Model\User;
+use Application\Model\Certificate;
 use Application\Config\Config;
 use Application\Model\Comment;
 use Application\Model\Task;
@@ -78,6 +79,30 @@ class ZendDbSqlMapper implements IndexMapperInterface
          return $ret;
      }
 
+     public function addCertificate(Certificate $certificate){
+         $data = array(
+                 'certificate_name' => $certificate->certificate_name,
+                 'certificate_note' => $certificate->certificate_note,
+                 'create_date'=> date("Y-m-d H:i:s"),
+                 'create_user_id' =>$certificate->create_user_id,
+                 'last_user_id'=>$certificate->last_user_id,
+                 'last_update'=>date("Y-m-d H:i:s"),
+         );
+     
+         $sql = new Sql($this->dbAdapter);
+         $insert = $sql->insert('certificates');
+         $insert->values($data);
+         $selectString = $sql->getSqlStringForSqlObject($insert);
+         $ret;
+         try {
+             $ret = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+         } catch (\Exception $e) {
+             var_dump($e);
+             $ret = NULL;
+         }
+         return $ret;
+     }
+     
      public function changeUserInfo($id_user,$user){
         $sql = new Sql($this->dbAdapter);
         $update = $sql->update('users');

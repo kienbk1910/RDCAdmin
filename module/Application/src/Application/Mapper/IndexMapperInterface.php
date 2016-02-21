@@ -6,6 +6,7 @@ use Application\Model\Comment;
 use Application\Model\MoneyHistory;
 use Application\Model\FileAttachment;
 use Application\Model\User;
+use Application\Model\Certificate;
 use Application\Model\Log;
 use Application\Model\Notification;
 use Application\Model\PayAction;
@@ -26,7 +27,8 @@ interface IndexMapperInterface
       public function modifyLog(Log $log,$type);
       public function showLog($user_id, Task $task);
       public function getListUserByBaseRole($role);
-
+      public function addCertificate(Certificate $certificate);
+      
       public function getInfoTask($id);
       public function changeInfoOfTask($id,$key,$value,$id_user);
       public function insertMoneyHistory(MoneyHistory $money);

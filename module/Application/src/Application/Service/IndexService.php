@@ -3,6 +3,7 @@ namespace Application\Service;
 use Application\Mapper\IndexMapperInterface;
 use Application\Service\IndexServiceInterface;
 use Application\Model\User;
+use Application\Model\Certificate;
 use Application\Model\Task;
 use Application\Model\Comment;
 use Application\Model\MoneyHistory;
@@ -30,6 +31,10 @@ class IndexService implements IndexServiceInterface
 
    public function addUser(User $user) {
        return $this->databaseMapper->addUser($user);
+   }
+   
+   public function addCertificate(Certificate $certificate){
+       return $this->databaseMapper->addCertificate($certificate);
    }
    public function changeUserInfo($id_user,$user){
        return $this->databaseMapper->changeUserInfo($id_user,$user);

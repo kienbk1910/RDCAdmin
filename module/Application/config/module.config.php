@@ -625,7 +625,33 @@ return array(
                      ),
                  ),
             ) /* End child */
-            ) /* End log */
+            ), /* End log */
+            /* Start certificate */
+            'manager-certificates' => array (
+                'type' => 'Literal',
+                'options' => array (
+                    'route' => '/manager-certificates',
+                    'defaults' => array (
+                            '__NAMESPACE__' => 'Application\Controller',
+                            'controller' => 'ManagerCertificates',
+                            'action' => 'index'
+                    )
+                ),
+                'may_terminate' => true,
+                'child_routes' => array (
+                    'add' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route'    => '/add',
+                            'defaults' => array(
+                                    'action' => 'add',
+                            ),
+                            'constraints' => array(
+                            )
+                        ),
+                    ),
+                ) /* End child */
+            ), /* End certificate */
         ),
     ),
     'service_manager' => array(
@@ -659,6 +685,7 @@ return array(
          'factories' => array(
              'Application\Controller\Index' => 'Application\Factory\IndexControllerFactory',
              'Application\Controller\Profile' => 'Application\Factory\ProfileControllerFactory',
+             'Application\Controller\ManagerCertificates' => 'Application\Factory\ManagerCertificatesControllerFactory',
              'Application\Controller\ManagerUsers' => 'Application\Factory\ManagerUsersControllerFactory',
              'Application\Controller\ManagerTasks' => 'Application\Factory\ManagerTasksControllerFactory',
              'Application\Controller\Tasks' => 'Application\Factory\TasksControllerFactory',
@@ -776,23 +803,25 @@ return array(
             )
         ),
        
-         /*array(
+         array(
             'label' => 'Quản Lý Chứng Chỉ',
-            'uri' => '#',
             'icon' => 'edit',
+            'route' => 'manager-certificates',
             'pages' => array(
                 array(
                     'label' => 'Danh Sách Chứng Chỉ',
-                    'uri' => '#',
+                    'route' => 'manager-certificates',
                     'icon' => 'circle-o'
                 ),
                 array(
                     'label' => 'Thêm Chứng Chỉ',
                     'uri' => '#',
+                    'route' => 'manager-certificates/add',
                     'icon' => 'circle-o'
                 ),
             )
-        ),*/
+        ),
+
     ),
  // agency navigation
         'agency' => array(
