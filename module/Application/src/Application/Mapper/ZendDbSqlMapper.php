@@ -691,7 +691,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
          $pay->money = $result->money;
          $pay->money_option = $result->money_option;
          $pay->note = $result->note;
-         $pay->custumer = $result->custumer;
+         $pay->type = $result->type;   
         return $pay;
      }
       public function modifyPayLog($user_id, MoneyHistory $old,MoneyHistory $new,$type){
