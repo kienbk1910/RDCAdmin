@@ -2,6 +2,7 @@
 // Filename: /module/Blog/src/Blog/Service/PostServiceInterface.php
 namespace Application\Service;
 use Application\Model\User;
+use Application\Model\Certificate;
 use Application\Model\Task;
 use Application\Model\Comment;
 use Application\Model\MoneyHistory;
@@ -14,6 +15,7 @@ interface IndexServiceInterface
      public function getListRoles();
      public function updateAvatar($id_user,$avatar);
      public function addUser(User $user);
+     public function addCertificate(Certificate $certificate);
      public function changeUserInfo($id_user,$user);
      public function getTotalUsers();
      public function getListUsers($start,$length,$search);
