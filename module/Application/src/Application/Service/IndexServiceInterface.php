@@ -13,6 +13,7 @@ use Application\Model\PayAction;
 interface IndexServiceInterface
 {
      public function getListRoles();
+     public function getListCertificates();
      public function updateAvatar($id_user,$avatar);
      public function addUser(User $user);
      public function addCertificate(Certificate $certificate);
