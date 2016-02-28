@@ -37,6 +37,13 @@
                   <div class="active tab-pane" id="activity">
 
                     <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="inputName" class="col-sm-2 control-label">Họ và Tên</label>
+                        <div class="col-sm-10">
+                          <a href="#" id="pro-name" data-type="text" data-pk="<?php echo $user->id;?>"
+                          data-url="/profile/change-my-info" data-title="Nhập Tên"><?php echo $user->name;?> </a>
+                        </div>
+                      </div>
                       <div class="form-group">
                         <label for="inputName" class="col-sm-2 control-label">Email</label>
                         <div class="col-sm-10">
@@ -111,6 +118,12 @@
 </section><!-- /.content -->
 <script type="text/javascript">
   $('#pro-email').editable({
+     success: function(response, newValue) {
+        response = JSON.parse(response);
+        if(response.status == 'error') return response.msg; //msg will be shown in editable form
+    }
+  });
+   $('#pro-name').editable({
      success: function(response, newValue) {
         response = JSON.parse(response);
         if(response.status == 'error') return response.msg; //msg will be shown in editable form

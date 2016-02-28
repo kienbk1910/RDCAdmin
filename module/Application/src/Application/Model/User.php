@@ -47,6 +47,7 @@ class User
      * @var int
      */
     public $block;
+    public $name;
 
     /**
      *

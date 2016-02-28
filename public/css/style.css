@@ -39,6 +39,9 @@ div.dataTables_wrapper {
 .foucus-value{
 	font-size: 18px;
 }
+.name_edit_able{
+	font-size: 17px;
+}
 @media print {
   a[href]:after {
     content: none !important;
@@ -48,4 +51,33 @@ div.dataTables_wrapper {
     .price_match_no_print {
         display:none !important;
     }
+    .hide_border_print {
+   	 border-bottom: dashed 0px #0088cc !important;
+	}
+	.table-bordered thead tr th, .table-bordered tbody tr th, .table-bordered tfoot tr th, .table-bordered thead tr td, .table-bordered tbody tr td, .table-bordered tfoot tr td {
+    border: 1px solid #333 !important;
+	}
+	.red_color_print{
+		color: red !important;
+	}
+	.blue_color_print{
+		color: blue !important;
+	}
+	.hr_red_color_print{
+		border-top: 1px solid red !important;
+    	border-bottom: 2px solid red !important;
+    	height: 2px !important;
+	}
+	.header_print{
+		display: block !important;
+	}
+	.lable_value_print{
+		text-align: left !important;
+		    padding-left: 0px !important;
+	}
+	.lable_print{
+			text-align: right !important;
+		    padding-right: 0px !important;
+	}
+	title { display: none !important; }
 }

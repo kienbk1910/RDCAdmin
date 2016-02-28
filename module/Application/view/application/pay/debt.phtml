@@ -1,0 +1,82 @@
+<section class="content">
+	<div class="box box-default">
+		  <div class="box-header with-border">
+		    <h3 class="box-title">Tổng Kết Công Nợ</h3>
+		    <div class="box-tools pull-right">
+		      <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+		    </div><!-- /.box-tools -->
+		  </div><!-- /.box-header -->
+		  <div class="box-body" >
+		  		<table id="users-table" class="display nowrap" cellspacing="0" width="100%">
+	  
+		          <thead>
+		        
+		            <tr>
+		                <th>Tài Khoản</th>
+		                <th>Đại Lý</th>
+		                <th>Đã Thanh Toán</th>
+		               	<th>Nhà Cung Cấp</th>
+		               	<th>Đã Nhận</th>
+		               	<th>Dư Nợ</th>
+		            </tr>
+		        </thead>
+		        <tfoot>
+		            <tr>
+		            	<th>Tài Khoản</th>
+		                <th>Đại Lý</th>
+		                <th>Đã Thanh Toán</th>
+		               	<th>Nhà Cung Cấp</th>
+		               	<th>Đã Nhận</th>
+		               	<th>Dư Nợ</th>
+		            </tr>
+		        </tfoot>
+			</table>	
+		  </div><!-- /.box-body -->
+		
+	</div><!-- /.box -->
+	
+</section>
+<script type="text/javascript" language="javascript" class="init">
+	
+var editor; // use a global for the submit and return data rendering in the examples
+
+var table = $('#users-table').DataTable( {
+			"dom": '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>',
+			"processing": true,
+	        "serverSide": true,
+	        "scrollX": true,
+	        ajax: {
+	            url: "/pay/list",
+	            type: "POST"
+	        },
+	        "language": {
+	    		"url": "//cdn.datatables.net/plug-ins/1.10.10/i18n/Vietnamese.json"
+	  		},
+			columns: [
+				{ data: "DT_RowId" },
+				{ data: "username" },
+				{ data: "type" },
+				{ data: "money" },
+				{ data: "date_pay" },
+				{ data: "user_create" },
+				
+			],
+
+	} );
+	 $('#users-table').on('click', 'tr', function () {
+	 	
+      var data = table.row( this ).id();
+      	$(this).addClass('selected');
+        window.open("/pay/detail/"+data);
+    } );
+	
+    
+    $("#cus-date-start_1").datepicker( "option", "dateFormat", "dd/mm/yy");
+     $("#cus-date-start_2").datepicker({
+	  onSelect: function(dateText) {
+	      seach_custum_date_start();
+	  }
+	});
+   
+   
+</script>

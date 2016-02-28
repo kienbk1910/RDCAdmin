@@ -107,7 +107,9 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $sql = new Sql($this->dbAdapter);
         $update = $sql->update('users');
         /* Validate filed */
-        if ($user->email != NULL) {
+        if($user->name != NULL){
+            $update->set(array('name' => $user->name));
+        }else  if ($user->email != NULL) {
             $update->set(array('email' => $user->email));
         } else if ($user->phone != NULL) {
             $update->set(array('phone' => $user->phone));
@@ -922,8 +924,8 @@ class ZendDbSqlMapper implements IndexMapperInterface
     public function getPayActionById($id){
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('pay_action')
-                ->join('users', 'pay_action.user_id = users.id', array("username"=>"username"), 'left')
-                ->join(array('create' => 'users'), 'pay_action.create_user = create.id', array("user_create"=>"username"), 'left')
+                ->join('users', 'pay_action.user_id = users.id', array("username"=>"username","owner_name"=>"name","owner_phone"=>"phone"), 'left')
+                ->join(array('create' => 'users'), 'pay_action.create_user = create.id', array("user_create"=>"username","user_create_name"=>"name"), 'left')
                 ->join('money_option', 'pay_action.pay_option = money_option.id', array("pay_name"=>"name"), 'left');
         $select->Where(array('pay_action.id = ?' => $id));
         $selectString = $sql->getSqlStringForSqlObject($select);

@@ -91,4 +91,6 @@ interface IndexServiceInterface
      public function getListMoneyHistoryByPayId($id);
      public function deletePayAction($id);
      public function deleteMoneyHistoryByPayId($id);
+
+  
  }

@@ -261,6 +261,20 @@ return array(
                             ),
 
                         ),
+                     'debt' => array(
+                         'type' => 'segment',
+                           'options' => array(
+                             'route'    => '/debt',
+                               'defaults' => array(
+                                 'action' => 'debt',
+                                  
+                             ),
+                             'constraints' => array(
+                                
+                             )
+                            ),
+
+                        ),
                     ),
             ),
 // end pay
@@ -779,6 +793,12 @@ return array(
                     'label' => 'Lịch Sử Thu Chi',
                     'uri' => '#',
                       'route' => 'pay',
+                    'icon' => 'circle-o'
+                ),
+                  array(
+                    'label' => 'Công Nợ',
+                    'uri' => '#',
+                    'route' => 'pay/debt',
                     'icon' => 'circle-o'
                 ),
                 

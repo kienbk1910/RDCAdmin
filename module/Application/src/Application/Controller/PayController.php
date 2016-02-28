@@ -190,6 +190,13 @@ use Application\Model\DataTablesObject;
 
         ));
      }
+     public function debtAction(){
+        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set("Tổng Kết Công Nợ");
+
+         return new ViewModel(array(
+      
+        )); 
+     }
      public function detailAction(){
         $this->checkAuth();
         $request = $this->getRequest();

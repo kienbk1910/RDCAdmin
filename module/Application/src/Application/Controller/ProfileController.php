@@ -40,6 +40,7 @@ use Application\Model\User;
               $user->email = $db_user->email;
               $user->block = $db_user->block;
               $user->role_id = $db_user->role_id;
+              $user->name = $user->name;
           }
           $usererror = Config::PROCESS_OK;
           return new ViewModel(array(
@@ -129,6 +130,7 @@ use Application\Model\User;
              $user->email = $db_user->email;
              $user->block = $db_user->block;
              $user->role_id = $db_user->role_id;
+             $user->name = $db_user->name;
          }
         $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set("Thông Tin Của ".$db_user->username);
 
@@ -187,6 +189,20 @@ use Application\Model\User;
          $selected_user->phone = NULL;
          $selected_user->note = NULL;
          $selected_user->block = NULL;
+         $selected_user->name = NULL;
+         if ($name == "pro-name") {
+             $result = new Xeditable();
+             $validator = new \Zend\Validator\NotEmpty();
+             if ($validator->isValid($value)) {
+                 $selected_user->name = $value;
+                 $this->databaseService->changeUserInfo($id, $selected_user);
+             }else{
+                 $result->setStatus(Xeditable::STATUS_ERROR);
+                 $result->setMsg(Xeditable::MSG_DATA_EMPTY);
+             }
+             echo \Zend\Json\Json::encode($result, false);
+             exit;
+         }
 
          if ($name == "pro-email") {
              $result = new Xeditable();
@@ -258,18 +274,23 @@ use Application\Model\User;
              echo \Zend\Json\Json::encode($result, false);
              exit;
          }
+        $result = new Xeditable();
+        $result->setStatus(Xeditable::STATUS_ERROR);
+        $result->setMsg(Xeditable::MSG_DATA_EMPTY);
+        echo \Zend\Json\Json::encode($result, false);
+        exit;
      }
 
      public function changeMyInfoAction(){
          $this->checkAuth();
          $value = $this->getRequest()->getPost('value');
          $name = $this->getRequest()->getPost('name');
-         $id = $this->getRequest()->getPost('pk');
+         $id =  $this->auth->getIdentity()->id;
          $selected_user = new User(NULL, NULL, NULL, NULL);
          $selected_user->email = NULL;
          $selected_user->phone = NULL;
          $selected_user->note = NULL;
-
+         $selected_user->name = NULL;
          if ($name == "pro-email") {
              $result = new Xeditable();
              $validator = new \Zend\Validator\EmailAddress();
@@ -299,7 +320,20 @@ use Application\Model\User;
              echo \Zend\Json\Json::encode($result, false);
              exit;
          }
-
+         if ($name == "pro-name") {
+             $result = new Xeditable();
+             $validator = new \Zend\Validator\NotEmpty();
+             if ($validator->isValid($value)) {
+                 $selected_user->name = $value;
+                 $this->databaseService->changeUserInfo($id, $selected_user);
+                 $this->user->phone = $value;
+             }else{
+                 $result->setStatus(Xeditable::STATUS_ERROR);
+                 $result->setMsg(Xeditable::MSG_DATA_ERROR);
+             }
+             echo \Zend\Json\Json::encode($result, false);
+             exit;
+         }
          if ($name == "pro-note") {
              $result = new Xeditable();
              $validator = new \Zend\Validator\NotEmpty();
@@ -314,5 +348,10 @@ use Application\Model\User;
              echo \Zend\Json\Json::encode($result, false);
              exit;
          }
+            $result = new Xeditable();
+        $result->setStatus(Xeditable::STATUS_ERROR);
+        $result->setMsg(Xeditable::MSG_DATA_EMPTY);
+        echo \Zend\Json\Json::encode($result, false);
+        exit;
      }
 }
