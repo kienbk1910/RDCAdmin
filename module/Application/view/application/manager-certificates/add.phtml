@@ -27,10 +27,7 @@
                       <label>Tên Chứng Chỉ</label>
                       <input type="text" class="form-control" name="certificate_name" value="<?php if (!empty($certificate)) { echo $certificate->getUsername(); } ?>">
                     </div>
-                    <div class="form-group <?php if (!empty($certificate_error['create_date'])) { echo 'has-error';} ?>">
-                      <label>Ngày Tạo</label>
-                      <input type="text" class="form-control" name="password" >
-                    </div>
+
                     <div class="form-group <?php if (!empty($certificate_error['certificate_note'])) { echo 'has-error';} ?>">
                       <label>Ghi Chú Chứng Chỉ</label>
                       <input type="text" class="form-control" name="certificate_note" value="<?php if (!empty($certificate)) { echo $certificate->getUsername(); } ?>">
@@ -58,14 +55,6 @@
   }
   $( "input[name='certificate_name']" ).parent().removeClass("has-error");
   $( "input[name='certificate_name']" ).parent().addClass("has-success");
-
-  if($( "input[name='create_date']" ).val().length == 0 ){
-    $( "input[name='create_date']" ).parent().addClass("has-error");
-    return false;
-  }
-  $( "input[name='create_date']" ).parent().removeClass("has-error");
-  $( "input[name='create_date']" ).parent().addClass("has-success");
-
   return true;
  }
 </script>

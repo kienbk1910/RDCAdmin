@@ -664,6 +664,17 @@ return array(
                             )
                         ),
                     ),
+                    'adddetail' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route'    => '/adddetail',
+                            'defaults' => array(
+                                'action' => 'adddetail',
+                            ),
+                            'constraints' => array(
+                            )
+                        ),
+                    ),
                 ) /* End child */
             ), /* End certificate */
         ),
@@ -822,7 +833,6 @@ return array(
                 ),
             )
         ),
-       
          array(
             'label' => 'Quản Lý Chứng Chỉ',
             'icon' => 'edit',
@@ -830,6 +840,7 @@ return array(
             'pages' => array(
                 array(
                     'label' => 'Danh Sách Chứng Chỉ',
+                    'uri' => '#',
                     'route' => 'manager-certificates',
                     'icon' => 'circle-o'
                 ),
@@ -837,6 +848,12 @@ return array(
                     'label' => 'Thêm Chứng Chỉ',
                     'uri' => '#',
                     'route' => 'manager-certificates/add',
+                    'icon' => 'circle-o'
+                ),
+                array(
+                    'label' => 'Thêm Hồ Sơ Chứng Chỉ',
+                    'uri' => '#',
+                    'route' => 'manager-certificates/adddetail',
                     'icon' => 'circle-o'
                 ),
             )

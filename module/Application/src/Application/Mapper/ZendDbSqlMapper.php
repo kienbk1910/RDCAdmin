@@ -48,6 +48,14 @@ class ZendDbSqlMapper implements IndexMapperInterface
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
     }
 
+    public function getListCertificates()
+    {
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('certificates');
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+    }
+    
      public function updateAvatar($id_user,$avatar){
         $sql = new Sql($this->dbAdapter);
         $update = $sql->update('users');

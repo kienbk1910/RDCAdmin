@@ -7,7 +7,7 @@
     <section class=" col-lg-offset-3 col-lg-6 connectedSortable">
          <div class="box box-warning">
                 <div class="box-header with-border">
-                  <h3 class="box-title">Tạo Chứng Chỉ</h3>
+                  <h3 class="box-title">Tạo Hồ Sơ Chứng Chỉ</h3>
                 </div><!-- /.box-header -->
                 <div class="box-body">
                  <!-- alert-danger -->
@@ -21,26 +21,40 @@
                     ?>
                   </div><!-- /.alert-danger  -->
                  <?php } ?>
+
                   <form role="form" method="post" onsubmit="return validateFormRegister()">
+                    <div class="form-group">
+                      <label> Loại Chứng Chỉ</label>
+                      <select name="certificate_type" class="form-control">
+                      <?php
+                        foreach ($certificates as $certificate) {
+                            echo "<option value=" . $certificate->id . ">" . $certificate->certificate_name . "</option>";
+                        }
+                      ?>
+                      </select>
+                    </div >
+
                     <!-- text input -->
-                    <div class="form-group <?php if (!empty($certificate_error['certificate_name'])) { echo 'has-error';} ?>">
-                      <label>Tên Chứng Chỉ</label>
-                      <input type="text" class="form-control" name="certificate_name" value="<?php if (!empty($certificate)) { echo $certificate->getUsername(); } ?>">
+                    <div style=" border: 1px solid wheat;padding: 2px;" class="form-group <?php if (!empty($certificate_error['certificate_name'])) { echo 'has-error';} ?>">
+                      <label>Ghi Chú:</label>
+                      </br>
+                      <label><?php if (!empty($certificate)) { echo $certificate->certificate_note; } ?></label>
                     </div>
                     <div class="form-group <?php if (!empty($certificate_error['create_date'])) { echo 'has-error';} ?>">
                       <label>Ngày Tạo</label>
                       <input type="text" class="form-control" name="password" >
                     </div>
+                    
                     <div class="form-group <?php if (!empty($certificate_error['certificate_code'])) { echo 'has-error';} ?>">
                       <label>Mã Chứng Chỉ</label>
-                      <input type="text" class="form-control" name="certificate_code" value="<?php if (!empty($certificate)) { echo $certificate->getUsername(); } ?>">
+                      <input type="text" class="form-control" name="certificate_code" 
+                          value="<?php ?>">
                     </div>
                    <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
                           <button type="submit" class="btn btn-danger">Tạo Hồ Sơ</button>
                         </div>
-                      </div>
-
+                   </div>
                   </form>
                 </div><!-- /.box-body -->
               </div><!-- /.box -->

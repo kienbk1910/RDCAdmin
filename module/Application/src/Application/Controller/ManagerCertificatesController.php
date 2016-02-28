@@ -25,16 +25,57 @@ class ManagerCertificatesController extends BaseController {
         $this->getServiceLocator()->get( 'ViewHelperManager' )->get( 'HeadTitle' )->set( "Danh Sách Hồ Sơ Chứng Chỉ" );
         return new ViewModel();
     }
-    public function getlistAction() {
-        return new ViewModel();
+
+    public function adddetailAction() {
+        $this->checkAdmin();
+        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set("Thêm Hồ Sơ Chứng Chỉ");
+
+        $request = $this->getRequest();
+        $certificates = $this->databaseService->getListCertificates();
+        $certificate_error = array();
+
+        if ($request->isPost()) {
+            $certificate_name = $this->getRequest ()->getPost('certificate_name', null);
+            if (strlen($certificate_name) > 500) {
+                $certificate_error['certificate_name'] = "Tên chứng chỉ vượt quá giới hạn cho phép (500 kí tự)";
+            } else if (strlen($certificate_name) <= 0) {
+                $certificate_error['certificate_name'] = "Tên chứng chỉ trống";
+            }
+    
+            /* validate certificate_code */
+            $certificate_note = $this->getRequest ()->getPost('certificate_note', null);
+            if (strlen($certificate_note) > 500) {
+                $certificate_error['certificate_note'] = "Ghi chú của chứng chỉ vượt quá giới hạn cho phép (500 kí tự)";
+            }
+    
+            $certificate = new Certificate();
+            if (empty($certificate_error)) {
+                $certificate->certificate_name = $certificate_name;
+                $certificate->certificate_note = $certificate_note;
+    
+                $certificate->create_user_id = $this->auth->getIdentity()->id;
+                $certificate->last_user_id = $this->auth->getIdentity()->id;
+                $ret = $this->databaseService->addCertificate($certificate);
+    
+                if ($ret == NULL) {
+                    $certificate_error['certificate_name'] = "Chứng Chỉ Đã Tồn Tại";
+                } else {
+                    return $this->redirect()->toRoute('manager-certificates');
+                }
+            }
+        }
+        
+        return new ViewModel(array(
+                'certificates' => $certificates,
+                'certificate_error' => $certificate_error,
+        ));
     }
+    
     public function addAction() {
         $this->checkAdmin();
         $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set("Thêm Hồ Sơ Chứng Chỉ");
-        
+
         $request = $this->getRequest();
-        $roles = $this->databaseService->getListRoles();
-        
         if ($request->isPost()) {
             $certificate_name = $this->getRequest ()->getPost('certificate_name', null);
             $certificate_error = array();
@@ -43,9 +84,6 @@ class ManagerCertificatesController extends BaseController {
             } else if (strlen($certificate_name) <= 0) {
                 $certificate_error['certificate_name'] = "Tên chứng chỉ trống";
             }
-
-            /* validate date */
-            $create_date = $this->getRequest ()->getPost('create_date', null);
 
             /* validate certificate_code */
             $certificate_note = $this->getRequest ()->getPost('certificate_note', null);
@@ -57,7 +95,7 @@ class ManagerCertificatesController extends BaseController {
             if (empty($certificate_error)) {
                 $certificate->certificate_name = $certificate_name;
                 $certificate->certificate_note = $certificate_note;
-                $certificate->create_date = $create_date;
+
                 $certificate->create_user_id = $this->auth->getIdentity()->id;
                 $certificate->last_user_id = $this->auth->getIdentity()->id;
                 $ret = $this->databaseService->addCertificate($certificate);

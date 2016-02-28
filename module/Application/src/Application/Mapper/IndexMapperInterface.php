@@ -13,6 +13,7 @@ use Application\Model\PayAction;
 interface IndexMapperInterface
 {
       public function getListRoles();
+      public function getListCertificates();
       public function updateAvatar($id_user,$avatar);
       public function changeUserInfo($id_user,$email);
       public function getTotalUsers();
