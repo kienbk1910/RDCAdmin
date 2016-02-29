@@ -667,12 +667,23 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes' => array (
-                    'add' => array(
+                   'add' => array(
                         'type' => 'segment',
                         'options' => array(
                             'route'    => '/add',
                             'defaults' => array(
                                     'action' => 'add',
+                            ),
+                            'constraints' => array(
+                            )
+                        ),
+                    ),
+                    'detailindex' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route'    => '/detailindex',
+                            'defaults' => array(
+                                'action' => 'detailindex',
                             ),
                             'constraints' => array(
                             )
@@ -700,12 +711,25 @@ return array(
                             )
                         ),
                     ),
-                    'edit-detail' => array(
+                    'editdetail' => array(
                         'type' => 'segment',
                         'options' => array(
-                            'route'    => '/edit-detail/:id',
+                            'route'    => '/editdetail/:id',
                             'defaults' => array(
                                 'action' => 'editDetail',
+                                'id'=>'0',
+                            ),
+                            'constraints' => array(
+                                'id'   => '[1-9]\d*',
+                            )
+                        ),
+                    ),
+                    'edit' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route'    => '/edit/:id',
+                            'defaults' => array(
+                                'action' => 'edit',
                                 'id'=>'0',
                             ),
                             'constraints' => array(
@@ -899,6 +923,12 @@ return array(
                     'label' => 'Thêm Chứng Chỉ',
                     'uri' => '#',
                     'route' => 'manager-certificates/add',
+                    'icon' => 'circle-o'
+                ),
+                array(
+                    'label' => 'Danh Sách Hồ Sơ Chứng Chỉ',
+                    'uri' => '#',
+                    'route' => 'manager-certificates/detailindex',
                     'icon' => 'circle-o'
                 ),
                 array(
