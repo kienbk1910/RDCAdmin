@@ -55,6 +55,13 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $selectString = $sql->getSqlStringForSqlObject($select);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
     }
+    public function getCertificateByID($id) {
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('certificates');
+        $select->Where(array('certificates.id = ?' => $id));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+    }
     
      public function updateAvatar($id_user,$avatar){
         $sql = new Sql($this->dbAdapter);
@@ -105,7 +112,28 @@ class ZendDbSqlMapper implements IndexMapperInterface
          try {
              $ret = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
          } catch (\Exception $e) {
-             var_dump($e);
+             $ret = NULL;
+         }
+         return $ret;
+     }
+
+     public function updateCertificate(Certificate $certificate){
+         $data = array(
+                 'certificate_name' => $certificate->certificate_name,
+                 'certificate_note' => $certificate->certificate_note,
+                 'last_user_id'=>$certificate->last_user_id,
+                 'last_update'=>date("Y-m-d H:i:s"),
+         );
+
+         $sql = new Sql($this->dbAdapter);
+         $update = $sql->update('certificates');
+         $update->set($data);
+         $update->Where(array('id = ?' => $certificate->id));
+         $selectString = $sql->getSqlStringForSqlObject($update);
+         $ret;
+         try {
+             $ret = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+         } catch (\Exception $e) {
              $ret = NULL;
          }
          return $ret;
@@ -171,9 +199,49 @@ class ZendDbSqlMapper implements IndexMapperInterface
     public function getCountUsers($search){
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('users')
-                    ->join('roles', 'roles.id = users.role_id', array(
-                            'role_name' => 'name'), 'left');
+        ->join('roles', 'roles.id = users.role_id', array(
+                'role_name' => 'name'), 'left');
         $select->where->like('users.username', '%' . $search .'%');
+        $select->columns(array('COUNT'=>new \Zend\Db\Sql\Expression('COUNT(*)')));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $resultSet =  $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $count = 0;
+        foreach ($resultSet as $row) {
+            $count = $row->COUNT;
+            break;
+        }
+        return $count;
+    }
+
+    public function getTotalCertificates(){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('certificates')
+        ->columns(array('COUNT'=>new \Zend\Db\Sql\Expression('COUNT(*)')));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $resultSet =  $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $count = 0;
+        foreach ($resultSet as $row) {
+            $count = $row->COUNT;
+            break;
+        }
+        return $count;
+    }
+
+    public function getListCertificatesAll($start, $length, $search){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('certificates')
+        ->join('users', 'users.id = certificates.last_user_id', array(
+                'last_user_id' => 'username'), 'left');
+        $select->where->like('certificates.certificate_name', '%' . $search .'%');
+        $select->offset($start)->limit($length);
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+    }
+
+    public function getCountCertificates($search){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('certificates');
+        $select->where->like('certificates.certificate_name', '%' . $search .'%');
         $select->columns(array('COUNT'=>new \Zend\Db\Sql\Expression('COUNT(*)')));
         $selectString = $sql->getSqlStringForSqlObject($select);
         $resultSet =  $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);

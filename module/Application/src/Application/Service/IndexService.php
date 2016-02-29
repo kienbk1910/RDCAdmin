@@ -25,9 +25,6 @@ class IndexService implements IndexServiceInterface
    public function getListRoles(){
    		return $this->databaseMapper->getListRoles();
    }
-   public function getListCertificates() {
-       return $this->databaseMapper->getListCertificates();
-   }
    public function updateAvatar($id_user,$avatar){
    		return $this->databaseMapper->updateAvatar($id_user,$avatar);
    }
@@ -35,10 +32,7 @@ class IndexService implements IndexServiceInterface
    public function addUser(User $user) {
        return $this->databaseMapper->addUser($user);
    }
-   
-   public function addCertificate(Certificate $certificate){
-       return $this->databaseMapper->addCertificate($certificate);
-   }
+
    public function changeUserInfo($id_user,$user){
        return $this->databaseMapper->changeUserInfo($id_user,$user);
    }
@@ -49,8 +43,31 @@ class IndexService implements IndexServiceInterface
       return $this->databaseMapper->getListUsers($start,$length,$search);
    }
    public function getCountUsers($search){
-     return $this->databaseMapper->getCountUsers($search);
+       return $this->databaseMapper->getCountUsers($search);
    }
+   
+   public function getTotalCertificates(){
+       return $this->databaseMapper->getTotalCertificates();
+   }
+   public function getListCertificatesAll($start,$length,$search){
+       return $this->databaseMapper->getListCertificatesAll($start,$length,$search);
+   }
+   public function getCertificateByID($id){
+       return $this->databaseMapper->getCertificateByID($id);
+   }
+   public function getCountCertificates($search){
+     return $this->databaseMapper->getCountCertificates($search);
+   }
+   public function getListCertificates() {
+       return $this->databaseMapper->getListCertificates();
+   }
+   public function addCertificate(Certificate $certificate){
+       return $this->databaseMapper->addCertificate($certificate);
+   }
+   public function updateCertificate(Certificate $certificate){
+       return $this->databaseMapper->updateCertificate($certificate);
+   }
+   
    public function changePassword($id_user, $password, $old_password) {
        return $this->databaseMapper->changePassword($id_user, $password, $old_password);
    }

@@ -1,0 +1,48 @@
+<section class="content">
+	<table id="users-table" class="display" cellspacing="0" width="100%">
+	         <thead>
+	            <tr>
+	                <th>Tên Chứng Chỉ</th>
+	                <th>Ghi Chú</th>
+	                <th>Ngưởi Chỉnh Sửa Cuối Cùng</th>
+	                <th>Ngày Tạo</th>
+	            </tr>
+	        </thead>
+	        <tfoot>
+	            <tr>
+	                <th>Tên Chứng Chỉ</th>
+	                <th>Ghi Chú</th>
+	                <th>Ngưởi Chỉnh Sửa Cuối Cùng</th>
+	                <th>Ngày Tạo</th>
+	            </tr>
+	        </tfoot>
+	</table>
+</section>
+<script type="text/javascript" language="javascript" class="init">
+
+var editor; // use a global for the submit and return data rendering in the examples
+		var table = $('#users-table').DataTable( {
+						"dom": '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>',
+						processing: true,
+				        serverSide: true,
+				        ajax: {
+				            url: "/manager-certificates/getlist",
+				            type: "POST"
+				        },
+				        "language": {
+				    		"url": "//cdn.datatables.net/plug-ins/1.10.10/i18n/Vietnamese.json"
+				  		},
+						columns: [
+							{ data: "certificate_name" },
+							{ data: "certificate_note" },
+							{ data: "last_user_id" },
+							{ data: "create_date" }
+						],
+
+				} );
+	 $('#users-table').on('click', 'tr', function () {
+        var data = table.row( this ).id();
+        window.open("/manager-certificates/edit-detail/"+data);
+    } );
+
+</script>

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 21, 2016 at 06:44 PM
+-- Generation Time: Feb 29, 2016 at 05:44 PM
 -- Server version: 10.1.9-MariaDB
 -- PHP Version: 5.5.30
 
@@ -32,20 +32,21 @@ CREATE TABLE `manager_certificates` (
   `certificate_code` int(11) NOT NULL,
   `full_name` varchar(20) NOT NULL,
   `place_of_birth` varchar(100) NOT NULL,
-  `permanent_address` varchar(100) NOT NULL,
-  `current_address` varchar(100) NOT NULL,
+  `start_time` datetime NOT NULL,
+  `end_time` datetime NOT NULL,
   `identity_card` int(11) NOT NULL,
   `day_of_birth` datetime NOT NULL,
   `last_user_id` int(11) NOT NULL,
-  `last_update` datetime NOT NULL
+  `last_update` datetime NOT NULL,
+  `note` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `manager_certificates`
 --
 
-INSERT INTO `manager_certificates` (`id`, `certificate_type`, `certificate_code`, `full_name`, `place_of_birth`, `permanent_address`, `current_address`, `identity_card`, `day_of_birth`, `last_user_id`, `last_update`) VALUES
-(1, 1, 1122, 'Tran Viet', 'Quang Nam', 'Hong Lac', 'Thu Duc', 121213, '2016-02-06 00:00:00', 1, '2016-02-24 00:00:00');
+INSERT INTO `manager_certificates` (`id`, `certificate_type`, `certificate_code`, `full_name`, `place_of_birth`, `start_time`, `end_time`, `identity_card`, `day_of_birth`, `last_user_id`, `last_update`, `note`) VALUES
+(1, 1, 1122, 'Tran Viet', 'Quang Nam', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 121213, '2016-02-06 00:00:00', 1, '2016-02-24 00:00:00', '');
 
 --
 -- Indexes for dumped tables

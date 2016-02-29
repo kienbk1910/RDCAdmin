@@ -689,6 +689,30 @@ return array(
                             )
                         ),
                     ),
+                    'getlist' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route'    => '/getlist',
+                            'defaults' => array(
+                                'action' => 'getlist',
+                            ),
+                            'constraints' => array(
+                            )
+                        ),
+                    ),
+                    'edit-detail' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route'    => '/edit-detail/:id',
+                            'defaults' => array(
+                                'action' => 'editDetail',
+                                'id'=>'0',
+                            ),
+                            'constraints' => array(
+                                'id'   => '[1-9]\d*',
+                            )
+                        ),
+                    ),
                 ) /* End child */
             ), /* End certificate */
         ),
