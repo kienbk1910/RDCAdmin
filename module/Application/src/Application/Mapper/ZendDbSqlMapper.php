@@ -973,7 +973,6 @@ class ZendDbSqlMapper implements IndexMapperInterface
                     ->limit($length);
         }
         $selectString = $sql->getSqlStringForSqlObject($select);
-
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
 
      }
@@ -996,7 +995,9 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $select = $sql->select('pay_action');
         $select->join('users', 'pay_action.user_id = users.id', array('username'=>'username'), 'left');
         $select->join(array('create' => 'users'), 'pay_action.create_user = create.id', array('user_create'=>'username'), 'left');
-        $select->where->like('users.username', '%' . $search .'%');
+        if($search!= '' &&$search != null){
+             $select->where->like('pay_action.title', '%' . $search .'%');
+         }
         $username = DataTableUtility::getSearchValue($columns,"username");
         if($username != "" && $username != 0){
            $select->Where(array('users.id' => $username));

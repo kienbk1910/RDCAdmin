@@ -20,6 +20,14 @@ use Application\Utility\URLUtilily;
 		  </div><!-- /.box-header -->
 		  <div class="box-body" >
 		 <form role="form" method="post" onsubmit="return validateFormPay()">
+		 	 <div class="row form-horizontal">
+		  	<div class="form-group">
+		  	 <label for="inputName" class="col-sm-2 control-label">Tiêu Đề</label>
+                  <div class="col-sm-5">
+                    <input id="title"type="text" class="form-control cant_empty" name="title" >
+                  </div>
+		  	</div>
+		  </div>
 		  	<div class="form-horizontal">
 		  	 <label for="inputName" class="col-sm-2 control-label">
 		  	 <?php if($type == Config::PAY_CUSTUMER){
@@ -155,6 +163,12 @@ use Application\Utility\URLUtilily;
 		$( "#total_pay").html(accounting.formatNumber(total));
 	});
 	function validateFormPay(){
+		if($( "input[name='title']" ).val().length == 0 ){
+       		$( "input[name='title']" ).parent().addClass("has-error");
+      	 	return false;
+   		 }
+   		$( "input[name='title']" ).parent().removeClass("has-error");
+    	$( "input[name='title']" ).parent().addClass("has-success");
 		if($( "input[name='total_money']" ).val().length == 0 ){
        		$( "input[name='total_money']" ).parent().addClass("has-error");
       	 	return false;

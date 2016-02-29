@@ -1,0 +1,184 @@
+<?php
+use Application\Config\Config;
+use Utility\Date\Date;
+use Application\Utility\URLUtilily; 
+?>
+<section class="content">
+	<div class="box box-default">
+		  <div class="box-header with-border">
+		    <h3 class="box-title">
+		    	<?php if($type == Config::PAY_CUSTUMER){
+		    				echo "Tạo Phiếu Thu";
+		    			}else{
+		    				echo "Tạo Phiếu Chi";
+		    			}
+		    		 ?>
+		    </h3>
+		    <div class="box-tools pull-right">
+		     <!--  <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button> -->
+		    </div><!-- /.box-tools -->
+		  </div><!-- /.box-header -->
+		  <div class="box-body" >
+		  <form role="form" method="post" onsubmit="return validateFormPay()">
+		  <div class="row form-horizontal">
+		  	<div class="form-group">
+		  	 <label for="inputName" class="col-sm-2 control-label">Tiêu Đề</label>
+                  <div class="col-sm-5">
+                    <input id="title"type="text" class="form-control cant_empty" name="title" >
+                  </div>
+		  	</div>
+		  </div>
+		  <div class="row">
+		 <div >
+		  	<div class="form-horizontal">
+		  	 <label for="inputName" class="col-sm-2 control-label ">Ngày Thanh Toán</label>
+                  <div class="col-sm-2">
+                    <input id="date_pay"type="text" class="form-control cant_empty" name="date_pay" >
+                  </div>
+		  	</div>
+		  	<div class="form-horizontal">
+		  	 <label for="inputName" class="col-sm-2 control-label">Phương Thức</label>
+              	<div class="col-sm-2">
+                   <select name="money_option" class="form-control">
+                      <option value="1">Tiền Mặt</option>
+                      <option value="2">Chuyển Khoản</option>
+                      
+                   </select>
+                </div>
+		  	</div>
+		  </div>
+		  </div>
+		  <div class="row">
+		  <div class="table-responsive"> 
+		  		<table class="table table-bordered">
+			  		<thead>
+			  			<tr> 
+			  			<th>#</th>
+			  			<th>Mã SP</th>
+			  			<th>Tên</th>
+			  			<th>Hồ Sơ</th>
+			  			<th>Thỏa Thuận</th>
+			  			<th>
+			  				<?php if($type == Config::PAY_CUSTUMER){
+		    				echo "Đã Nhận";
+		    			}else{
+		    				echo "Đã Thanh Toán";
+		    			}
+		    		 ?>
+			  			</th>
+			  			<th>Dư Nợ</th>
+			  			<th>Thanh Toán</th>
+			  			<th></th>
+			  			</tr> 
+			  		</thead>
+		  		<tbody id="body-table">
+		  			
+		  			<tr id="control-table">
+		  				<th scope="row"></th>
+		  				<td></td>
+		  				<td></td>
+		  				<td></td>
+		  				<td></td>
+		  				<td></td>
+		  				<td><button type="submit" class="btn btn-danger" data-dismiss="modal">Thanh Toán</button></td>
+		  				<td id="total_pay">0</td>
+		  				<td><button id="add_row" type="button" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-plus"></span>Thêm</button><td>
+		  			</tr>
+		  		</tbody>
+		  	</table>
+		  </div>
+		  </div>
+		  </div>
+		  <input type="hidden" value="0"name="count">
+		  	<input type="hidden" value="<?php echo $type ;?>"name="type">
+		</form>
+		</div>
+	</div>
+
+</section><!-- /.content -->
+<script type="text/javascript">
+	
+	  $("#date_pay").datepicker();
+   $("#date_pay").datepicker( "option", "dateFormat", "dd/mm/yy");
+
+
+	function update_index(){
+		var  i = 1;
+		$('#body-table tr').each(function() {
+	        $(this).children('.index_row').html(i);
+	        $(this).find('div .code_product').attr('name','code_product_'+i);
+	     	$(this).find('div .name_product').attr('name','name_product_'+i);
+	     	$(this).find('div .name_task').attr('name','name_task_'+i);
+	     	$(this).find('div .cost_1').attr('name','cost_1_'+i);
+	     	$(this).find('div .cost_2').attr('name','cost_2_'+i);
+	     	$(this).find('div .cost_3').attr('name','cost_3_'+i);
+	     	$(this).find('div .cost_4').attr('name','cost_4_'+i);
+	        i++;
+    	});
+    	$("input[name='count']").val(i-2);
+	}
+	$('#add_row').click(function(){
+				add_row();
+	});
+
+	function add_row(){
+		var row ="<tr>";
+	     	row+='<th scope="row" class="index_row">1</th>';
+			row+='<td><div><input "type="text" class="form-control code_product" ></div></td>';
+			row+='<td><div><input "type="text" class="form-control name_product cant_empty" ></div></td>';
+			row+='<td><div><input "type="text" class="form-control name_task"></div></td>';
+			row+='<td><div><input data-v-min="0" "type="text" class="form-control number-money cost_1 cant_empty"></div></td>';
+			row+='<td><div><input data-v-min="0" "type="text" class="form-control number-money cost_2 cant_empty"></div></td>';
+			row+='<td><div><input data-v-min="0" "type="text" class="form-control number-money cost_3 cant_empty"></div></td>';
+			row+='<td><div><input data-v-min="0" "type="text" class="form-control number-money input-money cost_4 cant_empty"></div></td>';
+			row+='<td><button data-v-min="0"  class="btn btn-danger remove-btn" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>Xóa</button></td>';	
+				
+			row+='</tr>';
+			$("#control-table").before(row );
+			$('.remove-btn').unbind('click');
+			$('.remove-btn').click(function(){
+				$(this).parent().parent().remove();
+				update_index();
+			});
+			update_index();
+			$('.number-money').autoNumeric('init');
+			$('.number-money').autoNumeric('update', {lZero: 'keep'});
+			$('.input-money').unbind('keyup');
+			$('.input-money').keyup( function(){
+				var total = 0;
+				$( ".input-money" ).each(function( index ) {
+				    var money = $( this ).val();
+				    console.log(money);
+				    if(money != ""){
+		 	 	  	 total += accounting.unformat(money);
+		 	 	  	 console.log(total);
+		 	 	  	}
+				});
+				console.log(total);
+				$( "#total_pay").html(accounting.formatNumber(total));
+			});
+			return false;
+
+	}
+	function validateFormPay(){
+
+		var isError = 0;
+		if($("input[name='count']").val() == "0" ||$("input[name='count']").val() == ''){
+			alert("Xin Nhập Dữ Liệu!");
+			return false;
+		}
+		$('.cant_empty').each(function(){
+			$(this).parent().removeClass("has-error");
+    		$(this).parent().addClass("has-success");
+    		if($(this).val().length == 0 ){
+       			$( this).parent().addClass("has-error");
+       			isError = 1;
+      	 		return ;
+   		 	}
+		});
+		if(isError == 1){
+			return false;
+		}
+		return true;
+	}
+</script>

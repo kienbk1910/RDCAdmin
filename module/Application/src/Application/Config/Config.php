@@ -30,6 +30,10 @@ namespace Application\Config;
     const PAY_CUSTUMER = 1;
     const PAY_PROVIDER = 2;
 
+
+    const PAY_ACTION_IS_TASK  = 1;
+    const PAY_ACTION_NOT_TASK = 2;
+
     const IMAGE_PATH = "/files/users/avatar/origin/";
     const FILE_ATTACHMENT_PATH = "/data/attachment/";
 
@@ -45,17 +49,17 @@ namespace Application\Config;
     const FILE_PERMISSION_ALL = 4;
     const FILE_PERMISSION_CUSTUMER_PROVIDER = 6;
     /* Add user */
-    const PROCESS_OK = "Processing successfully";
-    const PROCESS_NG = "Genaral error while processing";
-    const PASSWORD_DIFFERENT = "Password is not mapping";
-    const PASSWORD_IS_THE_SAME = "Password is the same as the old one";
-    const PASSWORD_IS_WRONG = "Your password is wrong";
-    const USER_EXIST = "Username is exist";
-    const USER_IS_NOT_EXIST = "Username is not exist";
-    const PASSWORD_EXCEED_MAX_LEN = "Password length exceed maximum length";
-    const PASSWORD_BENEATH_MIN_LEN = "Password length beneath minimum length";
-    const USERNAME_EXCEED_MAX_LEN = "Username length exceed maximum length";
-    const USERNAME_BENEATH_MIN_LEN = "Username length beneath minimum length";
+    const PROCESS_OK = "Sử Lý Thành công";
+    const PROCESS_NG = "Có Lỗi Trong Quá Trình Sử Lý";
+    const PASSWORD_DIFFERENT = "Mật Khẩu Không Giống Nhau";
+    const PASSWORD_IS_THE_SAME = "Mất Khẩu Giống Với Mật Khẩu Cũ";
+    const PASSWORD_IS_WRONG = "Mật Khẩu Sai";
+    const USER_EXIST = "Tài Khoản Đã Tồn Tài";
+    const USER_IS_NOT_EXIST = "Tài Khoản Không Tồn Tại";
+    const PASSWORD_EXCEED_MAX_LEN = "Mật Khẩu Quá Dài! (8 đến 500) ";
+    const PASSWORD_BENEATH_MIN_LEN = "Mật Khẩu Quá Ngắn! (8 đến 500) ";
+    const USERNAME_EXCEED_MAX_LEN = "Tài Khoản Quá Dài (5 đến 500)";
+    const USERNAME_BENEATH_MIN_LEN = "Tài Khoản Quá Ngắn (5 đến 500)";
 
     const AGENCY_TYPE = 0;
     const PROVIDER_TYPE = 1;

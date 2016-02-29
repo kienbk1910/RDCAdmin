@@ -11,5 +11,5 @@ class PayListItem
     public $type;
     public $money;
     public $user_create;
-    
+    public $title;
 }

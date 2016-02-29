@@ -247,6 +247,20 @@ return array(
                             ),
 
                         ),
+                   'new' => array(
+                     'type' => 'segment',
+                       'options' => array(
+                         'route'    => '/tao-hoa-don/:id',
+                           'defaults' => array(
+                             'action' => 'new',
+                              'id'=>'1',
+                         ),
+                         'constraints' => array(
+                            
+                         )
+                        ),
+
+                    ),  
                     'delete' => array(
                          'type' => 'segment',
                            'options' => array(
@@ -804,7 +818,7 @@ return array(
                     'label' => 'Lịch Sử Thu Chi',
                     'uri' => '#',
                       'route' => 'pay',
-                    'icon' => 'circle-o'
+                    'icon' => 'circle-o text-blue'
                 ),
                   array(
                     'label' => 'Công Nợ',
@@ -812,7 +826,20 @@ return array(
                     'route' => 'pay/debt',
                     'icon' => 'circle-o'
                 ),
-                
+                array(
+                    'label' => 'Tạo Phiếu Thu',
+                    'uri' => '#',
+                    'route' => 'pay/new',
+                    'params'     => array('id' => 1),
+                    'icon' => 'circle-o text-green'
+                ),
+                  array(
+                    'label' => 'Tạo Phiếu Chi',
+                    'uri' => '#',
+                    'route' => 'pay/new',
+                    'params'     => array('id' => 2),
+                    'icon' => 'circle-o text-red'
+                ),
             )
         ),
          array(
@@ -858,7 +885,6 @@ return array(
                 ),
             )
         ),
-
     ),
  // agency navigation
         'agency' => array(

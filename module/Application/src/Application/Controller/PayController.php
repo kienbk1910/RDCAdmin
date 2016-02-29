@@ -1,20 +1,21 @@
 <?php
 namespace Application\Controller;
- use Application\Service\IndexServiceInterface;
- use Application\Controller\BaseController;
- use Zend\View\Model\ViewModel;
- use Zend\View\Model\JsonModel;
- use Application\Model\Task;
- use Application\Config\Config;
- use Zend\Authentication\AuthenticationService;
- use Application\Model\Notification;
- use Application\Model\PayListItem;
-  use Application\Model\TaskListItem;
- use Application\Model\PayAction;
- use Application\Model\MoneyHistory;
- use Utility\Date\Date;
+use Application\Service\IndexServiceInterface;
+use Application\Controller\BaseController;
+use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
+use Application\Model\Task;
+use Application\Config\Config;
+use Zend\Authentication\AuthenticationService;
+use Application\Model\Notification;
+use Application\Model\PayListItem;
+use Application\Model\TaskListItem;
+use Application\Model\PayAction;
+use Application\Model\MoneyHistory;
+use Utility\Date\Date;
 use Application\Model\User;
 use Application\Model\DataTablesObject;
+use Application\Model\DataPay;
  class PayController extends BaseController
  {
      public function __construct(IndexServiceInterface $databaseService,AuthenticationService $auth)
@@ -68,6 +69,7 @@ use Application\Model\DataTablesObject;
          foreach ($tasks as $task) {
             $item = new PayListItem();
             $item->DT_RowId =$task->id;
+            $item->title = $task->title;
             $item->username =$task->username;
             $item->date_pay = Date::changeDateSQLtoVN($task->date_pay);
             if($task->type == Config::PAY_CUSTUMER)
@@ -75,7 +77,11 @@ use Application\Model\DataTablesObject;
              else{
                $item->type = "Chi"; 
              }
-            $item->money =  number_format($this->databaseService->getMoneyPayAction($task->id)) ;
+            if($task->is_task == Config::PAY_ACTION_IS_TASK){
+                 $item->money =  number_format($this->databaseService->getMoneyPayAction($task->id)) ;
+            }else{
+                $item->money =  number_format($task->cost);
+            }
             $item->user_create =$task->user_create;
             array_push($data->data,$item);
          }
@@ -106,14 +112,19 @@ use Application\Model\DataTablesObject;
             $money_option = $request->getPost('money_option',1);
             $create_user = $this->auth->getIdentity()->id;
             $create_date = date('Y-m-d H:i:s');
+             
             if($count >0){
                 $pay = new PayAction();
+                $pay->title = $request->getPost('title','');
                 $pay->user_id =   $user_id;
+                $pay->data = '';
+                $pay->cost = 0;
                 $pay->date_pay = $date_pay;
                 $pay->pay_option = $money_option;
                 $pay->create_user = $create_user;
                 $pay->create_date = $create_date;
                 $pay->type = $type;
+                $pay->is_task = Config::PAY_ACTION_IS_TASK;
                 $pay_id = $this->databaseService->addPayAction( $pay);
                 if($pay_id >0){
                     for($i = 0; $i<$count;$i++){
@@ -190,6 +201,7 @@ use Application\Model\DataTablesObject;
 
         ));
      }
+
      public function debtAction(){
         $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set("Tổng Kết Công Nợ");
 
@@ -205,6 +217,11 @@ use Application\Model\DataTablesObject;
         $pay = $this->databaseService->getPayActionById($id);
         if($pay == NULL){
             return $this->redirect()->toRoute('pay',array());
+        }
+        if($pay->is_task == Config::PAY_ACTION_NOT_TASK){
+            return new ViewModel(array(
+            "pay" => $pay
+            ));
         }
         $moneys = $this->databaseService->getPayActionDetail($id);
      
@@ -228,6 +245,54 @@ use Application\Model\DataTablesObject;
         return new ViewModel(array(
             "datas"=>$data,
             "pay" => $pay
+        ));
+     }
+     public function newAction(){
+         $type = $this->params()->fromRoute('id', 1);
+        if($type == Config::PAY_CUSTUMER){
+            $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set("Tạo Phiếu Thu");
+       }else{
+            $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set("Tạo Phiếu Chi");
+       }
+       $request = $this->getRequest();
+        if ($request->isPost()) {
+            $date_pay = Date::changeVNtoDateSQL($request->getPost('date_pay'));
+            $money_option = $request->getPost('money_option',1);
+            $create_user = $this->auth->getIdentity()->id;
+            $create_date = date('Y-m-d H:i:s');
+            $pay = new PayAction();
+            $pay->title = $request->getPost('title','');
+            $pay->user_id = 0;
+            $pay->date_pay = $date_pay;
+            $pay->pay_option = $money_option;
+            $pay->create_user = $create_user;
+            $pay->create_date = $create_date;
+            $pay->type = $type;
+            $pay->is_task = Config::PAY_ACTION_NOT_TASK;
+            $count = $request->getPost('count',0);
+            $datas = array();
+            $total = 0;
+            for($i = 1; $i <= $count;$i++){
+                $data = new DataPay();
+                $data->code_product = $request->getPost(sprintf('code_product_%d',$i),'');
+                $data->name_product = $request->getPost(sprintf('name_product_%d',$i),'');
+                $data->name_task = $request->getPost(sprintf('name_task_%d',$i),'');
+                $data->cost_1 = str_replace(',','',$request->getPost(sprintf('cost_1_%d',$i),0));
+                $data->cost_2 = str_replace(',','',$request->getPost(sprintf('cost_2_%d',$i),0));
+                $data->cost_3 = str_replace(',','',$request->getPost(sprintf('cost_3_%d',$i),0));
+                $data->cost_4 = str_replace(',','',$request->getPost(sprintf('cost_4_%d',$i),0));
+                $total += $data->cost_4;
+                array_push($datas,$data);
+            
+            }
+            $pay->cost = $total;
+            $pay->data = json_encode($datas);
+            
+            $pay_id = $this->databaseService->addPayAction( $pay);
+             return $this->redirect()->toRoute('pay/detail',array('id'=> $pay_id));
+        }
+        return new ViewModel(array(
+            "type"=>$type,
         ));
      }
 }
