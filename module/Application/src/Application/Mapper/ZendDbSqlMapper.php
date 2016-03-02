@@ -881,7 +881,8 @@ class ZendDbSqlMapper implements IndexMapperInterface
             $select->Where(array('tasks.provider_id = ?' => $id_user));
         }
         $selectString = $sql->getSqlStringForSqlObject($select);
-        $resultSet = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE); 
+        $resultSet = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $count = 0;
         foreach ($resultSet as $row) {
             $count = $row->count;
             break;
@@ -954,7 +955,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
         if($user_id != null){
             $select->Where(array('pay_action.user_id' => $user_id));
         }
-         $select->columns(array('COUNT'=>new \Zend\Db\Sql\Expression('COUNT(*)')));
+        $select->columns(array('COUNT'=>new \Zend\Db\Sql\Expression('COUNT(*)')));
         $selectString = $sql->getSqlStringForSqlObject($select);
         $resultSet =  $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
         $count = 0;
@@ -1060,5 +1061,49 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $selectString = $sql->getSqlStringForSqlObject($insert);
      
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+    }
+    protected function getSelectAgency($start,$length,$search){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('users')
+                    ->where(array('users.role_id =?' => 4));
+        $select->where->like('users.username', '%' . $search .'%');
+        return $select;
+    }
+    public function getTotalNumberAgency(){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('users')
+                ->columns(array('COUNT'=>new \Zend\Db\Sql\Expression('COUNT(*)')))
+                ->where(array('users.role_id =?' => 4));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $resultSet =  $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $count = 0;
+        foreach ($resultSet as $row) {
+            $count = $row->COUNT;
+            break;
+        }
+        return $count;    
+    }
+    public function getListAgency($start,$length,$search){
+        $sql = new Sql($this->dbAdapter);
+        $select = $this->getSelectAgency($start,$length,$search);
+        if($start !=null && $length !=null){
+             $select->offset($start)
+                    ->limit($length);
+        }
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+    }
+    public function getListAgencyFiltered($start,$length,$search){
+        $sql = new Sql($this->dbAdapter);
+        $select = $this->getSelectAgency($start,$length,$search);
+        $select->columns(array('COUNT'=>new \Zend\Db\Sql\Expression('COUNT(*)')));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $resultSet =  $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $count = 0;
+        foreach ($resultSet as $row) {
+            $count = $row->COUNT;
+            break;
+        }
+        return $count;
     }
 }

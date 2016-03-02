@@ -92,6 +92,9 @@
 			  	<div class="col-sm-3">
 			  		<button class="btn btn-block btn-danger" onclick="pay_action(2)">Thanh Toán Cho Nhà Cung Cấp</button>
 			  	</div>
+			  	<div class="col-sm-2">
+			  		<button class="btn btn-block btn-info" onclick="add_action()"><span class="glyphicon glyphicon-plus"></span>Thêm Hồ Sơ</button>
+			  	</div>
 		  </div>
     </div>
 		  </div><!-- /.box-body -->
@@ -161,6 +164,60 @@
 	        </tfoot>
 	</table>
 </section>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="pay-modal-lable">Thêm Hồ Sơ</h4>
+      </div>
+      <div class="modal-body">
+      		<div class="row">
+      			<div class="col-sm-6">
+      				<div class="form-group">
+                      <label>Tên Khách Hàng</label>
+                      <input type="text" class="form-control" name="custumer" placeholder="Tên Khách Hàng">
+                    </div>
+                    <div class="form-group">
+                      <label>Sản Phẩm</label>
+                      <input type="text" class="form-control" name="certificate"  >
+                    </div>
+                    <div class="form-group">
+                      <label>Người Giám Sát</label>
+                      <input type="text" class="form-control" name="custumer" placeholder="Tên Khách Hàng">
+                    </div>
+                    <div class="form-group">
+                      <label>Người Chịu Trách Nhiệm</label>
+                      <input type="text" class="form-control" name="certificate"  >
+                    </div>
+      			</div>
+      			<div class="col-sm-6">
+      				<div class="form-group">
+                      <label>Đại Lý</label>
+                      <input type="text" class="form-control" name="custumer" placeholder="Tên Khách Hàng">
+                    </div>
+                    <div class="form-group">
+                      <label>Thỏa Thuận</label>
+                      <input type="text" class="form-control" name="certificate"  >
+                    </div>
+                    <div class="form-group">
+                      <label>Ngày Nhận</label>
+                      <input type="text" class="form-control" name="custumer" placeholder="Tên Khách Hàng">
+                    </div>
+                    <div class="form-group">
+                      <label>Ghi Chú</label>
+                      <input type="text" class="form-control" name="certificate"  >
+                    </div>
+      			</div>
+      		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+        <button type="button"  class="btn btn-primary" id="btn_submit">Tạo</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script type="text/javascript" language="javascript" class="init">
 	
 var editor; // use a global for the submit and return data rendering in the examples
@@ -332,6 +389,12 @@ var editor; // use a global for the submit and return data rendering in the exam
 	      seach_custum_date_end();
 	  }
 	});
+	function add_action(){
+    	
+
+    	$("#myModal").modal('show');
+    
+  }
     $("#cus-date-end_2").datepicker( "option", "dateFormat", "dd/mm/yy");
      function export_pdf(){
      	window.location ='/manager-tasks/export-pdf'

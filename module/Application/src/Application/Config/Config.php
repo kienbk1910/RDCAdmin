@@ -23,6 +23,8 @@ namespace Application\Config;
     const EDIT_FILE_ACTION = 9;
     const DELETE_FILE_ACTION = 10;
     const COMMENT_ACTION = 11;
+    const ADD_RECEIPT_ACTION = 12;
+    const ADD_PAY_ACTION = 13;
     // process id
     const PROCESS_REC = 1;
     // type pay

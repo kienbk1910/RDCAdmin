@@ -230,4 +230,13 @@ class IndexService implements IndexServiceInterface
   public function deleteMoneyHistoryByPayId($id){
     return $this->databaseMapper->deleteMoneyHistoryByPayId($id); 
   }
+  public function getTotalNumberAgency(){
+      return $this->databaseMapper->getTotalNumberAgency(); 
+  }
+   public function getListAgency($start,$length,$search){
+      return $this->databaseMapper->getListAgency($start,$length,$search); 
+   }
+   public function getListAgencyFiltered($start,$length,$search){
+      return $this->databaseMapper->getListAgencyFiltered($start,$length,$search); 
+   }
 }

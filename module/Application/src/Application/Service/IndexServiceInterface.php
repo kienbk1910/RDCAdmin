@@ -93,5 +93,8 @@ interface IndexServiceInterface
      public function deletePayAction($id);
      public function deleteMoneyHistoryByPayId($id);
 
+     public function getTotalNumberAgency();
+     public function getListAgency($start,$length,$search);
+     public function getListAgencyFiltered($start,$length,$search);
   
  }

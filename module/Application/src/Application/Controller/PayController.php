@@ -16,6 +16,7 @@ use Utility\Date\Date;
 use Application\Model\User;
 use Application\Model\DataTablesObject;
 use Application\Model\DataPay;
+use Application\Model\DebtListItem;
  class PayController extends BaseController
  {
      public function __construct(IndexServiceInterface $databaseService,AuthenticationService $auth)
@@ -294,5 +295,52 @@ use Application\Model\DataPay;
         return new ViewModel(array(
             "type"=>$type,
         ));
+     }
+     function listDebtAction(){
+        $this->checkAuth();
+         $request = $this->getRequest();
+
+         $draw = $request->getPost('draw',1);
+         $start = $request->getPost('start',0);
+         $length = $request->getPost('length',10);
+         $search = $request->getPost('search','');
+         $search = $search['value'];
+         $total = $this->databaseService->getTotalNumberAgency();
+
+         $users = $this->databaseService->getListAgency($start,$length,$search);
+         $data = new DataTablesObject();
+         $data->recordsTotal = $total;
+         $data->recordsFiltered = $this->databaseService->getListAgencyFiltered($start,$length,$search);
+         $data->draw = $draw;
+         foreach ($users as $user) {
+            $agency = new DebtListItem();
+            $agency->DT_RowId = $user->id;
+            $agency->username = $user->username;
+            $agency->agency = $this->databaseService->getTotalAgencyById($user->id,Config::PAY_CUSTUMER);
+            $agency->provider = $this->databaseService->getTotalAgencyById($user->id,Config::PAY_PROVIDER);
+            $agency->agency_pay = $this->databaseService->getTotalCurrentMoneyById($user->id,Config::PAY_CUSTUMER);
+            $agency->provider_pay = $this->databaseService->getTotalCurrentMoneyById($user->id,Config::PAY_PROVIDER);
+            if($agency->provider == null){
+                $agency->provider = 0;
+            }
+            if($agency->agency == null){
+                $agency->agency = 0;
+            }
+            if($agency->agency_pay == null){
+                $agency->agency_pay = 0;
+            }
+            if($agency->provider_pay == null){
+                $agency->provider_pay = 0;
+            }
+            $agency->total = ($agency->agency - $agency->agency_pay) - ($agency->provider - $agency->provider_pay );
+            $agency->agency_pay = number_format($agency->agency_pay);
+            $agency->agency = number_format($agency->agency);
+            $agency->provider = number_format($agency->provider);
+            $agency->provider_pay = number_format($agency->provider_pay);
+            $agency->total = number_format($agency->total);
+            array_push($data->data,$agency);
+         }
+        echo \Zend\Json\Json::encode($data, false);
+        exit;
      }
 }

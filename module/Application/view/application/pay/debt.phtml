@@ -12,22 +12,24 @@
 		          <thead>
 		        
 		            <tr>
-		                <th>Tài Khoản</th>
+		                <th>Mã TK</th>
 		                <th>Đại Lý</th>
-		                <th>Đã Thanh Toán</th>
-		               	<th>Nhà Cung Cấp</th>
+		                <th>Hóa Đơn Đại Lý</th>
 		               	<th>Đã Nhận</th>
-		               	<th>Dư Nợ</th>
+		               	<th>Hóa Đơn NCC</th>
+		               	<th>Đã Chi</th>
+		               	<th>Nợ</th>
 		            </tr>
 		        </thead>
 		        <tfoot>
 		            <tr>
-		            	<th>Tài Khoản</th>
+		            	<th>Mã TK</th>
 		                <th>Đại Lý</th>
-		                <th>Đã Thanh Toán</th>
-		               	<th>Nhà Cung Cấp</th>
+		                <th>Hóa Đơn Đại Lý</th>
 		               	<th>Đã Nhận</th>
-		               	<th>Dư Nợ</th>
+		               	<th>Hóa Đơn NCC</th>
+		               	<th>Đã Chi</th>
+		               	<th>Nợ</th>
 		            </tr>
 		        </tfoot>
 			</table>	
@@ -46,7 +48,7 @@ var table = $('#users-table').DataTable( {
 	        "serverSide": true,
 	        "scrollX": true,
 	        ajax: {
-	            url: "/pay/list",
+	            url: "/pay/list-debt",
 	            type: "POST"
 	        },
 	        "language": {
@@ -55,11 +57,11 @@ var table = $('#users-table').DataTable( {
 			columns: [
 				{ data: "DT_RowId" },
 				{ data: "username" },
-				{ data: "type" },
-				{ data: "money" },
-				{ data: "date_pay" },
-				{ data: "user_create" },
-				
+				{ data: "agency" },
+				{ data: "agency_pay" },
+				{ data: "provider" },
+				{ data: "provider_pay" },
+				{ data: "total" },
 			],
 
 	} );
@@ -67,7 +69,7 @@ var table = $('#users-table').DataTable( {
 	 	
       var data = table.row( this ).id();
       	$(this).addClass('selected');
-        window.open("/pay/detail/"+data);
+      
     } );
 	
     

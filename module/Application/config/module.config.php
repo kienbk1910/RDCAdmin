@@ -275,6 +275,20 @@ return array(
                             ),
 
                         ),
+                    'list-debt' => array(
+                         'type' => 'segment',
+                           'options' => array(
+                             'route'    => '/list-debt',
+                               'defaults' => array(
+                                 'action' => 'listDebt',
+                                  
+                             ),
+                             'constraints' => array(
+                                
+                             )
+                            ),
+
+                        ),
                      'debt' => array(
                          'type' => 'segment',
                            'options' => array(
@@ -820,12 +834,7 @@ return array(
                       'route' => 'pay',
                     'icon' => 'circle-o text-blue'
                 ),
-                  array(
-                    'label' => 'Công Nợ',
-                    'uri' => '#',
-                    'route' => 'pay/debt',
-                    'icon' => 'circle-o'
-                ),
+                
                 array(
                     'label' => 'Tạo Phiếu Thu',
                     'uri' => '#',
@@ -839,6 +848,12 @@ return array(
                     'route' => 'pay/new',
                     'params'     => array('id' => 2),
                     'icon' => 'circle-o text-red'
+                ),
+                array(
+                    'label' => 'Công Nợ',
+                    'uri' => '#',
+                    'route' => 'pay/debt',
+                    'icon' => 'circle-o'
                 ),
             )
         ),
@@ -860,7 +875,7 @@ return array(
                 ),
             )
         ),
-         array(
+     /*    array(
             'label' => 'Quản Lý Chứng Chỉ',
             'icon' => 'edit',
             'route' => 'manager-certificates',
@@ -884,7 +899,7 @@ return array(
                     'icon' => 'circle-o'
                 ),
             )
-        ),
+        ),*/
     ),
  // agency navigation
         'agency' => array(
