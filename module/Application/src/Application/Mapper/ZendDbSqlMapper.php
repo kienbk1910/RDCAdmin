@@ -30,6 +30,8 @@ use Application\Model\FileAttachment;
 use Application\Model\Log;
 use Application\Model\Notification;
 use Application\Model\PayAction;
+use Application\Model\ManagerCertificate;
+
 class ZendDbSqlMapper implements IndexMapperInterface
 {
     protected $dbAdapter;
@@ -125,6 +127,58 @@ class ZendDbSqlMapper implements IndexMapperInterface
                  'last_update'=>date("Y-m-d H:i:s"),
          );
 
+         $sql = new Sql($this->dbAdapter);
+         $update = $sql->update('certificates');
+         $update->set($data);
+         $update->Where(array('id = ?' => $certificate->id));
+         $selectString = $sql->getSqlStringForSqlObject($update);
+         $ret;
+         try {
+             $ret = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+         } catch (\Exception $e) {
+             $ret = NULL;
+         }
+         return $ret;
+     }
+     
+     public function addDetailCertificate(ManagerCertificate $certificate){
+         $data = array(
+                 'certificate_type' => $certificate->certificate_type,
+                 'certificate_code' => $certificate->certificate_code,
+                 'full_name' => $certificate->full_name,
+                 'place_of_birth' => $certificate->place_of_birth,
+                 'start_time' => $certificate->start_time,
+                 'end_time' => $certificate->end_time,
+                 'day_of_birth' => $certificate->day_of_birth,
+                 'identity_card' => $certificate->identity_card,
+                 'last_user_id'=>$certificate->last_user_id,
+                 'last_update'=>date("Y-m-d H:i:s"),
+                 'note' =>$certificate->note,
+                 'create_user_id'=> $certificate->create_user_id,
+         );
+          
+         $sql = new Sql($this->dbAdapter);
+         $insert = $sql->insert('manager_certificates');
+         $insert->values($data);
+         $selectString = $sql->getSqlStringForSqlObject($insert);
+
+         $ret;
+         try {
+             $ret = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+         } catch (\Exception $e) {
+             $ret = NULL;
+         }
+         return $ret;
+     }
+     
+     public function updateDetailCertificate(ManagerCertificate $certificate){
+         $data = array(
+                 'certificate_name' => $certificate->certificate_name,
+                 'certificate_note' => $certificate->certificate_note,
+                 'last_user_id'=>$certificate->last_user_id,
+                 'last_update'=>date("Y-m-d H:i:s"),
+         );
+     
          $sql = new Sql($this->dbAdapter);
          $update = $sql->update('certificates');
          $update->set($data);

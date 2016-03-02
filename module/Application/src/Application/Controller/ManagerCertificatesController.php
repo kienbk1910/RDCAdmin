@@ -8,6 +8,7 @@ use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Zend\Authentication\AuthenticationService;
 use Application\Model\Certificate;
+use Application\Model\ManagerCertificate;
 use Application\Model\CertificateListItem;
 use Application\Model\DataTablesObject;
 use Zend\Debug\Debug;
@@ -55,51 +56,6 @@ class ManagerCertificatesController extends BaseController {
         }
         echo \Zend\Json\Json::encode($data, false);
         exit;
-    }
-    
-    public function adddetailAction() {
-        $this->checkAdmin();
-        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set("Thêm Hồ Sơ Chứng Chỉ");
-
-        $request = $this->getRequest();
-        $certificates = $this->databaseService->getListCertificates();
-        $certificate_error = array();
-
-        if ($request->isPost()) {
-            $certificate_name = $this->getRequest ()->getPost('certificate_name', null);
-            if (strlen($certificate_name) > 500) {
-                $certificate_error['certificate_name'] = "Tên chứng chỉ vượt quá giới hạn cho phép (500 kí tự)";
-            } else if (strlen($certificate_name) <= 0) {
-                $certificate_error['certificate_name'] = "Tên chứng chỉ trống";
-            }
-    
-            /* validate certificate_code */
-            $certificate_note = $this->getRequest ()->getPost('certificate_note', null);
-            if (strlen($certificate_note) > 500) {
-                $certificate_error['certificate_note'] = "Ghi chú của chứng chỉ vượt quá giới hạn cho phép (500 kí tự)";
-            }
-    
-            $certificate = new Certificate();
-            if (empty($certificate_error)) {
-                $certificate->certificate_name = $certificate_name;
-                $certificate->certificate_note = $certificate_note;
-    
-                $certificate->create_user_id = $this->auth->getIdentity()->id;
-                $certificate->last_user_id = $this->auth->getIdentity()->id;
-                $ret = $this->databaseService->adddetailCertificate($certificate);
-    
-                if ($ret == NULL) {
-                    $certificate_error['certificate_name'] = "Chứng Chỉ Đã Tồn Tại";
-                } else {
-                    return $this->redirect()->toRoute('manager-certificates');
-                }
-            }
-        }
-        
-        return new ViewModel(array(
-                'certificates' => $certificates,
-                'certificate_error' => $certificate_error,
-        ));
     }
     
     public function addAction() {
@@ -195,7 +151,71 @@ class ManagerCertificatesController extends BaseController {
             }
         }
     }
+
+    public function adddetailAction() {
+        $this->checkAdmin();
+        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set("Thêm Hồ Sơ Chứng Chỉ");
     
+        $request = $this->getRequest();
+        $certificates = $this->databaseService->getListCertificates();
+        $certificate_error = array();
+    
+        if ($request->isPost()) {
+            $certificate_type = $this->getRequest ()->getPost('certificate_type', null);
+            $certificate_code = $this->getRequest ()->getPost('certificate_code', null);
+            if (strlen($certificate_code) > 500) {
+                $certificate_error['certificate_code'] = "Mã số chứng chỉ vượt quá giới hạn cho phép (500 kí tự)";
+            } else if (strlen($certificate_code) <= 0) {
+                $certificate_error['certificate_code'] = "Mã số chứng chỉ trống";
+            }
+            $full_name = $this->getRequest ()->getPost('full_name', null);
+            if (strlen($full_name) > 50) {
+                $certificate_error['full_name'] = "Tên khách hàng vượt quá giới hạn cho phép (50 kí tự)";
+            } else if (strlen($full_name) <= 0) {
+                $certificate_error['full_name'] = "Tên khách hàng trống";
+            }
+    
+            $day_of_birth = $this->getRequest ()->getPost('day_of_birth', null);
+            $place_of_birth = $this->getRequest ()->getPost('place_of_birth', null);
+            $identity_card = $this->getRequest ()->getPost('identity_card', null);
+            $start_time = $this->getRequest ()->getPost('start_time', null);
+            $end_time = $this->getRequest ()->getPost('end_time', null);
+    
+            /* validate certificate_code */
+            $note = $this->getRequest ()->getPost('note', null);
+            if (strlen($note) > 500) {
+                $certificate_error['certificate_note'] = "Ghi chú của chứng chỉ vượt quá giới hạn cho phép (500 kí tự)";
+            }
+    
+            $managerCertificate = new ManagerCertificate();
+            if (empty($certificate_error)) {
+                $managerCertificate->certificate_code = $certificate_code;
+                $managerCertificate->certificate_type = $certificate_type;
+                $managerCertificate->full_name = $full_name;
+                $managerCertificate->day_of_birth = $day_of_birth;
+                $managerCertificate->place_of_birth = $place_of_birth;
+                $managerCertificate->identity_card = $identity_card;
+                $managerCertificate->start_time = $start_time;
+                $managerCertificate->end_time = $end_time;
+                $managerCertificate->last_user_id = $this->auth->getIdentity()->id;
+                $managerCertificate->create_user_id = $this->auth->getIdentity()->id;
+                $managerCertificate->note = $this->auth->getIdentity()->note;
+                $ret = $this->databaseService->adddetailCertificate($managerCertificate);
+    
+                if ($ret == NULL) {
+                    $certificate_error['certificate_name'] = "Hồ Sơ Chứng Chỉ Đã Tồn Tại";
+                } else {
+                    return $this->redirect()->toRoute('manager-certificates/detailindex');
+                }
+            }
+        }
+    
+        return new ViewModel(array(
+                'certificates' => $certificates,
+                'certificate_error' => $certificate_error,
+        ));
+    }
+
     public function editdetailAction() {
         $this->checkAdmin();
         $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set("Chỉnh Sửa Hồ Sơ Chứng Chỉ");
