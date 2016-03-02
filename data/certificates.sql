@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 21, 2016 at 06:42 PM
+-- Generation Time: Feb 29, 2016 at 05:43 PM
 -- Server version: 10.1.9-MariaDB
 -- PHP Version: 5.5.30
 
@@ -41,16 +41,8 @@ CREATE TABLE `certificates` (
 --
 
 INSERT INTO `certificates` (`id`, `certificate_name`, `certificate_note`, `create_date`, `create_user_id`, `last_user_id`, `last_update`) VALUES
-(1, 'Chứng Chỉ Hành Nghề', 'Chứng Chỉ Cho Việc Hành Nghề', '2016-02-01 00:00:00', 0, 0, '0000-00-00 00:00:00'),
-(2, 'ádasda', 'đâsdasd', '2016-02-21 18:08:46', 1, 1, '2016-02-21 18:08:46'),
-(3, 'ádasda', 'đâsdasd', '2016-02-21 18:09:03', 1, 1, '2016-02-21 18:09:03'),
-(4, 'dsadasdas', 'đâsdasdasd', '2016-02-21 18:09:52', 1, 1, '2016-02-21 18:09:52'),
-(5, '22222', '2222', '2016-02-21 18:10:54', 1, 1, '2016-02-21 18:10:54'),
-(6, '333', '3333', '2016-02-21 18:11:41', 1, 1, '2016-02-21 18:11:41'),
-(7, '333', '3333', '2016-02-21 18:14:01', 1, 1, '2016-02-21 18:14:01'),
-(8, 'sadasd123123', '13', '2016-02-21 18:26:49', 1, 1, '2016-02-21 18:26:49'),
-(9, 'aádas', 'đâsdad', '2016-02-21 18:27:27', 1, 1, '2016-02-21 18:27:27'),
-(10, '321', '456', '2016-02-21 18:39:34', 1, 1, '2016-02-21 18:39:34');
+(24, 'Chứng Chỉ Lao ĐỘng', 'Hồ sơ gồm có: cmnd, ms thuế, bảo hiểm', '2016-02-29 17:31:44', 1, 1, '2016-02-29 17:32:20'),
+(25, 'Chứng Chỉ Hành Nghề', 'Hồ sơ gồm có: cmnd', '2016-02-29 17:31:57', 1, 1, '2016-02-29 17:31:57');
 
 --
 -- Indexes for dumped tables
@@ -70,7 +62,7 @@ ALTER TABLE `certificates`
 -- AUTO_INCREMENT for table `certificates`
 --
 ALTER TABLE `certificates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

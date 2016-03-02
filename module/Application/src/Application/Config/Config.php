@@ -51,8 +51,8 @@ namespace Application\Config;
     const FILE_PERMISSION_ALL = 4;
     const FILE_PERMISSION_CUSTUMER_PROVIDER = 6;
     /* Add user */
-    const PROCESS_OK = "Sử Lý Thành công";
-    const PROCESS_NG = "Có Lỗi Trong Quá Trình Sử Lý";
+    const PROCESS_OK = "Xử Lý Thành công";
+    const PROCESS_NG = "Có Lỗi Trong Quá Trình Xử Lý";
     const PASSWORD_DIFFERENT = "Mật Khẩu Không Giống Nhau";
     const PASSWORD_IS_THE_SAME = "Mất Khẩu Giống Với Mật Khẩu Cũ";
     const PASSWORD_IS_WRONG = "Mật Khẩu Sai";
@@ -60,8 +60,8 @@ namespace Application\Config;
     const USER_IS_NOT_EXIST = "Tài Khoản Không Tồn Tại";
     const PASSWORD_EXCEED_MAX_LEN = "Mật Khẩu Quá Dài! (8 đến 500) ";
     const PASSWORD_BENEATH_MIN_LEN = "Mật Khẩu Quá Ngắn! (8 đến 500) ";
-    const USERNAME_EXCEED_MAX_LEN = "Tài Khoản Quá Dài (5 đến 500)";
-    const USERNAME_BENEATH_MIN_LEN = "Tài Khoản Quá Ngắn (5 đến 500)";
+    const USERNAME_EXCEED_MAX_LEN = "Tài Khoản Quá Dài! (5 đến 500)";
+    const USERNAME_BENEATH_MIN_LEN = "Tài Khoản Quá Ngắn! (5 đến 500)";
 
     const AGENCY_TYPE = 0;
     const PROVIDER_TYPE = 1;

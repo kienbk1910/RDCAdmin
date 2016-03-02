@@ -13,7 +13,6 @@ use Application\Model\PayAction;
 interface IndexMapperInterface
 {
       public function getListRoles();
-      public function getListCertificates();
       public function updateAvatar($id_user,$avatar);
       public function changeUserInfo($id_user,$email);
       public function getTotalUsers();
@@ -28,7 +27,11 @@ interface IndexMapperInterface
       public function modifyLog(Log $log,$type);
       public function showLog($user_id, Task $task);
       public function getListUserByBaseRole($role);
+      
+      public function getListCertificates();
       public function addCertificate(Certificate $certificate);
+      public function updateCertificate(Certificate $certificate);
+      public function getCertificateByID($id);
       
       public function getInfoTask($id);
       public function changeInfoOfTask($id,$key,$value,$id_user);

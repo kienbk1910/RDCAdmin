@@ -13,14 +13,21 @@ use Application\Model\PayAction;
 interface IndexServiceInterface
 {
      public function getListRoles();
-     public function getListCertificates();
      public function updateAvatar($id_user,$avatar);
      public function addUser(User $user);
-     public function addCertificate(Certificate $certificate);
      public function changeUserInfo($id_user,$user);
      public function getTotalUsers();
      public function getListUsers($start,$length,$search);
      public function getCountUsers($search);
+     
+     public function addCertificate(Certificate $certificate);
+     public function updateCertificate(Certificate $certificate);
+     public function getListCertificates();
+     public function getCertificateByID($id);
+     public function getTotalCertificates();
+     public function getListCertificatesAll($start,$length,$search);
+     public function getCountCertificates($search);
+     
      public function changePassword($id_user, $password, $old_password);
      public function resetPassword($id_user, $password);
      public function getListByRole($role);
