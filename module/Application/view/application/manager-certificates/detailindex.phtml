@@ -3,17 +3,17 @@
 	         <thead>
 	            <tr>
 	                <th>Tên Chứng Chỉ</th>
-	                <th>Ghi Chú</th>
-	                <th>Ngưởi Chỉnh Sửa Cuối Cùng</th>
-	                <th>Ngày Tạo</th>
+	                <th>Tên Khách Hàng</th>
+	                <th>Chứng Minh Nhân Dân</th>
+	                <th>Mã Số Chứng Chỉ</th>
 	            </tr>
 	        </thead>
 	        <tfoot>
 	            <tr>
 	                <th>Tên Chứng Chỉ</th>
-	                <th>Ghi Chú</th>
-	                <th>Ngưởi Chỉnh Sửa Cuối Cùng</th>
-	                <th>Ngày Tạo</th>
+	                <th>Tên Khách Hàng</th>
+	                <th>Chứng Minh Nhân Dân</th>
+	                <th>Mã Số Chứng Chỉ</th>
 	            </tr>
 	        </tfoot>
 	</table>
@@ -26,7 +26,7 @@ var editor; // use a global for the submit and return data rendering in the exam
 						processing: true,
 				        serverSide: true,
 				        ajax: {
-				            url: "/manager-certificates/getlist",
+				            url: "/manager-certificates/getlistdetail",
 				            type: "POST"
 				        },
 				        "language": {
@@ -34,15 +34,15 @@ var editor; // use a global for the submit and return data rendering in the exam
 				  		},
 						columns: [
 							{ data: "certificate_name" },
-							{ data: "certificate_note" },
-							{ data: "last_user_id" },
-							{ data: "create_date" }
+							{ data: "full_name" },
+							{ data: "identity_card" },
+							{ data: "certificate_code" }
 						],
 
 				} );
 	 $('#users-table').on('click', 'tr', function () {
         var data = table.row( this ).id();
-        window.open("/manager-certificates/edit-detail/"+data);
+        window.open("/manager-certificates/editdetail/" + data);
     } );
 
 </script>

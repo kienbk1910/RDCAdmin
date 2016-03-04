@@ -10,6 +10,7 @@ use Zend\Authentication\AuthenticationService;
 use Application\Model\Certificate;
 use Application\Model\ManagerCertificate;
 use Application\Model\CertificateListItem;
+use Application\Model\ManagerCertificateListItem;
 use Application\Model\DataTablesObject;
 use Zend\Debug\Debug;
 use Application\Config\Config;
@@ -57,7 +58,7 @@ class ManagerCertificatesController extends BaseController {
         echo \Zend\Json\Json::encode($data, false);
         exit;
     }
-    
+
     public function addAction() {
         $this->checkAdmin();
         $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set("Thêm Chứng Chỉ");
@@ -159,7 +160,7 @@ class ManagerCertificatesController extends BaseController {
         $request = $this->getRequest();
         $certificates = $this->databaseService->getListCertificates();
         $certificate_error = array();
-    
+        $managerCertificate = new ManagerCertificate();
         if ($request->isPost()) {
             $certificate_type = $this->getRequest ()->getPost('certificate_type', null);
             $certificate_code = $this->getRequest ()->getPost('certificate_code', null);
@@ -180,14 +181,13 @@ class ManagerCertificatesController extends BaseController {
             $identity_card = $this->getRequest ()->getPost('identity_card', null);
             $start_time = $this->getRequest ()->getPost('start_time', null);
             $end_time = $this->getRequest ()->getPost('end_time', null);
-    
+            $date_of_issue = $this->getRequest ()->getPost('date_of_issue', null);
             /* validate certificate_code */
             $note = $this->getRequest ()->getPost('note', null);
             if (strlen($note) > 500) {
                 $certificate_error['certificate_note'] = "Ghi chú của chứng chỉ vượt quá giới hạn cho phép (500 kí tự)";
             }
-    
-            $managerCertificate = new ManagerCertificate();
+
             if (empty($certificate_error)) {
                 $managerCertificate->certificate_code = $certificate_code;
                 $managerCertificate->certificate_type = $certificate_type;
@@ -195,6 +195,7 @@ class ManagerCertificatesController extends BaseController {
                 $managerCertificate->day_of_birth = $day_of_birth;
                 $managerCertificate->place_of_birth = $place_of_birth;
                 $managerCertificate->identity_card = $identity_card;
+                $managerCertificate->date_of_issue = $date_of_issue;
                 $managerCertificate->start_time = $start_time;
                 $managerCertificate->end_time = $end_time;
                 $managerCertificate->last_user_id = $this->auth->getIdentity()->id;
@@ -202,17 +203,18 @@ class ManagerCertificatesController extends BaseController {
                 $managerCertificate->note = $this->auth->getIdentity()->note;
                 $ret = $this->databaseService->adddetailCertificate($managerCertificate);
     
-                if ($ret == NULL) {
-                    $certificate_error['certificate_name'] = "Hồ Sơ Chứng Chỉ Đã Tồn Tại";
+                if ($ret == Config::CERTIFICATE_EXIST) {
+                    $certificate_error['certificate_code'] = Config::CERTIFICATE_EXIST;
                 } else {
                     return $this->redirect()->toRoute('manager-certificates/detailindex');
                 }
             }
         }
-    
+
         return new ViewModel(array(
                 'certificates' => $certificates,
                 'certificate_error' => $certificate_error,
+                'managerCertificate' => $managerCertificate,
         ));
     }
 
@@ -267,4 +269,29 @@ class ManagerCertificatesController extends BaseController {
             }
         }
     }
+
+    public function getlistdetailAction(){
+        $this->checkAuth();
+        $request = $this->getRequest();
+    
+        $draw = $request->getPost('draw', 1);
+        $start = $request->getPost('start', 0);
+        $length = $request->getPost('length', 10);
+        $search = $request->getPost('search', '');
+        $search = $search['value'];
+        $total = $this->databaseService->getTotalManagerCertificates();
+
+        $certificates = $this->databaseService->getListManagerCertificatesAll($start,$length,$search);
+        $data = new DataTablesObject();
+        $data->recordsTotal = $total;
+        $data->recordsFiltered = $this->databaseService->getCountManagerCertificates($search);
+        $data->draw = $draw;
+        foreach ($certificates as $certificate) {
+            array_push($data->data, new ManagerCertificateListItem($certificate->id, $certificate->certificate_name, $certificate->full_name,
+            $certificate->identity_card, $certificate->certificate_code));
+        }
+        echo \Zend\Json\Json::encode($data, false);
+        exit;
+    }
+    
 }

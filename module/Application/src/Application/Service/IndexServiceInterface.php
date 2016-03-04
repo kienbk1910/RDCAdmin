@@ -33,6 +33,10 @@ interface IndexServiceInterface
      public function getListCertificatesAll($start,$length,$search);
      public function getCountCertificates($search);
      
+     public function getTotalManagerCertificates();
+     public function getListManagerCertificatesAll($start,$length,$search);
+     public function getCountManagerCertificates($search);
+     
      public function changePassword($id_user, $password, $old_password);
      public function resetPassword($id_user, $password);
      public function getListByRole($role);

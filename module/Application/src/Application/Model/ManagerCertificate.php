@@ -11,6 +11,7 @@ class ManagerCertificate {
     public $start_time;
     public $end_time;
     public $identity_card;
+    public $date_of_issue;
     public $day_of_birth;
     public $last_user_id;
     public $last_update;

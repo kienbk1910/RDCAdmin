@@ -39,7 +39,6 @@ class ZendDbSqlMapper implements IndexMapperInterface
     public function __construct(AdapterInterface $dbAdapter)
     {
         $this->dbAdapter = $dbAdapter;
-
     }
 
      public function getListRoles()
@@ -143,32 +142,30 @@ class ZendDbSqlMapper implements IndexMapperInterface
      
      public function addDetailCertificate(ManagerCertificate $certificate){
          $data = array(
-                 'certificate_type' => $certificate->certificate_type,
-                 'certificate_code' => $certificate->certificate_code,
-                 'full_name' => $certificate->full_name,
-                 'place_of_birth' => $certificate->place_of_birth,
-                 'start_time' => $certificate->start_time,
-                 'end_time' => $certificate->end_time,
-                 'day_of_birth' => $certificate->day_of_birth,
-                 'identity_card' => $certificate->identity_card,
-                 'last_user_id'=>$certificate->last_user_id,
-                 'last_update'=>date("Y-m-d H:i:s"),
-                 'note' =>$certificate->note,
-                 'create_user_id'=> $certificate->create_user_id,
+             'certificate_type' => $certificate->certificate_type,
+             'certificate_code' => $certificate->certificate_code,
+             'full_name' => $certificate->full_name,
+             'place_of_birth' => $certificate->place_of_birth,
+             'start_time' => $certificate->start_time,
+             'end_time' => $certificate->end_time,
+             'day_of_birth' => $certificate->day_of_birth,
+             'identity_card' => $certificate->identity_card,
+             'date_of_issue' => $certificate->date_of_issue,
+             'last_user_id'=>$certificate->last_user_id,
+             'last_update'=>date("Y-m-d H:i:s"),
+             'note' =>$certificate->note,
+             'create_user_id'=> $certificate->create_user_id,
          );
-          
          $sql = new Sql($this->dbAdapter);
          $insert = $sql->insert('manager_certificates');
          $insert->values($data);
          $selectString = $sql->getSqlStringForSqlObject($insert);
 
-         $ret;
          try {
              $ret = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
          } catch (\Exception $e) {
-             $ret = NULL;
+             return Config::CERTIFICATE_EXIST;
          }
-         return $ret;
      }
      
      public function updateDetailCertificate(ManagerCertificate $certificate){
@@ -306,6 +303,47 @@ class ZendDbSqlMapper implements IndexMapperInterface
         }
         return $count;
     }
+
+    public function getTotalManagerCertificates(){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('manager_certificates')
+        ->columns(array('COUNT'=>new \Zend\Db\Sql\Expression('COUNT(*)')));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $resultSet =  $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $count = 0;
+        foreach ($resultSet as $row) {
+            $count = $row->COUNT;
+            break;
+        }
+        return $count;
+    }
+    
+    public function getListManagerCertificatesAll($start, $length, $search){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('manager_certificates')
+        ->join('certificates', 'certificates.id = manager_certificates.certificate_type', array(
+                'certificate_name' => 'certificate_name'), 'left');
+        $select->where->like('manager_certificates.certificate_code', '%' . $search .'%');
+        $select->offset($start)->limit($length);
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+    }
+    
+    public function getCountManagerCertificates($search){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('manager_certificates');
+        $select->where->like('manager_certificates.certificate_code', '%' . $search .'%');
+        $select->columns(array('COUNT'=>new \Zend\Db\Sql\Expression('COUNT(*)')));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $resultSet =  $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $count = 0;
+        foreach ($resultSet as $row) {
+            $count = $row->COUNT;
+            break;
+        }
+        return $count;
+    }
+
     /* change password */
     public function changePassword($id_user, $new_password, $old_password) {
         $sql = new Sql($this->dbAdapter);
