@@ -11,6 +11,7 @@ use Application\Model\FileAttachment;
 use Application\Model\Log;
 use Application\Model\Notification;
 use Application\Model\PayAction;
+use Application\Model\ManagerCertificate;
 class IndexService implements IndexServiceInterface
 {
     protected $databaseMapper;
@@ -66,6 +67,13 @@ class IndexService implements IndexServiceInterface
    }
    public function updateCertificate(Certificate $certificate){
        return $this->databaseMapper->updateCertificate($certificate);
+   }
+
+   public function addDetailCertificate(ManagerCertificate $certificate){
+       return $this->databaseMapper->addDetailCertificate($certificate);
+   }
+   public function updateDetailCertificate(ManagerCertificate $certificate){
+       return $this->databaseMapper->updateDetailCertificate($certificate);
    }
    
    public function changePassword($id_user, $password, $old_password) {

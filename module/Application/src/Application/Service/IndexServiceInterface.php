@@ -3,6 +3,7 @@
 namespace Application\Service;
 use Application\Model\User;
 use Application\Model\Certificate;
+use Application\Model\ManagerCertificate;
 use Application\Model\Task;
 use Application\Model\Comment;
 use Application\Model\MoneyHistory;
@@ -22,6 +23,10 @@ interface IndexServiceInterface
      
      public function addCertificate(Certificate $certificate);
      public function updateCertificate(Certificate $certificate);
+     
+     public function addDetailCertificate(ManagerCertificate $certificate);
+     public function updateDetailCertificate(ManagerCertificate $certificate);
+     
      public function getListCertificates();
      public function getCertificateByID($id);
      public function getTotalCertificates();

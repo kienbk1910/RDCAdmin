@@ -10,6 +10,7 @@ use Application\Model\Certificate;
 use Application\Model\Log;
 use Application\Model\Notification;
 use Application\Model\PayAction;
+use Application\Model\ManagerCertificate;
 interface IndexMapperInterface
 {
       public function getListRoles();
@@ -31,6 +32,8 @@ interface IndexMapperInterface
       public function getListCertificates();
       public function addCertificate(Certificate $certificate);
       public function updateCertificate(Certificate $certificate);
+      public function addDetailCertificate(ManagerCertificate $certificate);
+      public function updateDetailCertificate(ManagerCertificate $certificate);
       public function getCertificateByID($id);
       
       public function getInfoTask($id);

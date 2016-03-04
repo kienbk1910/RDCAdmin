@@ -53,11 +53,6 @@
                       <label>Số Chứng Minh Nhân Dân</label>
                       <input type="text" class="form-control" name="identity_card" value="<?php ?>">
                     </div>
-                    
-                    <div class="form-group <?php if (!empty($certificate_error['create_date'])) { echo 'has-error';} ?>">
-                      <label>Ngày Cấp</label>
-                      <input type="text" class="form-control" name="create_date" >
-                    </div>
 
                     <div class="form-group <?php if (!empty($certificate_error['start_time'])) { echo 'has-error';} ?>">
                       <label>Thời Gian Bắt Đầu</label>
@@ -69,6 +64,11 @@
                       <input type="text" class="form-control" name="end_time" value="<?php ?>">
                     </div>
 
+                    <div class="form-group <?php if (!empty($certificate_error['certificate_code'])) { echo 'has-error';} ?>">
+                      <label>Mã Số Chứng Chỉ</label>
+                      <input type="text" class="form-control" name="certificate_code" value="<?php ?>">
+                    </div>
+                    
                     <div class="form-group <?php if (!empty($certificate_error['note'])) { echo 'has-error';} ?>">
                       <label>Ghi Chú</label>
                       <input type="textarea" class="form-control" name="note" placeholder="Enter ..." value="<?php ?>">
