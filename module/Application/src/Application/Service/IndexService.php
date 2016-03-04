@@ -66,6 +66,9 @@ class IndexService implements IndexServiceInterface
    public function getListManagerCertificatesAll($start,$length,$search){
        return $this->databaseMapper->getListManagerCertificatesAll($start,$length,$search);
    }
+   public function getManagerCertificateByID($id){
+       return $this->databaseMapper->getManagerCertificateByID($id);
+   }
    public function getCountManagerCertificates($search){
        return $this->databaseMapper->getCountManagerCertificates($search);
    }

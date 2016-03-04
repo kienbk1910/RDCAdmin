@@ -40,7 +40,7 @@
                         
                         <div class="form-group <?php if (!empty($certificate_error['day_of_birth'])) { echo 'has-error';} ?>">
                           <label>Ngày Tháng Năm Sinh</label>
-                          <input type="text" class="form-control" name="day_of_birth" value="<?php echo $managerCertificate->day_of_birth; ?>">
+                          <input id="day_of_birth" type="text" class="form-control" name="day_of_birth" value="<?php echo $managerCertificate->day_of_birth; ?>">
                         </div>
                         
                         <div class="form-group <?php if (!empty($certificate_error['place_of_birth'])) { echo 'has-error';} ?>">
@@ -56,17 +56,17 @@
                     <div class="col-md-6">
                         <div class="form-group <?php if (!empty($certificate_error['date_of_issue'])) { echo 'has-error';} ?>">
                           <label>Ngày Cấp</label>
-                          <input type="text" class="form-control" name="date_of_issue" value="<?php echo $managerCertificate->date_of_issue ; ?>">
+                          <input id="date_of_issue" type="text" class="form-control" name="date_of_issue" value="<?php echo $managerCertificate->date_of_issue ; ?>">
                         </div>
                         
                         <div class="form-group <?php if (!empty($certificate_error['start_time'])) { echo 'has-error';} ?>">
                           <label>Thời Gian Bắt Đầu</label>
-                          <input type="text" class="form-control" name="start_time" value="<?php echo $managerCertificate->start_time ;  ?>">
+                          <input id="start_time" type="text" class="form-control" name="start_time" value="<?php echo $managerCertificate->start_time ;  ?>">
                         </div>
     
                         <div class="form-group <?php if (!empty($certificate_error['end_time'])) { echo 'has-error';} ?>">
                           <label>Thời Gian Kết Thúc</label>
-                          <input type="text" class="form-control" name="end_time" value="<?php echo $managerCertificate->end_time ; ?>">
+                          <input id="end_time" type="text" class="form-control" name="end_time" value="<?php echo $managerCertificate->end_time ; ?>">
                         </div>
     
                         <div class="form-group <?php if (!empty($certificate_error['certificate_code'])) { echo 'has-error';} ?>">
@@ -93,6 +93,7 @@
   </div><!-- /.row (main row) -->
 
 </section><!-- /.content -->
+
 <script type="text/javascript" language="javascript" >
  function validateFormRegister(){
   if($( "input[name='certificate_name']" ).val().length == 0 ){
@@ -111,4 +112,11 @@
   
   return true;
  }
+ $(function() {
+     $( "#day_of_birth" ).datepicker();
+     $( "#date_of_issue" ).datepicker();
+     $( "#start_time" ).datepicker();
+     $( "#end_time" ).datepicker();
+ });
+
 </script>

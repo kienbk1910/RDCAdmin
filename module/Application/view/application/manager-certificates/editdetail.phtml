@@ -1,0 +1,127 @@
+<?php use Application\Config\Config; ?>
+<!-- Main content -->
+<section class="content">
+  <!-- Main row -->
+  <div class="row">
+    <!-- Left col -->
+    <section class=" col-lg-12 connectedSortable">
+         <div class="box box-warning">
+                <div class=" box-header with-border">
+                  <h3 class="box-title">Chỉnh Sửa Hồ Sơ Chứng Chỉ</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                 <!-- alert-danger -->
+                 <?php if (!empty($certificate_error)) {?>
+                 <div class="<?php if (isset($certificate_error['ng'])) echo "alert alert-danger alert-dismissable";
+                    else if (isset($certificate_error['ok'])) echo "alert alert-success alert-dismissable"; ?>">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4><i class="icon fa fa-ban"></i> Alert!</h4>
+                    <?php
+                        if (!empty($certificate_error['certificate_code'])) echo $certificate_error['certificate_code'];
+                        if (!empty($certificate_error['ok'])) echo $certificate_error['ok'];
+                        if (!empty($certificate_error['ng'])) echo $certificate_error['ng'];
+                    ?>
+                  </div><!-- /.alert-danger  -->
+                 <?php } ?>
+                 <!-- left col -->
+                 <div class="col-md-6">
+                      <form role="form" method="post" onsubmit="return validateFormRegister()">
+                        <div class="form-group">
+                          <label> Loại Chứng Chỉ</label>
+                          <select name="certificate_type" class="form-control">
+                          <?php
+                            foreach ($certificates as $certificate) {
+                                echo "<option value=" . $certificate->id;
+                                if (!empty($certificate) && $managerCertificate->certificate_type == $certificate->id) {?> selected="selected" <?php }
+                                echo ">" . $certificate->certificate_name . "</option>";
+                            }
+                          ?>
+                          </select>
+                        </div >
+                        <div class="form-group <?php if (!empty($certificate_error['full_name'])) { echo 'has-error';} ?>">
+                          <label>Tên Khách Hàng</label>
+                          <input type="text" class="form-control" name="full_name" value="<?php echo $managerCertificate->full_name; ?>">
+                        </div>
+                        
+                        <div class="form-group <?php if (!empty($certificate_error['day_of_birth'])) { echo 'has-error';} ?>">
+                          <label>Ngày Tháng Năm Sinh</label>
+                          <input id="day_of_birth" type="text" class="form-control" name="day_of_birth" value="<?php echo $managerCertificate->day_of_birth; ?>">
+                        </div>
+                        
+                        <div class="form-group <?php if (!empty($certificate_error['place_of_birth'])) { echo 'has-error';} ?>">
+                          <label>Nơi Sinh</label>
+                          <input type="text" class="form-control" name="place_of_birth" value="<?php echo $managerCertificate->place_of_birth ; ?>">
+                        </div>
+                        <div class="form-group <?php if (!empty($certificate_error['identity_card'])) { echo 'has-error';} ?>">
+                          <label>Số Chứng Minh Nhân Dân</label>
+                          <input type="text" class="form-control" name="identity_card" value="<?php echo $managerCertificate->identity_card; ?>">
+                        </div>
+                    </div> <!-- . end left col -->
+                    <!-- right col -->
+                    <div class="col-md-6">
+                        <div class="form-group <?php if (!empty($certificate_error['date_of_issue'])) { echo 'has-error';} ?>">
+                          <label>Ngày Cấp</label>
+                          <input id="date_of_issue" type="text" class="form-control" name="date_of_issue" value="<?php echo $managerCertificate->date_of_issue ; ?>">
+                        </div>
+                        
+                        <div class="form-group <?php if (!empty($certificate_error['start_time'])) { echo 'has-error';} ?>">
+                          <label>Thời Gian Bắt Đầu</label>
+                          <input id="start_time" type="text" class="form-control" name="start_time" value="<?php echo $managerCertificate->start_time ;  ?>">
+                        </div>
+    
+                        <div class="form-group <?php if (!empty($certificate_error['end_time'])) { echo 'has-error';} ?>">
+                          <label>Thời Gian Kết Thúc</label>
+                          <input id="end_time" type="text" class="form-control" name="end_time" value="<?php echo $managerCertificate->end_time ; ?>">
+                        </div>
+    
+                        <div class="form-group <?php if (!empty($certificate_error['certificate_code'])) { echo 'has-error';} ?>">
+                          <label>Mã Số Chứng Chỉ</label>
+                          <input type="text" class="form-control" name="certificate_code" value="<?php echo $managerCertificate->certificate_code ; ?>">
+                        </div>
+                        
+                        <div class="form-group <?php if (!empty($certificate_error['note'])) { echo 'has-error';} ?>">
+                          <label>Ghi Chú</label>
+                          <input type="textarea" class="form-control" name="note" placeholder="Enter ..." value="<?php echo $managerCertificate->note ; ?>">
+                        </div>
+                    </div> <!-- . end right col -->
+                   <div class="form-group">
+                        <div class="col-sm-offset-5 col-sm-10">
+                          <button type="submit" class="btn btn-danger">Chỉnh Sửa Hồ Sơ Chứng Chỉ</button>
+                        </div>
+                   </div>
+                  </form>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+    </section><!-- /.Left col -->
+    <!-- right col (We are only adding the ID to make the widgets sortable)-->
+
+  </div><!-- /.row (main row) -->
+
+</section><!-- /.content -->
+
+<script type="text/javascript" language="javascript" >
+ function validateFormRegister(){
+  if($( "input[name='certificate_name']" ).val().length == 0 ){
+    $( "input[name='certificate_name']" ).parent().addClass("has-error");
+    return false;
+  }
+  $( "input[name='certificate_name']" ).parent().removeClass("has-error");
+  $( "input[name='certificate_name']" ).parent().addClass("has-success");
+
+  if($( "input[name='create_date']" ).val().length == 0 ){
+    $( "input[name='create_date']" ).parent().addClass("has-error");
+    return false;
+  }
+  $( "input[name='create_date']" ).parent().removeClass("has-error");
+  $( "input[name='create_date']" ).parent().addClass("has-success");
+  
+  return true;
+ }
+ $(function() {
+     $( "#day_of_birth" ).datepicker();
+     $( "#date_of_issue" ).datepicker();
+     $( "#start_time" ).datepicker();
+     $( "#end_time" ).datepicker();
+ });
+
+</script>

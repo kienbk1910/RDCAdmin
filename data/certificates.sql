@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 29, 2016 at 05:43 PM
+-- Generation Time: Mar 04, 2016 at 09:21 PM
 -- Server version: 10.1.9-MariaDB
 -- PHP Version: 5.5.30
 
@@ -41,8 +41,10 @@ CREATE TABLE `certificates` (
 --
 
 INSERT INTO `certificates` (`id`, `certificate_name`, `certificate_note`, `create_date`, `create_user_id`, `last_user_id`, `last_update`) VALUES
-(24, 'Chứng Chỉ Lao ĐỘng', 'Hồ sơ gồm có: cmnd, ms thuế, bảo hiểm', '2016-02-29 17:31:44', 1, 1, '2016-02-29 17:32:20'),
-(25, 'Chứng Chỉ Hành Nghề', 'Hồ sơ gồm có: cmnd', '2016-02-29 17:31:57', 1, 1, '2016-02-29 17:31:57');
+(24, 'Chứng Chỉ Lao ĐỘng', 'Hồ sơ gồm có: cmnd, ms thuế, bảo hiểm', '2016-02-29 17:31:44', 1, 1, '2016-03-04 21:20:20'),
+(25, 'Chứng Chỉ Hành Nghề', 'Hồ sơ gồm có: cmnd', '2016-02-29 17:31:57', 1, 1, '2016-02-29 17:31:57'),
+(26, 'văn bằng 2', 'hồ sơ gồm abc 123 4567', '2016-02-29 18:28:08', 1, 1, '2016-02-29 18:28:24'),
+(27, 'chứng chỉ xây dựng', 'không có ghi chú ', '2016-03-02 18:43:32', 1, 1, '2016-03-02 18:43:32');
 
 --
 -- Indexes for dumped tables
@@ -62,7 +64,7 @@ ALTER TABLE `certificates`
 -- AUTO_INCREMENT for table `certificates`
 --
 ALTER TABLE `certificates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

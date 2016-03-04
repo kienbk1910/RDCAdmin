@@ -34,6 +34,7 @@ interface IndexServiceInterface
      public function getCountCertificates($search);
      
      public function getTotalManagerCertificates();
+     public function getManagerCertificateByID($id);
      public function getListManagerCertificatesAll($start,$length,$search);
      public function getCountManagerCertificates($search);
      

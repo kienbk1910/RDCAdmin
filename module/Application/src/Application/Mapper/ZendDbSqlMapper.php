@@ -63,7 +63,13 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $selectString = $sql->getSqlStringForSqlObject($select);
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
     }
-    
+    public function getManagerCertificateByID($id) {
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('manager_certificates');
+        $select->Where(array('manager_certificates.id = ?' => $id));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+    }
      public function updateAvatar($id_user,$avatar){
         $sql = new Sql($this->dbAdapter);
         $update = $sql->update('users');
@@ -170,14 +176,23 @@ class ZendDbSqlMapper implements IndexMapperInterface
      
      public function updateDetailCertificate(ManagerCertificate $certificate){
          $data = array(
-                 'certificate_name' => $certificate->certificate_name,
-                 'certificate_note' => $certificate->certificate_note,
-                 'last_user_id'=>$certificate->last_user_id,
-                 'last_update'=>date("Y-m-d H:i:s"),
+             'certificate_type' => $certificate->certificate_type,
+             'certificate_code' => $certificate->certificate_code,
+             'full_name' => $certificate->full_name,
+             'place_of_birth' => $certificate->place_of_birth,
+             'start_time' => $certificate->start_time,
+             'end_time' => $certificate->end_time,
+             'day_of_birth' => $certificate->day_of_birth,
+             'identity_card' => $certificate->identity_card,
+             'date_of_issue' => $certificate->date_of_issue,
+             'last_user_id'=>$certificate->last_user_id,
+             'last_update'=>date("Y-m-d H:i:s"),
+             'note' =>$certificate->note,
+             //'create_user_id'=> $certificate->create_user_id,
          );
      
          $sql = new Sql($this->dbAdapter);
-         $update = $sql->update('certificates');
+         $update = $sql->update('manager_certificates');
          $update->set($data);
          $update->Where(array('id = ?' => $certificate->id));
          $selectString = $sql->getSqlStringForSqlObject($update);
