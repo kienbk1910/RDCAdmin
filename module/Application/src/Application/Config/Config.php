@@ -39,6 +39,9 @@ namespace Application\Config;
     const IMAGE_PATH = "/files/users/avatar/origin/";
     const FILE_ATTACHMENT_PATH = "/data/attachment/";
 
+    const ID_REPORTER_DEFAULT = 24;
+    const ID_ASSIGN_DEFAULT = 19;
+    
     const PASSWORD_MAX_LEN = 500;
     const PASSWORD_MIN_LEN = 8;
     const USERNAME_MAX_LEN = 500;

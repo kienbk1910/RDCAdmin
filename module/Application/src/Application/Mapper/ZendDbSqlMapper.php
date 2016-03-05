@@ -764,7 +764,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
                     ->limit($length);
         }
         $selectString = $sql->getSqlStringForSqlObject($select);
-
+    
         return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
       }
      public function getCountTasksFiltered($start,$length,$search,$columns,$order,$agency_id,$provider_id){

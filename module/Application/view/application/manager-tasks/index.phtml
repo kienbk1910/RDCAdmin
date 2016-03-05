@@ -41,7 +41,7 @@
                          <select id="process_id"class="form-control js-example-basic-single" name="agency_id" >
                           		<option  value="0">Tất Cả</option>;
                                <?php foreach($processes as $process){
-                                 echo "<option  value=".$process->id.">".$process->name."</option>";
+                                 echo "<option  value=".$process->getId().">".$process->getUsername()."</option>";
                                 }?>
                           </select>
                       </div>
@@ -49,7 +49,7 @@
                       <div class="col-sm-2">
                          <select id="provider_id"class="form-control js-example-basic-single" name="agency_id" >
                                <?php foreach($agencys as $agency){
-                                 echo "<option  value=".$agency->getId().">".$agency->getUsername()."</option>";
+                                 echo "<option  value=".$agency->id.">".$agency->username."</option>";
                                 }?>
                           </select>
                       </div>
@@ -92,9 +92,7 @@
 			  	<div class="col-sm-3">
 			  		<button class="btn btn-block btn-danger" onclick="pay_action(2)">Thanh Toán Cho Nhà Cung Cấp</button>
 			  	</div>
-			  	<div class="col-sm-2">
-			  		<button class="btn btn-block btn-info" onclick="add_action()"><span class="glyphicon glyphicon-plus"></span>Thêm Hồ Sơ</button>
-			  	</div>
+		
 		  </div>
     </div>
 		  </div><!-- /.box-body -->
@@ -102,14 +100,15 @@
 	</div><!-- /.box -->
 	
 	<div>
-		Ẩn Hiện: 
-		<a class="toggle-vis" data-column="1">Tên</a>
-		 - <a class="toggle-vis" data-column="2">Hồ Sơ</a>
-		 - <a class="toggle-vis" data-column="3">Trạng Thái</a> 
-		  - <a class="toggle-vis" data-column="4">Người Gửi</a> 
-		 - <a class="toggle-vis" data-column="5">Thỏa Thuận</a> 
-		  - <a class="toggle-vis" data-column="6">Đã Nhận</a>
-		 - <a class="toggle-vis" data-column="7">Ngày Nhận</a> 
+		Ẩn Hiện:
+		- <a class="toggle-vis" data-column="0">Ngày Nhận</a> 
+		<a class="toggle-vis" data-column="2">Tên</a>
+		 - <a class="toggle-vis" data-column="3">Hồ Sơ</a>
+		 - <a class="toggle-vis" data-column="4">Trạng Thái</a> 
+		  - <a class="toggle-vis" data-column="5">Người Gửi</a> 
+		 - <a class="toggle-vis" data-column="6">Thỏa Thuận</a> 
+		  - <a class="toggle-vis" data-column="7">Đã Nhận</a>
+		 
 		 - <a class="toggle-vis" data-column="8">Ngày Trả</a> 
 		 -<a class="toggle-vis" data-column="9">Xỷ Lý</a>
 		 -<a class="toggle-vis" data-column="10">Phải Chi</a>
@@ -124,6 +123,7 @@
 	          <thead>
 	        
 	            <tr>
+	            	<th>Ngày Nhận</th>
 	            	<th>#</th>
 	                <th>Tên</th>
 	                <th>Hồ Sơ</th>
@@ -131,7 +131,6 @@
 	               	<th>Người Gửi</th>
 	               	<th>Thỏa Thuận</th>
 	               	<th>Đã Nhận</th>
-	               	<th>Ngày Nhận</th>
 	               	<th>Ngày Trả</th>
 	               	<th>Xỷ Lý</th>
 	               	<th>Phải Chi</th>
@@ -144,14 +143,14 @@
 	        </thead>
 	        <tfoot>
 	            <tr>
+	            	<th>Ngày Nhận</th>
 	            	<th>#</th>
 	                <th>Tên</th>
 	                <th>Hồ Sơ</th>
 	                <th>Trạng Thái</th>
 	               	<th>Người Gửi</th>
 	               	<th>Thỏa Thuận</th>
-	               	<th>Đã Nhập</th>
-	               	<th>Ngày Nhận</th>
+	               	<th>Đã Nhập</th> 	
 	               	<th>Ngày Trả</th>
 	               	<th>Xỷ Lý</th>
 	               	<th>Phải Chi</th>
@@ -254,8 +253,24 @@ var editor; // use a global for the submit and return data rendering in the exam
 				        "language": {
 				    		"url": "//cdn.datatables.net/plug-ins/1.10.10/i18n/Vietnamese.json"
 				  		},
+				  		"columnDefs": [ {
+						      "targets": 4,
+						      "render": function ( data, type, row ) {
+					
+var custumer = '<a data-inputclass="custum-x-editable" href="#" class="process_id"  data-type="select2"';
+	custumer +='data-name="process_id"';
+	custumer +='data-pk="'+row.DT_RowId+'"';
+	custumer +='data-value="'+row.process_id+'"';
+	custumer +='data-url="/manager-tasks/change-info" data-title="Chọn Trạng Thái"></a>';
+						      	return custumer;
+                				},
+						    } ],
+						  "drawCallback": function( settings ) {
+				            init_editable();
+				        },
 				  		"lengthMenu": [ 20, 50,75, 100 ],
 						columns: [
+							{ data: "date_open" },
 							{ data: "DT_RowId" },
 							{ data: "custumer" },
 							{ data: "certificate" },
@@ -263,7 +278,6 @@ var editor; // use a global for the submit and return data rendering in the exam
 							{ data: "agency_name" },
 							{ data: "cost_sell" },
 							{ data: "custumer_pay" },
-							{ data: "date_open" },
 							{ data: "date_end" },
 							{ data: "provider_name" },
 							{ data: "cost_buy" },
@@ -280,6 +294,20 @@ var editor; // use a global for the submit and return data rendering in the exam
       //  var data = table.row( this ).id();
         //window.open("/manager-tasks/detail/"+data);
     } );
+	 function init_editable(){
+	  	$('.process_id').editable({
+	        source: [
+	        <?php 
+	          foreach ($processes as $process) {
+	            echo "{value: ".$process->getId().", text: '".$process->username."'},";
+	          }
+	        ?>
+	           ],
+	         select2: {
+	           multiple: false,
+	        }
+	    });
+	}
 	 function onpen_new_tab(id){
 	 		window.open("/manager-tasks/detail/"+id);
 	 }
@@ -341,7 +369,7 @@ var editor; // use a global for the submit and return data rendering in the exam
 
      $("#agency_id").select2().on("change", function(e) {
           // mostly used event, fired to the original element when the value changes
-           	$('#users-table').DataTable().column(4).search( e.val,"","").draw();
+           	$('#users-table').DataTable().column(5).search( e.val,"","").draw();
       });
      $("#provider_id").select2().on("change", function(e) {
           // mostly used event, fired to the original element when the value changes
@@ -349,7 +377,8 @@ var editor; // use a global for the submit and return data rendering in the exam
       });
        $("#process_id").select2().on("change", function(e) {
           // mostly used event, fired to the original element when the value changes
-           	$('#users-table').DataTable().column(3).search( e.val,"","").draw();
+ 
+           	$('#users-table').DataTable().column(4).search( e.val,"","").draw();
       });
         $("#assign_id").select2().on("change", function(e) {
           // mostly used event, fired to the original element when the value changes
@@ -360,7 +389,7 @@ var editor; // use a global for the submit and return data rendering in the exam
            	$('#users-table').DataTable().column(15).search( e.val,"","").draw();
       });
       function seach_custum_date_start(){
-      		$('#users-table').DataTable().column(7).search( $("#cus-date-start_1").val()+"-"+$("#cus-date-start_2").val(),"","").draw();
+      		$('#users-table').DataTable().column(0).search( $("#cus-date-start_1").val()+"-"+$("#cus-date-start_2").val(),"","").draw();
       }
       function seach_custum_date_end(){
       		$('#users-table').DataTable().column(8).search( $("#cus-date-end_1").val()+"-"+$("#cus-date-end_2").val(),"","").draw();

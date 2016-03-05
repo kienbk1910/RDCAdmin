@@ -532,6 +532,18 @@ return array(
                          ),
 
                      ),
+                    'add-fast' => array(
+                         'type' => 'segment',
+                         'options' => array(
+                             'route'    => '/them-nhanh',
+                             'defaults' => array(
+                                 'action' => 'add-fast',
+                             ),
+                             'constraints' => array(
+                             )
+                         ),
+
+                     ),
                   'deletefile' => array(
                      'type' => 'segment',
                      'options' => array(
@@ -871,14 +883,20 @@ return array(
                 array(
                     'label' => 'Danh Sách Hồ Sơ',
                     'uri' => '#',
-                    'icon' => 'circle-o',
+                    'icon' => 'circle-o text-blue',
                     'route' => 'manager-tasks',
                 ),
                 array(
-                    'label' => 'Thêm Hồ Sơ',
+                    'label' => 'Thêm Hồ Sơ Chi Tiết',
                     'uri' => '#',
-                    'icon' => 'circle-o',
+                    'icon' => 'circle-o text-green',
                     'route' => 'manager-tasks/add',
+                ),
+                  array(
+                    'label' => 'Thêm Hồ Sơ Nhanh',
+                    'uri' => '#',
+                    'icon' => 'circle-o text-red',
+                    'route' => 'manager-tasks/add-fast',
                 ),
             )
         ),

@@ -42,6 +42,9 @@ div.dataTables_wrapper {
 .name_edit_able{
 	font-size: 17px;
 }
+.dataTables_scrollBody{
+	overflow: visible !important;
+}
 @media print {
   a[href]:after {
     content: none !important;

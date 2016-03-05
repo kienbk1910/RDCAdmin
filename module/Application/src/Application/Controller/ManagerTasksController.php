@@ -54,9 +54,15 @@ class ManagerTasksController extends BaseController
 
         }
         $processes = $this->databaseService->getListProcess();
+        $processes_s = array();
+        foreach ($processes as $user) {
+             array_push($processes_s,new User($user->id,$user->name,"",""));
+
+        }
+       
         return new ViewModel(
              array('agencys'=>$agencys,
-                'processes'=>$processes,
+                'processes'=>$processes_s,
                  'staffs'=>$staffs)
             );
      }
@@ -90,8 +96,7 @@ class ManagerTasksController extends BaseController
             $item->custumer_pay = number_format($this->databaseService->getTotalPay($task->id,Config::PAY_CUSTUMER));
             $item->date_open = Date::changeDateSQLtoVN($task->date_open);
             $item->date_end = Date::changeDateSQLtoVN($task->date_end);
-            $item->process_name =$task->process_name;
-
+             $item->process_id =  $task->process_id;
             $item->provider_name =$task->provider_name;
             $item->cost_buy = number_format($task->cost_buy);
             $item->provider_pay = number_format($this->databaseService->getTotalPay($task->id,Config::PAY_PROVIDER));
@@ -169,8 +174,8 @@ class ManagerTasksController extends BaseController
             $task->last_update = $task->create_date;
             $task->last_user_id =  $this->auth->getIdentity()->id;
             $task->process_id = Config::PROCESS_REC;
-            $task->reporter_id = $request->getPost('reporter_id');
-            $task->assign_id = $request->getPost('assign_id');
+            $task->reporter_id = $request->getPost('reporter_id',Config::ID_REPORTER_DEFAULT);
+            $task->assign_id = $request->getPost('assign_id',Config::ID_ASSIGN_DEFAULT);
             // infor
             $task->custumer = $request->getPost('custumer');
             $task->certificate = $request->getPost('certificate');
@@ -216,8 +221,26 @@ class ManagerTasksController extends BaseController
 
             // provider
             $mail->notify_to_user($task->toArray(), $receiver, Config::PROVIDER_TYPE, Config::NOTIFY_CREATE);
-
-            return $this->redirect()->toRoute('manager-tasks/detail',array('id'=> $task->id));
+            $ajax = $request->getPost('ajax',0);
+            if($ajax == 0){
+                 return $this->redirect()->toRoute('manager-tasks/detail',array('id'=> $task->id));
+            }
+            $task = $this->databaseService->getInfoTask($task->id);
+            if($task->count() == 0 ){
+                return new JsonModel(array('id'=> 0));
+            }
+            $task = $task->current();
+            $task->date_open = Date::changeDateSQLtoVN($task->date_open);
+            $task->date_end = Date::changeDateSQLtoVN($task->date_end);
+            $task->date_open_pr = Date::changeDateSQLtoVN($task->date_open_pr);
+            $task->date_end_pr = Date::changeDateSQLtoVN($task->date_end_pr);
+            $task->last_update = Date::changeDateSQLtoVN($task->last_update);
+            $task->cost_sell = number_format($task->cost_sell);
+            $task->cost_buy = number_format($task->cost_buy);
+            return new JsonModel(array(
+                'task'=> $task
+            ));
+        
         }
         $users = $this->databaseService->getListByRole(Config::ROLE_AGENCY);
 
@@ -684,5 +707,12 @@ class ManagerTasksController extends BaseController
         ));
         $response->setHeaders($headers);
         return $response;
+    }
+    public function addFastAction(){
+        $this->checkLevel2();
+         $agencys = $this->databaseService->getListByRole(Config::ROLE_AGENCY);
+         return new ViewModel(array(
+            'agencys' =>$agencys
+        )); 
     }
 }

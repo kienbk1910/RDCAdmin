@@ -15,8 +15,7 @@ class TaskListItem
     public $custumer_pay;
     public $date_open;
     public $date_end;
-
-    public $provider_name;
+    public $process_id;
     public $cost_buy;
     public $provider_pay;
     public $date_open_pr;

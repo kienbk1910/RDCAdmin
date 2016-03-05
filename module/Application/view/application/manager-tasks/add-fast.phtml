@@ -1,0 +1,211 @@
+<section class="content">
+	<div class="box box-default">
+		  <div class="box-header with-border">
+		    <h3 class="box-title">
+		    	Chức Năng Thêm Nhanh Hồ Sơ
+		    </h3>
+		    <div class="box-tools pull-right">
+		     <!--  <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button> -->
+		    </div><!-- /.box-tools -->
+		  </div><!-- /.box-header -->
+		<div class="box-body" >
+			<div class="row">
+			 <div class="table-responsive"> 
+		  		<table class="table table-bordered table-striped">
+			  		
+		  		<tbody  id="table-result">
+		  			
+		  			
+		  		</tbody>
+		  	</table>
+		  </div>
+
+		  <div class="table-responsive"> 
+		    <div class="progress progress-xxs" style="margin-bottom: 0px;">
+                    <div class="progress-bar progress-bar-primary progress-bar-striped" role="progressbar" aria-valuenow="0" id="upload-file-process" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                      <span class="sr-only">40% Complete (success)</span>
+                    </div>
+                  </div>
+		  		<table class="table table-bordered">
+			  		<thead>
+			  			<tr>
+			  			<th>#</th>
+			  			<th>Ngày Nhận</th>
+			  			<th>Tên</th>
+			  			<th>Hồ Sơ</th>
+			  			<th style="min-width:150px">Người Gửi</th>
+			  			<th>Thỏa Thuận</th>
+			  			<th style="min-width:150px">Nhà Cung Cấp</th>
+			  			<th style="">Giá Cung Cấp</th>
+			  			</tr> 
+			  		</thead>
+		  		<tbody id="body-table">
+		  			
+		  			<tr id="control-table">
+		  				<td scope="row">
+		  					
+		  				</td>
+		  				<td>
+		  					
+				  		</td>
+		  				<td>
+		  					
+				  		</td>
+		  				<td style="min-width: 150px;">
+		  					
+		  				</td>
+		  				<td>
+		  				</td>
+		  				<td></td>
+		  				<td>
+		  				</td>
+		  				<td><button id="add_row" onclick="add_row()" type="button" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-plus"></span>Thêm</button><td>
+		  			</tr>
+		  		</tbody>
+		  	</table>
+		  </div>
+		  </div>
+		</div>
+	</div>
+
+</section><!-- /.content -->
+<script type="text/javascript">
+	var agencys = new Array();
+	<?php foreach($agencys as $agency){
+        echo 'agencys.push({value:"'.$agency->id.'", name:"'.$agency->username.'"});';
+	}?>
+	function update_index(){
+		var  i = 1;
+		$('#body-table tr').each(function() {
+	        $(this).children('.index_row').html(i);
+	       
+	        i++;
+    	});
+ 
+	}
+	function validateFormTask(row){
+		var is_erro = true;
+		row.find('.cant_empty').each(function(){
+			$(this).parent().removeClass("has-error");
+    		$(this).parent().addClass("has-success");
+    		if($(this).val().length == 0 ){
+    			$(this).parent().removeClass("has-success");
+       			$( this).parent().addClass("has-error");
+       			
+      	 		is_erro = false ;
+   		 	}
+		});
+		return is_erro;
+	}
+	function add_row_result(task){
+		var row = '<tr>';
+			 row += '<td class="index_row">1</td>'; 
+			 row += '<td>'+task.date_open+'</td>';
+			 row += '<td>'+task.custumer+'</td>';
+			 row += '<td>'+task.certificate+'</td>';
+			 row += '<td>'+task.agency_name+'</td>';
+			 row += '<td>'+task.cost_sell+'</td>';   
+			 row += '<td>'+task.provider_name+'</td>';
+			 row += '<td>'+task.cost_buy+'</td>';      
+			 row += '</tr>'; 
+		$("#table-result").append(row );
+		var  i = 1;
+		$('#table-result tr').each(function() {
+	        $(this).children('.index_row').html(i);
+	       
+	        i++;
+    	});
+
+	}
+	window.onbeforeunload = function(){
+  		return 'Bạn Có Chắc Chắn Muốn rời Khỏi Trang Này Không?';
+	}
+	function addTask(row){
+		var date_open = row.find('.date_open').val();
+		var custumer = row.find('.custumer').val();
+		var certificate = row.find('.certificate').val();
+		var agency_id = row.find('.agency_id').val();
+		var cost_sell = row.find('.cost_sell').val();
+		var provider_id = row.find('.provider_id').val();
+		var cost_buy = row.find('.cost_buy').val();
+		   $.ajax({
+            type:"POST",                          
+            url:"/manager-tasks/add",
+            data:{date_open:date_open,
+                   custumer:custumer,
+                   certificate:certificate,
+                   agency_id:agency_id,
+                   cost_sell:cost_sell,
+                   provider_id:provider_id,
+                   cost_buy:cost_buy,
+                   ajax:1
+                   },
+			 xhr: function() {  // Custom XMLHttpRequest
+	            var myXhr = $.ajaxSettings.xhr();
+	            if(myXhr.upload){ // Check if upload property exists
+	                myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
+	            }
+	            
+	            return myXhr;
+       		 },
+            success: function(data){
+                add_row_result(data.task);
+                row.remove();
+                update_index();
+                $("#upload-file-process").attr('value', 0);
+		        $("#upload-file-process").attr('max', 0);
+		        $("#upload-file-process").css('width',0);
+            }
+     });
+	}
+	function progressHandlingFunction(e){
+		if(e.lengthComputable){
+	        $("#upload-file-process").attr('value', e.loaded);
+	        $("#upload-file-process").attr('max', e.total);
+	        $("#upload-file-process").css('width',e.loaded*100/e.total+"%");
+      	}
+	}
+    function add_row(){
+		var row ="<tr>";
+	     	row+='<th scope="row" class="index_row">1</th>';
+			row+='<td><div><input "type="text" class="form-control date_open cant_empty " ></div></td>';
+			row+='<td><div><input "type="text" class="form-control cant_empty custumer" ></div></td>';
+			row+='<td><div><input "type="text" class="form-control cant_empty certificate"></div></td>';
+			row+='<td><div><select  class="form-control  agency_id">';
+			var index = 0;
+			var select_agency ="";
+			for	(index = 0; index < agencys.length; index++) {
+			   select_agency+='<option  value="'+agencys[index].value+'">'+agencys[index].name+'</option>';
+			}
+			row+=select_agency;
+			row+='</select></td>';
+			row+='<td><div><input  class="form-control number-money cant_empty cost_sell"></div></td>';
+			row+='<td><div><select class="form-control  provider_id">'
+			row+=select_agency;
+			row+='</select></td>';
+			row+='<td><div><input  class="form-control number-money cant_empty cost_buy"></div></td>';
+			row+='<td><button data-v-min="0"  class="btn btn-danger remove-btn" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Xóa</button></td>';
+			row+='<td><button data-v-min="0"  class="btn btn-info add-btn" data-dismiss="modal"><span class="glyphicon glyphicon-send"></span> Tạo</button></td>';		
+			row+='</tr>';
+			$("#control-table").before(row );
+			$( "#control-table" ).prev().find('.date_open').datepicker();
+			$( "#control-table" ).prev().find('.agency_id').select2();
+			$( "#control-table" ).prev().find('.provider_id').select2();
+			$( "#control-table" ).prev().find('.number-money').autoNumeric('init');
+			update_index();
+			$( "#control-table" ).prev().find('.remove-btn').unbind('click');
+			$( "#control-table" ).prev().find('.remove-btn').click(function(){
+				$(this).parent().parent().remove();
+				update_index();
+			})
+			$( "#control-table" ).prev().find('.remove-btn').unbind('click');
+			$( "#control-table" ).prev().find('.add-btn').click(function(){
+				if(validateFormTask($(this).parent().parent())== false){
+					return;
+				}
+				$('this').prop('disabled', true);
+				addTask($(this).parent().parent());
+			})
+			return false;
+	}
+</script>
