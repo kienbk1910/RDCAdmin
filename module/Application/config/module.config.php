@@ -923,7 +923,7 @@ return array(
                 ),
             )
         ),
-     /*    array(
+         array(
             'label' => 'Quản Lý Chứng Chỉ',
             'icon' => 'edit',
             'route' => 'manager-certificates',
@@ -953,7 +953,7 @@ return array(
                     'icon' => 'circle-o'
                 ),
             )
-        ),*/
+        ),
     ),
  // agency navigation
         'agency' => array(
