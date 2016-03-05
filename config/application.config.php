@@ -11,7 +11,6 @@ return array(
         'Application',
         'Auth',
         'Utility',
-        'DOMPDFModule',
         'WebinoImageThumb'
     ),
 

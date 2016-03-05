@@ -725,12 +725,23 @@ return array(
                             )
                         ),
                     ),
+                    'getlistdetail' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route'    => '/getlistdetail',
+                            'defaults' => array(
+                                'action' => 'getlistdetail',
+                            ),
+                            'constraints' => array(
+                            )
+                        ),
+                    ),
                     'editdetail' => array(
                         'type' => 'segment',
                         'options' => array(
                             'route'    => '/editdetail/:id',
                             'defaults' => array(
-                                'action' => 'editDetail',
+                                'action' => 'editdetail',
                                 'id'=>'0',
                             ),
                             'constraints' => array(

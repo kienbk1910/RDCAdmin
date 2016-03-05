@@ -62,7 +62,8 @@ namespace Application\Config;
     const PASSWORD_BENEATH_MIN_LEN = "Mật Khẩu Quá Ngắn! (8 đến 500) ";
     const USERNAME_EXCEED_MAX_LEN = "Tài Khoản Quá Dài! (5 đến 500)";
     const USERNAME_BENEATH_MIN_LEN = "Tài Khoản Quá Ngắn! (5 đến 500)";
-
+    const CERTIFICATE_EXIST = "Mã Chứng Chỉ Đã Tồn Tại";
+    
     const AGENCY_TYPE = 0;
     const PROVIDER_TYPE = 1;
     const ASSIGN_REPORTER_TYPE = 2;
