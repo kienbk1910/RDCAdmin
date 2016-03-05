@@ -33,6 +33,7 @@ use Application\Model\User;
           $usererror = array();
           $db_users = $this->databaseService->getUserById($this->identity()->id);
           foreach ($db_users as $db_user) {
+         
               $user = new User($this->identity()->id, $db_user->username, NULL, NULL);
               $user->avatar = $db_user->avatar;
               $user->note = $db_user->note;
@@ -40,8 +41,9 @@ use Application\Model\User;
               $user->email = $db_user->email;
               $user->block = $db_user->block;
               $user->role_id = $db_user->role_id;
-              $user->name = $user->name;
+              $user->name = $db_user->name;
           }
+
           $usererror = Config::PROCESS_OK;
           return new ViewModel(array(
                   'usererror' => $usererror,
