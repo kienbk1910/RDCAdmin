@@ -396,6 +396,12 @@ echo $this->doctype(); ?>
                   ->setMaxDepth(2)
                   ->setPartial(array('partial/navigation.phtml', 'Application'));
 
+                }else if($this->identity()->role_id == 3){
+                     echo $this->navigation('staff_navigation')
+                  ->menu()
+                  ->setUlClass('nav navbar-nav')
+                  ->setMaxDepth(2)
+                  ->setPartial(array('partial/navigation.phtml', 'Application'));
                 }else{
                   echo $this->navigation('navigation')
                   ->menu()

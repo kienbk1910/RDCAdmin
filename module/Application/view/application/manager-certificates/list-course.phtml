@@ -1,0 +1,138 @@
+<?php use Application\Config\Config; ?>
+<section class="content">
+	<div class="box box-default">
+		  <div class="box-header with-border">
+		    <h3 class="box-title">
+		    	Danh Dách Khóa Học <b style="color:red"><?php echo $certificate->certificate_name;?></b>
+		    </h3>
+		    <div class="box-tools pull-right">
+		     <!--  <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button> -->
+		    </div><!-- /.box-tools -->
+		  </div><!-- /.box-header -->
+		  <div class="box-body" >
+		  <div class="row">
+                     <div class="form-group col-sm-3">
+                      <label for="month">Tháng</label>
+                      <div>
+                      <select id="month" class="form-control cus-select2" name="month">
+                      <?php 
+                      	$i = 1;
+                      	echo '<option value="0">Tất Cả</option>';
+                      	for($i = 1; $i< 13; $i++){
+                      		echo '<option value="'.$i.'"> '.$i.'</option>';
+                      	}
+                      ?>
+                     
+                      </select>
+                       </div>
+                    </div>
+                    <div class="form-group col-sm-3">
+	                      <label for="year">Năm</label>
+	                      <div>
+	                      <select  id="year" id="exampleInputEmail1" class="form-control cus-select2" name="year">
+	                      <?php 
+	                      	$i = 1;
+	                      	echo '<option value="0">Tất Cả</option>';
+	                      	for($i = 2013; $i< 2030; $i++){
+	                      		echo '<option value="'.$i.'"> '.$i.'</option>';
+	                      	}
+	                      ?>
+	                     
+	                      </select>
+	                       </div>
+                    </div>
+                    	
+	                    <div class="col-sm-2">
+	                  
+		                    <label for="exampleInputEmail1"></label>
+							<button class="btn btn-block btn-primary" onclick="list_student()"><span class="glyphicon glyphicon-plus"></span> Thêm Học Viên</button>
+					
+						</div>
+						
+                    </div>
+			
+			<table id="users-table" class="display" cellspacing="0" width="100%">
+			         <thead>
+			          	<tr>
+			                <th rowspan="2">MS</th>
+			                <th class="text-center" colspan="2">Khóa Học</th>
+			                <th class="text-center" colspan="3">Thông Tin</th>
+			            </tr>
+			            <tr>
+		
+			                 <th>Tháng</th>
+			                <th>Năm</th>
+			                <th>Ngày Bắt Đầu</th>
+			                <th>Ngày Kết thúc</th>
+			                <th>Ngày Cấp</th>
+			   
+			            </tr>
+			        </thead>
+			        <tfoot>
+			            <tr>
+			               	<th>MS</th>
+			                <th>Tháng</th>
+			                <th>Năm</th>
+			                <th>Ngày Bắt Đầu</th>
+			                <th>Ngày Kết thúc</th>
+			                <th>Ngày Cấp</th>
+			            </tr>
+			        </tfoot>
+			</table>
+		</div>
+	</div>
+
+</section><!-- /.content -->
+<script type="text/javascript" language="javascript" class="init">
+
+var editor; // use a global for the submit and return data rendering in the examples
+		var table = $('#users-table').DataTable( {
+						"dom": '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>',
+						processing: true,
+				        serverSide: true,
+				        ajax: {
+				            url: "/manager-certificates/list-course-ajax/<?php echo $certificate->id;?>",
+				            type: "POST"
+				        },
+				        "lengthMenu": [ 50, 100,200,],
+				        "language": {
+				    		"url": "//cdn.datatables.net/plug-ins/1.10.10/i18n/Vietnamese.json"
+				  		},
+						columns: [
+							{ data: "DT_RowId" },
+							{ data: "month" },
+							{ data: "year" },
+							{ data: "start" },
+							{ data: "end" },
+							{ data: "finish" },
+							
+						],
+
+				} );
+	 $('#users-table').on('click', 'tr', function () {
+        if ( $(this).hasClass('selected') ) {
+            $(this).removeClass('selected');
+        }
+        else {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    } );
+
+	  $("#month").select2().on("change", function(e) {
+          // mostly used event, fired to the original element when the value changes
+           	$('#users-table').DataTable().column(1).search( e.val,"","").draw();
+      });
+        $("#year").select2().on("change", function(e) {
+          // mostly used event, fired to the original element when the value changes
+           	$('#users-table').DataTable().column(2).search( e.val,"","").draw();
+      });
+	function list_student(){
+		var data = table.rows('.selected').data();
+	 	 if(data.length == 0){
+	 	 	 alert( "Chưa Chọn Khóa Học ! ");
+	 	 	 return;
+	 	 }
+	 	 window.open("/manager-certificates/danh-sach-hoc-vien/"+data[0]['DT_RowId']);
+	}
+</script>

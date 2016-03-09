@@ -10,6 +10,7 @@ class Certificate {
     public $create_user_id;
     public $last_user_id;
     public $last_update;
+    public $location_option;
     public function __construct()
     {
     }

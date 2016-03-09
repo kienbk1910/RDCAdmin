@@ -1,8 +1,20 @@
+<?php use Application\Config\Config; ?>
 <section class="content">
+	<div class="row">
+	    <?php if ($this->identity()->role_id <= Config::USER_LEAVE1) {?>
+		<div class="col-sm-2">
+			<button class="btn btn-block btn-primary" onclick="add_course()"><span class="glyphicon glyphicon-plus"></span> Thêm Khóa Học</button>
+		</div>
+		<?php }?>
+		<div class="col-sm-2">
+			<button class="btn btn-block btn-danger" onclick="list_course()"><span class="glyphicon glyphicon-th-list"></span> Danh Sách Khóa Học</button>
+		</div>
+	</div>
 	<table id="users-table" class="display" cellspacing="0" width="100%">
 	         <thead>
 	            <tr>
 	                <th>Tên Chứng Chỉ</th>
+	                <th>Địa Chỉ</th>
 	                <th>Ghi Chú</th>
 	                <th>Ngưởi Chỉnh Sửa Cuối Cùng</th>
 	                <th>Ngày Tạo</th>
@@ -11,6 +23,7 @@
 	        <tfoot>
 	            <tr>
 	                <th>Tên Chứng Chỉ</th>
+	                <th>Địa Chỉ</th>
 	                <th>Ghi Chú</th>
 	                <th>Ngưởi Chỉnh Sửa Cuối Cùng</th>
 	                <th>Ngày Tạo</th>
@@ -29,11 +42,13 @@ var editor; // use a global for the submit and return data rendering in the exam
 				            url: "/manager-certificates/getlist",
 				            type: "POST"
 				        },
+				        "lengthMenu": [ 50, 100,200,],
 				        "language": {
 				    		"url": "//cdn.datatables.net/plug-ins/1.10.10/i18n/Vietnamese.json"
 				  		},
 						columns: [
 							{ data: "certificate_name" },
+							{ data: "location" },
 							{ data: "certificate_note" },
 							{ data: "last_user_id" },
 							{ data: "create_date" }
@@ -41,8 +56,29 @@ var editor; // use a global for the submit and return data rendering in the exam
 
 				} );
 	 $('#users-table').on('click', 'tr', function () {
-        var data = table.row( this ).id();
-        window.open("/manager-certificates/edit/"+data);
+        if ( $(this).hasClass('selected') ) {
+            $(this).removeClass('selected');
+        }
+        else {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
     } );
-
+	 
+	function add_course(){
+		var data = table.rows('.selected').data();
+	 	 if(data.length == 0){
+	 	 	 alert( "Chưa Chọn Loại Hồ Sơ Chứng Chỉ ! ");
+	 	 	 return;
+	 	 }
+	 	 window.open("/manager-certificates/them-khoa-hoc/"+data[0]['DT_RowId']);
+	}
+	function list_course(){
+		var data = table.rows('.selected').data();
+	 	 if(data.length == 0){
+	 	 	 alert( "Chưa Chọn Loại Hồ Sơ Chứng Chỉ ! ");
+	 	 	 return;
+	 	 }
+	 	 window.open("/manager-certificates/danh-sach-khoa-hoc/"+data[0]['DT_RowId']);
+	}
 </script>

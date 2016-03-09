@@ -11,6 +11,8 @@ use Application\Model\FileAttachment;
 use Application\Model\Log;
 use Application\Model\Notification;
 use Application\Model\PayAction;
+use Application\Model\Course;
+use Application\Model\Student;
 interface IndexServiceInterface
 {
      public function getListRoles();
@@ -113,5 +115,18 @@ interface IndexServiceInterface
      public function getTotalNumberAgency();
      public function getListAgency($start,$length,$search);
      public function getListAgencyFiltered($start,$length,$search);
+
+     public function addCourse(Course $course);
+     public function getCourseById($id);
+
+     public function getTotalCourse($id);
+     public function getListCourse($start,$length,$search,$columns,$order,$id);
+     public function getCountCourseFiltered($start,$length,$search,$columns,$order,$id);
+
+     public function addStudent(Student $Student);
+     public function deleteStudent($id);
+     public function getTotalStudent($id);
+     public function getListStudent($start,$length,$search,$columns,$order,$id);
+     public function getCountStudentFiltered($start,$length,$search,$columns,$order,$id);
   
  }

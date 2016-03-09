@@ -1,0 +1,240 @@
+<section class="content">
+	<div class="box box-default">
+		  <div class="box-header with-border">
+		    <h3 class="box-title">
+		    	Danh Dách Học Viên <b style="color:red"><?php echo $course->certificate_name?></b>
+		    	<b style="color:green"><?php echo $course->month.'/'.$course->year;?></b>
+		    </h3>
+		    <div class="box-tools pull-right">
+		     <!--  <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button> -->
+		    </div><!-- /.box-tools -->
+		  </div><!-- /.box-header -->
+		  <div class="box-body" >
+		   <div class="row">
+                <div class="col-sm-2">
+                <label for="exampleInputEmail1"></label>
+				<button class="btn btn-block btn-primary" onclick="delete_student()"><span class="glyphicon glyphicon-remove"></span> Xóa Học Viên</button>
+				</div>	
+            </div>
+		  <div class="row">
+                    
+			<table id="users-table" class="display" cellspacing="0" width="100%">
+			         <thead>
+			            <tr>
+			            	
+			                <th>Họ Và Tên</th>
+			                <th>Ngày Sinh</th>
+			                <th>Địa Chỉ</th>
+			                <th>Khóa Học</th>
+			                <th>Số C/C</th>
+			                <th>CMND</th>
+			   
+			            </tr>
+			        </thead>
+			        <tfoot>
+			            <tr>
+			               <th>Họ Và Tên</th>
+			                <th>Ngày Sinh</th>
+			                <th>Địa Chỉ</th>
+			                <th>Khóa Học</th>
+			                <th>Số C/C</th>
+			                <th>CMND</th>
+			            </tr>
+			        </tfoot>
+			</table>
+			<div class="table-responsive"> 
+		    	<div class="progress progress-xxs" style="margin-bottom: 0px;">
+                    <div class="progress-bar progress-bar-primary progress-bar-striped" role="progressbar" aria-valuenow="0" id="upload-file-process" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                      <span class="sr-only">40% Complete (success)</span>
+                    </div>
+                  </div>
+		  		<table class="table table-bordered">
+			  	
+		  		<tbody id="body-table">
+		  			
+		  			<tr id="control-table">
+		  				<td scope="row">
+		  					<div><input type="text" id="name" placeholder="Họ Và Tên"class="form-control date_open cant_empty " ></div>
+		  				</td>
+		  				<td>
+		  					<div><input type="text" id="birth_of_date" placeholder="Ngày Sinh" class="form-control date_open cant_empty " ></div>
+				  		</td>
+		  				<td>
+		  					<div><input type="text" id="address" placeholder="Địa Chỉ" class="form-control date_open cant_empty " ></div>
+				  		</td>
+		  				<td >
+		  					<div><input placeholder="Khóa Học" id="course_name" type="text" class="form-control date_open cant_empty " ></div>
+		  				</td>
+		  				<td>
+		  				<div><input placeholder="Số C/C" id="code"  type="text" class="form-control date_open cant_empty " ></div>
+		  				</td>
+		  				<td>
+		  					<div><input placeholder="CMND"  id="card_id"type="text" class="form-control date_open  " ></div>
+		  				</td>
+		  				
+		  			</tr>
+		  			<td scope="row">
+		  				
+		  				</td>
+		  				<td>
+		  				</td>
+		  				<td>
+		  					
+				  		</td>
+		  				<td >
+		  					
+		  				</td>
+		  				<td>
+		  				
+		  				</td>
+		  				<td><button id="add_row" onclick="add_student()" type="button" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-plus"></span>Thêm</button><td>
+		  				
+		  			</tr>
+		  		</tbody>
+		  	</table>
+		  </div>
+		</div>
+	</div>
+
+</section><!-- /.content -->
+<script type="text/javascript">
+var editor; // use a global for the submit and return data rendering in the examples
+	var table = $('#users-table').DataTable( {
+					"dom": '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>',
+					processing: true,
+			        serverSide: true,
+			        ajax: {
+			            url: "/manager-certificates/list-student-ajax/<?php echo $id;?>",
+			            type: "POST"
+			        },
+			        "lengthMenu": [ 5,10, 20,50,100],
+			        "language": {
+			    		"url": "//cdn.datatables.net/plug-ins/1.10.10/i18n/Vietnamese.json"
+			  		},
+					columns: [
+					
+						{ data: "name" },
+						{ data: "birth_of_date" },
+						{ data: "address" },
+						{ data: "course_name" },
+						{ data: "code" },
+						{ data: "card_id" },
+						
+					],
+
+			} );
+ $('#users-table').on('click', 'tr', function () {
+        if ( $(this).hasClass('selected') ) {
+            $(this).removeClass('selected');
+        }
+        else {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    } );
+function progressHandlingFunction(e){
+		if(e.lengthComputable){
+	        $("#upload-file-process").attr('value', e.loaded);
+	        $("#upload-file-process").attr('max', e.total);
+	        $("#upload-file-process").css('width',e.loaded*100/e.total+"%");
+      	}
+}
+function init_input(){
+	$('.cant_empty').each(function(){
+		$(this).parent().removeClass("has-error");
+		$(this).parent().removeClass("has-success");
+		$(this).val("");
+	});
+	$('#card_id').val("");
+}
+function add_student(){
+	var is_erro = true;
+	$('.cant_empty').each(function(){
+		$(this).parent().removeClass("has-error");
+		$(this).parent().addClass("has-success");
+		if($(this).val().length == 0 ){
+			$(this).parent().removeClass("has-success");
+   			$( this).parent().addClass("has-error");
+   			
+  	 		is_erro = false ;
+		 	}
+	});
+	if(is_erro == false){
+	 	return;
+
+	}
+	var name = $("#name").val();
+	var address = $("#address").val();
+	var card_id = $("#card_id").val();
+	var course_name = $("#course_name").val();
+	var code = $("#code").val();
+	var birth_of_date = $("#birth_of_date").val();
+	var course_id = <?php echo $id ?>;
+	 $.ajax({
+            type:"POST",                          
+            url:"/manager-certificates/add-student",
+            data:{name:name,
+                   address:address,
+                   card_id:card_id,
+                   course_name:course_name,
+                   code:code,
+                   birth_of_date:birth_of_date,
+                   course_id:course_id,
+                   },
+			 xhr: function() {  // Custom XMLHttpRequest
+	            var myXhr = $.ajaxSettings.xhr();
+	            if(myXhr.upload){ // Check if upload property exists
+	                myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
+	            }
+	            
+	            return myXhr;
+       		 },
+            success: function(data){
+            	$("#upload-file-process").attr('value', 0);
+		        $("#upload-file-process").attr('max', 0);
+		        $("#upload-file-process").css('width',0);
+                if(data.status == true){
+                	table.draw();
+                	init_input();
+                }else{
+                	alert("Có Lỗi Của Dữ Liệu !");
+                }
+
+            }
+        });    
+}
+function delete_student_finish(id){
+	 $.ajax({
+            type:"POST",                          
+            url:"/manager-certificates/delete-student",
+            data:{id:id,
+                   },
+			 xhr: function() {  // Custom XMLHttpRequest
+	            var myXhr = $.ajaxSettings.xhr();
+	            if(myXhr.upload){ // Check if upload property exists
+	                myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
+	            }
+	            return myXhr;
+       		 },
+            success: function(data){
+            	$("#upload-file-process").attr('value', 0);
+		        $("#upload-file-process").attr('max', 0);
+		        $("#upload-file-process").css('width',0);
+               	table.draw();
+            }
+        });    
+}
+function delete_student(){
+	var data = table.rows('.selected').data();
+ 	 if(data.length == 0){
+ 	 	 alert( "Chưa Chọn Học Viên ! ");
+ 	 	 return;
+ 	 }
+	 var r = confirm("Bạn Có Chắc Muốn Xóa Không!");
+	if (r == true) {
+	    delete_student_finish(data[0]['DT_RowId']);
+	} else {
+	    
+	}
+}
+</script>

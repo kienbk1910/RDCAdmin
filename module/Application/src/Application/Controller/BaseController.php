@@ -31,6 +31,7 @@
           }
            return true;
       }
+      
       public function checkRole($role){
            $this->checkAuth();
           if($this->auth->getIdentity()->role_id > $role){

@@ -27,7 +27,15 @@
                       <label>Tên Chứng Chỉ</label>
                       <input type="text" class="form-control" name="certificate_name" value="<?php if (!empty($certificate)) { echo $certificate->getUsername(); } ?>">
                     </div>
-
+                   <div class="form-group ">
+                      <label>Địa Chỉ</label>
+                      <select class="form-control" name="location_option">
+                          <option value="1">Quê Quán</option>
+                          <option value="2">Nơi Sinh</option>
+                          <option value="3">Hộ Khẩu Thường Chú</option>
+                      </select>
+                    </div>
+                 
                     <div class="form-group <?php if (!empty($certificate_error['certificate_note'])) { echo 'has-error';} ?>">
                       <label>Ghi Chú Chứng Chỉ</label>
                       <input  type="textarea"  class="form-control"  placeholder="Enter ..." name="certificate_note" value="<?php if (!empty($certificate)) { echo $certificate->getUsername(); } ?>">

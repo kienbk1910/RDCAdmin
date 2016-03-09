@@ -31,6 +31,8 @@ use Application\Model\Log;
 use Application\Model\Notification;
 use Application\Model\PayAction;
 use Application\Model\ManagerCertificate;
+use Application\Model\Course;
+use Application\Model\Student;
 
 class ZendDbSqlMapper implements IndexMapperInterface
 {
@@ -61,7 +63,8 @@ class ZendDbSqlMapper implements IndexMapperInterface
         $select = $sql->select('certificates');
         $select->Where(array('certificates.id = ?' => $id));
         $selectString = $sql->getSqlStringForSqlObject($select);
-        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $result = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        return $result->current();
     }
     public function getManagerCertificateByID($id) {
         $sql = new Sql($this->dbAdapter);
@@ -108,6 +111,7 @@ class ZendDbSqlMapper implements IndexMapperInterface
                  'create_date'=> date("Y-m-d H:i:s"),
                  'create_user_id' =>$certificate->create_user_id,
                  'last_user_id'=>$certificate->last_user_id,
+                 'location_option'=>$certificate->location_option,
                  'last_update'=>date("Y-m-d H:i:s"),
          );
      
@@ -296,6 +300,8 @@ class ZendDbSqlMapper implements IndexMapperInterface
     public function getListCertificatesAll($start, $length, $search){
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select('certificates')
+        ->join('location_option', 'location_option.id = certificates.location_option', array(
+                'location' => 'name'), 'left')
         ->join('users', 'users.id = certificates.last_user_id', array(
                 'last_user_id' => 'username'), 'left');
         $select->where->like('certificates.certificate_name', '%' . $search .'%');
@@ -1280,5 +1286,142 @@ class ZendDbSqlMapper implements IndexMapperInterface
             break;
         }
         return $count;
+    }
+    public function addCourse(Course $course){
+        $sql = new Sql($this->dbAdapter);
+        $insert = $sql->insert('courses');
+        $newData = $course->toArray();
+        $insert->values($newData);
+        $selectString = $sql->getSqlStringForSqlObject($insert);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE); 
+    }
+    public function getCourseById($id){
+         $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('courses')
+                ->join('certificates', 'certificates.id = courses.certificate_id', array("certificate_name"=>"certificate_name"), 'left');
+        $select->Where(array('courses.id = ?' => $id));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $result = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        return $result->current();
+    }
+    public function getTotalCourse($id){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('courses')
+                ->columns(array('COUNT'=>new \Zend\Db\Sql\Expression('COUNT(*)')))
+                ->where(array('courses.certificate_id =?' => $id));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $resultSet =  $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $count = 0;
+        foreach ($resultSet as $row) {
+            $count = $row->COUNT;
+            break;
+        }
+        return $count; 
+    }
+    public function getListCourse($start,$length,$search,$columns,$order,$id){
+        $sql = new Sql($this->dbAdapter);
+        $select = $this->getSelectCourse($start,$length,$search,$columns,$order,$id);
+        if($start !=null && $length !=null){
+             $select->offset($start)
+                    ->limit($length);
+        }
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+    }
+    public function getCountCourseFiltered($start,$length,$search,$columns,$order,$id){
+        $sql = new Sql($this->dbAdapter);
+        $select = $this->getSelectCourse($start,$length,$search,$columns,$order,$id);
+        $select->columns(array('COUNT'=>new \Zend\Db\Sql\Expression('COUNT(*)')));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $resultSet =  $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $count = 0;
+        foreach ($resultSet as $row) {
+            $count = $row->COUNT;
+            break;
+        }
+        return $count;
+    }
+     protected function getSelectCourse($start,$length,$search,$columns,$order,$id){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('courses');
+       $select->Where(array('courses.certificate_id =?' => $id));
+       // $select->where->like('tasks.custumer', '%' . $search .'%');
+        $year = DataTableUtility::getSearchValue($columns,"year");
+        if($year != "" && $year != 0){
+            $select->Where(array('courses.year' => $year));
+        }
+         $month = DataTableUtility::getSearchValue($columns,"month");
+        if($month != "" && $month != 0){
+            $select->Where(array('courses.month' => $month));
+        }
+       
+        return $select;
+      }
+       public function addStudent(Student $Student){
+        $sql = new Sql($this->dbAdapter);
+        $insert = $sql->insert('students');
+        $newData = $Student->toArray();
+        $insert->values($newData);
+        $selectString = $sql->getSqlStringForSqlObject($insert);
+         $ret;
+         try {
+             $ret = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+         } catch (\Exception $e) {
+             $ret = NULL;
+         }
+         return $ret;
+       }
+    public function getTotalStudent($id){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('students')
+                ->columns(array('COUNT'=>new \Zend\Db\Sql\Expression('COUNT(*)')))
+                ->where(array('students.course_id =?' => $id));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $resultSet =  $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $count = 0;
+        foreach ($resultSet as $row) {
+            $count = $row->COUNT;
+            break;
+        }
+        return $count; 
+    }
+    public function getListStudent($start,$length,$search,$columns,$order,$id){
+        $sql = new Sql($this->dbAdapter);
+        $select = $this->getSelectStudent($start,$length,$search,$columns,$order,$id);
+        if($start !=null && $length !=null){
+             $select->offset($start)
+                    ->limit($length);
+        }
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+    }
+    public function getCountStudentFiltered($start,$length,$search,$columns,$order,$id){
+         $sql = new Sql($this->dbAdapter);
+        $select = $this->getSelectStudent($start,$length,$search,$columns,$order,$id);
+        $select->columns(array('COUNT'=>new \Zend\Db\Sql\Expression('COUNT(*)')));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        $resultSet =  $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $count = 0;
+        foreach ($resultSet as $row) {
+            $count = $row->COUNT;
+            break;
+        }
+        return $count;
+    }
+    protected function getSelectStudent($start,$length,$search,$columns,$order,$id){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select('students');
+        $select->Where(array('students.course_id =?' => $id));
+        $select->where->like('students.name', '%' . $search .'%');
+         $select->order(array('students.code DESC'));
+        return $select;
+    }
+    public function deleteStudent($id){
+        $sql = new Sql($this->dbAdapter);
+        $insert = $sql->delete('students');
+        $insert->where(array('id =?' => $id));
+        $selectString = $sql->getSqlStringForSqlObject($insert);
+     
+        return $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
     }
 }

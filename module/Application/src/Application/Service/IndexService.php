@@ -12,6 +12,8 @@ use Application\Model\Log;
 use Application\Model\Notification;
 use Application\Model\PayAction;
 use Application\Model\ManagerCertificate;
+use Application\Model\Course;
+use Application\Model\Student;
 class IndexService implements IndexServiceInterface
 {
     protected $databaseMapper;
@@ -279,4 +281,35 @@ class IndexService implements IndexServiceInterface
    public function getListAgencyFiltered($start,$length,$search){
       return $this->databaseMapper->getListAgencyFiltered($start,$length,$search); 
    }
+  public function addCourse(Course $course){
+    return $this->databaseMapper->addCourse($course); 
+  }
+  public function getCourseById($id){
+      return $this->databaseMapper->getCourseById($id); 
+  }
+  public function getTotalCourse($id){
+      return $this->databaseMapper->getTotalCourse($id); 
+  }
+  public function getListCourse($start,$length,$search,$columns,$order,$id){
+      return $this->databaseMapper->getListCourse($start,$length,$search,$columns,$order,$id); 
+  }
+  public function getCountCourseFiltered($start,$length,$search,$columns,$order,$id){
+       return $this->databaseMapper->getCountCourseFiltered($start,$length,$search,$columns,$order,$id); 
+  }
+ public function addStudent(Student $Student){
+    return $this->databaseMapper->addStudent($Student); 
+
+ }
+  public function getTotalStudent($id){
+      return $this->databaseMapper->getTotalStudent($id); 
+  }
+  public function getListStudent($start,$length,$search,$columns,$order,$id){
+      return $this->databaseMapper->getListStudent($start,$length,$search,$columns,$order,$id); 
+  }
+  public function getCountStudentFiltered($start,$length,$search,$columns,$order,$id){
+    return $this->databaseMapper->getCountStudentFiltered($start,$length,$search,$columns,$order,$id);
+  }
+ public function deleteStudent($id){
+    return $this->databaseMapper->deleteStudent($id);
+ }
 }

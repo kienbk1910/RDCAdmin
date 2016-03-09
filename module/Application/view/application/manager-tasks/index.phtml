@@ -307,6 +307,14 @@ var custumer = '<a data-inputclass="custum-x-editable" href="#" class="process_i
 	           multiple: false,
 	        }
 	    });
+	    $('.process_id').on('hidden', function(e, reason) {
+    		$(".dataTables_scrollBody").css("overflow","auto");
+    		
+			});
+	    $('.process_id').on('shown', function(e, reason) {
+    		
+    		$(".dataTables_scrollBody").css("overflow","visible");
+		});
 	}
 	 function onpen_new_tab(id){
 	 		window.open("/manager-tasks/detail/"+id);

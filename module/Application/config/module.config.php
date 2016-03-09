@@ -774,6 +774,96 @@ return array(
                             )
                         ),
                     ),
+                     'add-course' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route'    => '/them-khoa-hoc/:id',
+                            'defaults' => array(
+                                'action' => 'addCourse',
+                                'id'=>'0',
+                            ),
+                            'constraints' => array(
+                                'id'   => '[1-9]\d*',
+                            )
+                        ),
+                    ),
+                     'list-course' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route'    => '/danh-sach-khoa-hoc/:id',
+                            'defaults' => array(
+                                'action' => 'listCourse',
+                                'id'=>'0',
+                            ),
+                            'constraints' => array(
+                                'id'   => '[1-9]\d*',
+                            )
+                        ),
+                    ),
+                      'list-course-ajax' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route'    => '/list-course-ajax/:id',
+                            'defaults' => array(
+                                'action' => 'listCourseAjax',
+                                'id'=>'0',
+                            ),
+                            'constraints' => array(
+                                'id'   => '[1-9]\d*',
+                            )
+                        ),
+                    ),
+                      'list-student' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route'    => '/danh-sach-hoc-vien/:id',
+                            'defaults' => array(
+                                'action' => 'listStudent',
+                                'id'=>'0',
+                            ),
+                            'constraints' => array(
+                                'id'   => '[1-9]\d*',
+                            )
+                        ),
+
+                    ),
+                    'add-student' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route'    => '/add-student',
+                            'defaults' => array(
+                                'action' => 'addStudent',
+                            
+                            ),
+                            
+                        ),
+                        
+                    ),
+                      'delete-student' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route'    => '/delete-student',
+                            'defaults' => array(
+                                'action' => 'deleteStudent',
+                            
+                            ),
+                            
+                        ),
+                        
+                    ),
+                   'list-student-ajax' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route'    => '/list-student-ajax/:id',
+                            'defaults' => array(
+                                'action' => 'listStudentAjax',
+                                'id'=>'0',
+                            ),
+                            'constraints' => array(
+                                'id'   => '[1-9]\d*',
+                            )
+                        ),
+                    ),
                 ) /* End child */
             ), /* End certificate */
         ),
@@ -787,6 +877,7 @@ return array(
             'translator' => 'Zend\Mvc\Service\TranslatorServiceFactory',
             'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',
             'agency_navigation' => 'Application\Navigation\Service\AgencyNavigationFactory',
+            'staff_navigation' => 'Application\Navigation\Service\StaffNavigationFactory',
             'Application\Mapper\IndexMapperInterface'   => 'Application\Factory\ZendDbSqlMapperFactory',
             'Application\Service\IndexServiceInterface' => 'Application\Factory\IndexServiceFactory'
 
@@ -969,18 +1060,121 @@ return array(
                     'route' => 'manager-certificates/add',
                     'icon' => 'circle-o'
                 ),
+            )
+        ),
+    ),
+'staff' => array(
+        array(
+            'label' => 'Bảng Tin',
+            'route' => 'application',
+            'icon' => 'dashboard',
+            'pages' => array(
                 array(
-                    'label' => 'Danh Sách Hồ Sơ Chứng Chỉ',
+                    'label' => 'Tin Tức',
                     'uri' => '#',
-                    'route' => 'manager-certificates/detailindex',
+                    'icon' => 'circle-o',
+                    'route' => 'application',
+                    'action' => 'index',
+                ),
+                array(
+                    'label' => 'Thông Kê',
+                    'uri' => '#',
+                    'icon' => 'circle-o',
+                    'route' => 'application/statistic',
+                    'action' => 'statistic',
+                ),
+            )
+        ),
+        array(
+            'label' => 'Hồ Sơ',
+            'uri' => '#',
+            'icon' => 'files-o',
+            'route' => 'manager-tasks',
+            'pages' => array(
+                array(
+                    'label' => 'Danh Sách Hồ Sơ',
+                    'uri' => '#',
+                    'icon' => 'circle-o text-blue',
+                    'route' => 'manager-tasks',
+                ),
+                array(
+                    'label' => 'Thêm Hồ Sơ Chi Tiết',
+                    'uri' => '#',
+                    'icon' => 'circle-o text-green',
+                    'route' => 'manager-tasks/add',
+                ),
+                  array(
+                    'label' => 'Thêm Hồ Sơ Nhanh',
+                    'uri' => '#',
+                    'icon' => 'circle-o text-red',
+                    'route' => 'manager-tasks/add-fast',
+                ),
+            )
+        ),
+         array(
+            'label' => 'Tài Chính',
+            'uri' => '#',
+            'icon' => 'laptop',
+            'pages' => array(
+                array(
+                    'label' => 'Lịch Sử Thu Chi',
+                    'uri' => '#',
+                      'route' => 'pay',
+                    'icon' => 'circle-o text-blue'
+                ),
+                
+                array(
+                    'label' => 'Tạo Phiếu Thu',
+                    'uri' => '#',
+                    'route' => 'pay/new',
+                    'params'     => array('id' => 1),
+                    'icon' => 'circle-o text-green'
+                ),
+                  array(
+                    'label' => 'Tạo Phiếu Chi',
+                    'uri' => '#',
+                    'route' => 'pay/new',
+                    'params'     => array('id' => 2),
+                    'icon' => 'circle-o text-red'
+                ),
+                array(
+                    'label' => 'Công Nợ',
+                    'uri' => '#',
+                    'route' => 'pay/debt',
+                    'icon' => 'circle-o'
+                ),
+            )
+        ),
+         array(
+            'label' => 'Quản lý Users',
+            'icon' => 'pie-chart',
+            'route' => 'manager-users',
+            'pages' => array(
+                array(
+                    'label' => 'Danh Sách Users',
+                     'route' => 'manager-users',
                     'icon' => 'circle-o'
                 ),
                 array(
-                    'label' => 'Thêm Hồ Sơ Chứng Chỉ',
+                    'label' => 'Thêm User',
                     'uri' => '#',
-                    'route' => 'manager-certificates/adddetail',
+                    'route' => 'manager-users/add',
                     'icon' => 'circle-o'
                 ),
+            )
+        ),
+         array(
+            'label' => 'Quản Lý Chứng Chỉ',
+            'icon' => 'edit',
+            'route' => 'manager-certificates',
+            'pages' => array(
+                array(
+                    'label' => 'Danh Sách Chứng Chỉ',
+                    'uri' => '#',
+                    'route' => 'manager-certificates',
+                    'icon' => 'circle-o'
+                ),
+               
             )
         ),
     ),

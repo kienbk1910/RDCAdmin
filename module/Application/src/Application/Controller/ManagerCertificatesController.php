@@ -11,11 +11,14 @@ use Application\Model\Certificate;
 use Application\Model\ManagerCertificate;
 use Application\Model\CertificateListItem;
 use Application\Model\ManagerCertificateListItem;
+use Application\Model\CourseListItem;
+use Application\Model\StudentListItem;
 use Application\Model\DataTablesObject;
 use Zend\Debug\Debug;
 use Application\Config\Config;
 use Utility\Date\Date;
-
+use Application\Model\Course;
+use Application\Model\Student;
 class ManagerCertificatesController extends BaseController {
     public function __construct(IndexServiceInterface $databaseService, AuthenticationService $auth) {
         $this->databaseService = $databaseService;
@@ -52,7 +55,7 @@ class ManagerCertificatesController extends BaseController {
         $data->draw = $draw;
         foreach ($certificates as $certificate) {
             $certificate->create_date = Date::changeDateSQLtoVN($certificate->create_date);
-            array_push($data->data, new CertificateListItem($certificate->id, $certificate->certificate_name,
+            array_push($data->data, new CertificateListItem($certificate->id,$certificate->certificate_name, $certificate->location,
                 $certificate->certificate_note, $certificate->last_user_id, $certificate->create_date));
         }
         echo \Zend\Json\Json::encode($data, false);
@@ -60,7 +63,7 @@ class ManagerCertificatesController extends BaseController {
     }
 
     public function addAction() {
-        $this->checkAdmin();
+         $this->checkLevel1();
         $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set("Thêm Chứng Chỉ");
 
         $request = $this->getRequest();
@@ -78,11 +81,13 @@ class ManagerCertificatesController extends BaseController {
             if (strlen($certificate_note) > 500) {
                 $certificate_error['certificate_note'] = "Ghi chú của chứng chỉ vượt quá giới hạn cho phép (500 kí tự)";
             }
-
+            $location_option = $this->getRequest ()->getPost('location_option', 1);
+            
             $certificate = new Certificate();
             if (empty($certificate_error)) {
                 $certificate->certificate_name = $certificate_name;
                 $certificate->certificate_note = $certificate_note;
+                $certificate->location_option   =$location_option;
 
                 $certificate->create_user_id = $this->auth->getIdentity()->id;
                 $certificate->last_user_id = $this->auth->getIdentity()->id;
@@ -295,7 +300,7 @@ class ManagerCertificatesController extends BaseController {
     }
 
     public function getlistdetailAction(){
-        $this->checkAuth();
+         $this->checkLevel2();
         $request = $this->getRequest();
     
         $draw = $request->getPost('draw', 1);
@@ -317,5 +322,154 @@ class ManagerCertificatesController extends BaseController {
         echo \Zend\Json\Json::encode($data, false);
         exit;
     }
-    
+    public function addCourseAction(){
+        $this->checkLevel1();
+        $id = $this->params()->fromRoute('id', 1);
+        $certificate = $this->databaseService->getCertificateByID($id);
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $course = new Course();
+            $course->create_id = $this->auth->getIdentity()->id;
+            $course->create_date = date('Y-m-d H:i:s');
+            $course->edit_date = $course->create_date;
+            $course->edit_id =  $this->auth->getIdentity()->id;
+
+            $course->month =  $request->getPost('month',1);
+            $course->year =  $request->getPost('year',2015);
+            $course->certificate_id =  $request->getPost('certificate_id');
+
+            $start = $request->getPost('start');
+            $end = $request->getPost('end');
+            $finish = $request->getPost('finish');
+
+            $course->start = Date::changeVNtoDateSQL($start);
+            $course->end = Date::changeVNtoDateSQL($end);
+            $course->finish = Date::changeVNtoDateSQL($finish);
+            $id = $this->databaseService->addCourse($course);
+            return $this->redirect()->toRoute('manager-certificates/list-course',array('id' =>$course->certificate_id ));
+        }
+      return new ViewModel(
+        array('certificate' =>$certificate)
+        );
+    }
+     public function addStudentAction(){
+        $this->checkLevel2();
+        $request = $this->getRequest();
+        $status = false;
+        if ($request->isPost()) {
+            $student = new Student();
+            $student->create_id = $this->auth->getIdentity()->id;
+            $student->create_date = date('Y-m-d H:i:s');
+            $student->edit_date = $student->create_date;
+            $student->edit_id =  $this->auth->getIdentity()->id;
+
+            $student->course_id =  $request->getPost('course_id');
+            $student->name =  $request->getPost('name');
+            $student->address =  $request->getPost('address');
+            $student->card_id =  $request->getPost('card_id');
+            $student->course_name =  $request->getPost('course_name');
+            $student->code =  trim($request->getPost('code'));
+            $student->birth_of_date = $request->getPost('birth_of_date');
+        
+            $id = $this->databaseService->addStudent($student);
+            if($id  == null){
+                $status = false;
+            }else{
+                $status = true;
+            }
+        }
+       return new JsonModel(array("status"=>$status));
+    }
+    public function listCourseAction(){
+        $this->checkLevel2();
+       $id = $this->params()->fromRoute('id', 1);
+        $certificate = $this->databaseService->getCertificateByID($id);
+      return new ViewModel(
+        array('certificate' =>$certificate)
+        );
+    }
+    public function listCourseAjaxAction(){
+         $this->checkLevel2();
+         $request = $this->getRequest();
+
+         $draw = $request->getPost('draw',1);
+         $start = $request->getPost('start',0);
+         $length = $request->getPost('length',10);
+         $search = $request->getPost('search','');
+         $columns = $request->getPost('columns','');
+         $orders = $request->getPost('order','');
+         $id = $this->params()->fromRoute('id', 1);
+         $search = $search['value'];
+         $total = $this->databaseService->getTotalCourse( $id );
+
+         $tasks =$this->databaseService->getListCourse($start,$length,$search,$columns,$orders ,$id);
+         $data = new DataTablesObject();
+         $data->recordsTotal = $total;
+         $data->recordsFiltered = $this->databaseService->getCountCourseFiltered($start,$length,$search,$columns,$orders,$id);
+         $data->draw = $draw;
+         foreach ($tasks as $task) {
+            $item = new CourseListItem();
+            $item->DT_RowId =$task->id;
+            $item->end =Date::changeDateSQLtoVN($task->end);
+            $item->start =Date::changeDateSQLtoVN($task->start);
+            $item->finish =Date::changeDateSQLtoVN($task->finish);
+             $item->month =$task->month;
+                  $item->year =$task->year;
+            array_push($data->data,$item);
+         }
+        echo \Zend\Json\Json::encode($data, false);
+        exit;
+    }
+     public function listStudentAction(){
+        $this->checkLevel2();
+       $id = $this->params()->fromRoute('id', 1);
+
+       $course = $this->databaseService->getCourseById($id);
+      return new ViewModel(
+         array('id' =>$id,'course'=>$course)
+        );
+    }
+    public function deleteStudentAction(){
+        $this->checkLevel2();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $id = $request->getPost('id',0);
+           $this->databaseService->deleteStudent( $id );
+        }
+       return new JsonModel();  
+    }
+     public function listStudentAjaxAction(){
+        $this->checkLevel2();
+ 
+         $request = $this->getRequest();
+
+         $draw = $request->getPost('draw',1);
+         $start = $request->getPost('start',0);
+         $length = $request->getPost('length',10);
+         $search = $request->getPost('search','');
+         $columns = $request->getPost('columns','');
+         $orders = $request->getPost('order','');
+         $id = $this->params()->fromRoute('id', 1);
+         $search = $search['value'];
+         $total = $this->databaseService->getTotalStudent( $id );
+
+         $tasks =$this->databaseService->getListStudent($start,$length,$search,$columns,$orders ,$id);
+         $data = new DataTablesObject();
+         $data->recordsTotal = $total;
+         $data->recordsFiltered = $this->databaseService->getCountStudentFiltered($start,$length,$search,$columns,$orders,$id);
+         $data->draw = $draw;
+         foreach ($tasks as $task) {
+            $item = new StudentListItem();
+            $item->DT_RowId =$task->id;
+            $item->name = $task->name;
+            $item->birth_of_date = $task->birth_of_date;
+            $item->address =$task->address;
+            $item->course_name =$task->course_name;
+            $item->code =$task->code;
+            $item->card_id =$task->card_id;
+            array_push($data->data,$item);
+         }
+        echo \Zend\Json\Json::encode($data, false);
+        exit;
+    }
 }
